@@ -17,32 +17,48 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="45dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="45dp"
                 android:layout_weight="1"
                 android:text="Historique" />
+
         </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="591dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/imageButton3"
+                android:layout_width="139dp"
+                android:layout_height="97dp"
                 android:layout_weight="1"
+                android:contentDescription="TODO"
                 app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="137dp"
+                android:layout_height="94dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/maison" />
+
+            <ImageButton
+                android:id="@+id/imageButton5"
+                android:layout_width="130dp"
+                android:layout_height="95dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/setting" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

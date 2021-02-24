@@ -6,6 +6,9 @@ import java.util.Map;
 
 public class Activite {
 
+    public static final double METRE_PIED = 3.28084;
+    public static final double METRE_MILES = 0.000621371;
+
     private String nom = null;
     private Date date = null;
     private Sport sport = null;
@@ -16,6 +19,11 @@ public class Activite {
     private Graphique graphique = null;
     private Map<String, Double> statistique = null;
 
+    private double[] tabDistanceMetrique = null;
+    private double[] tabElevationMetrique = null;
+    private double[] tabVitesseMetrique = null;
+
+
     public Activite(String pNom, Date pDate, Sport pSport, Date pDuree, Date pHeureDebut, Date pHeureFin, double pDistance) {
 if(validernom(pNom))
 {
@@ -23,7 +31,7 @@ if(validernom(pNom))
     setDate(pDate);
     setSport(pSport);
     setDuree(pDuree);
-    setHeureDebut(heureDebut);
+    setHeureDebut(pHeureDebut);
     setHeureFin(pHeureFin);
     setDistance(pDistance);
 }
@@ -100,6 +108,30 @@ if(validernom(pNom))
         this.distance = distance;
     }
 
+    public double[] getTabDistanceMetrique() {
+        return tabDistanceMetrique;
+    }
+
+    public void setTabDistanceMetrique(double[] tabDistanceMetrique) {
+        this.tabDistanceMetrique = tabDistanceMetrique;
+    }
+
+    public double[] getTabElevationMetrique() {
+        return tabElevationMetrique;
+    }
+
+    public double[] getTabVitesseMetrique() {
+        return tabVitesseMetrique;
+    }
+
+    public void setTabVitesseMetrique(double[] tabVitesseMetrique) {
+        this.tabVitesseMetrique = tabVitesseMetrique;
+    }
+
+    public void setTabElevationMetrique(double[] tabElevationMetrique) {
+        this.tabElevationMetrique = tabElevationMetrique;
+    }
+
     public Graphique getGraphique() {
         return graphique;
     }
@@ -133,22 +165,23 @@ if(validernom(pNom))
 
     public double getDistanceMetrique()
     {
-        return  0;
+        return  this.tabDistanceMetrique[this.tabDistanceMetrique.length]-this.tabDistanceMetrique[0];
     }
 
     public double getDistanceImperiale()
     {
-        return  0;
+        return  this.getDistanceMetrique()*METRE_MILES;
     }
 
     public double getDenivelePositifMetrique()
     {
-        return  0;
+
+        return 0;
     }
 
     public double getDenivelePositifImperiale()
     {
-        return  0;
+        return  getDenivelePositifMetrique()*METRE_PIED;
     }
 
     public double getDeniveleNegatifMetrique()
@@ -163,6 +196,8 @@ if(validernom(pNom))
 
     public double getVitesseActuelleMetrique()
     {
+        
+
         return  0;
     }
 
@@ -176,34 +211,55 @@ if(validernom(pNom))
         return  0;
     }
 
-    public double getAltitudeMaxMetrique()
+    public double getVitesseMoyenneImperiale()
     {
         return  0;
+    }
+
+    public double getAltitudeMaxMetrique()
+    {
+        double maxVal = Double.MAX_VALUE;
+
+        for(int i = 0; i < tabElevationMetrique.length; i++) {
+
+            if (tabElevationMetrique[i] > maxVal) {
+                maxVal = tabElevationMetrique[i];
+            }
+        }
+        return  maxVal;
     }
 
     public double getAltitudeMaxImperiale()
     {
-        return  0;
+        return  getAltitudeMaxMetrique()*METRE_PIED;
     }
 
     public double getAltitudeMinMetrique()
     {
-        return  0;
+        double minVal = Double.MIN_VALUE;
+
+        for(int i = 0; i < tabElevationMetrique.length; i++) {
+
+            if (tabElevationMetrique[i] > minVal) {
+                minVal = tabElevationMetrique[i];
+            }
+        }
+        return  minVal;
     }
 
     public double getAltitudeMinImperiale()
     {
-        return  0;
+        return  getAltitudeMinMetrique()*METRE_PIED;
     }
 
     public double getAltitudeActuelleMetrique()
     {
-        return  0;
+        return  this.tabElevationMetrique[this.tabElevationMetrique.length];
     }
 
     public double getAltitudeActuelleImperiale()
     {
-        return  0;
+        return  METRE_PIED *getAltitudeActuelleMetrique();
     }
 
 }

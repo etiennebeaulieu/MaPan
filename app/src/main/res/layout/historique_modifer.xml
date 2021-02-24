@@ -28,7 +28,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="81dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="10dp"
             android:background="#00316C19"
             android:backgroundTint="#00316C19"
@@ -38,12 +39,14 @@
                 android:id="@+id/modifier_textView"
                 android:layout_width="280dp"
                 android:layout_height="80dp"
-                android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
+                android:paddingTop="10dp"
                 android:text="@string/modifier"
-                android:textAlignment="center"
-                android:textSize="36sp" />
+                android:textAlignment="textStart"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                tools:paddingLeft="10dp" />
 
             <ImageButton
                 android:id="@+id/modifier_importer"
@@ -52,9 +55,9 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:contentDescription="TODO"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/stat_sys_download"
-                android:contentDescription="TODO" />
+                app:srcCompat="@android:drawable/stat_sys_download" />
 
         </LinearLayout>
 
@@ -65,6 +68,13 @@
             android:background="#FFFFFF">
 
         </ListView>
+
+        <Button
+            android:id="@+id/modifier_changeActivity"
+            android:layout_width="424dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:text="changer le type d'activité" />
 
         <LinearLayout
             android:layout_width="match_parent"

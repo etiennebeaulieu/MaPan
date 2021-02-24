@@ -1,6 +1,7 @@
 package modele;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,13 +35,15 @@ public class Activite {
     private Graphique graphique = null;
     private Map<String, Double> statistique = null;
 
-    private double[] tabDistanceMetrique = null;
-    private double[] tabElevationMetrique = null;
-    private double[] tabVitesseMetrique = null;
+    private ArrayList<Double> tabLatitude = null;
+    private ArrayList<Double> tabLongitude = null;
+    private ArrayList<Double> tabElevationMetrique = null;
+    private ArrayList<Double> tabDistanceMetrique = null;
+    private ArrayList<Double> tabVitesseMetrique = null;
 
 
     public Activite(String pNom, Date pDate, Sport pSport, Date pDuree, Date pHeureDebut,Date pHeureFin,double pDistance) {
-if(validernom(pNom))
+if(validerNom(pNom))
 {
     setNom(pNom);
     setDate(pDate);
@@ -54,18 +57,25 @@ if(validernom(pNom))
     }
     public Activite(String pNom, Date pDate, Sport pSport, File pFichier)
     {
-        if(validernom(pNom) && validerFichier(pFichier))
+        if(validerNom(pNom) && validerFichier(pFichier))
         {
             setNom(pNom);
             setDate(pDate);
             setSport(pSport);
-            // lire fichier
+
+            tabLatitude = new ArrayList<>();
+            tabLongitude = new ArrayList<>();
+            tabElevationMetrique = new ArrayList<>();
+            tabDistanceMetrique = new ArrayList<>();
+            tabVitesseMetrique = new ArrayList<>();
+
+            // lire fichier + setTableaux
 
             //heureDebut  = 1er point ficher
             //heureFin = dernier point fichier
             //duree = dernier-1er
 
-            setDistanceMetrique(calculerDistance(0,tabDistanceMetrique.length));
+            setDistanceMetrique(calculerDistance(0,tabDistanceMetrique.size()-1));
             setDistanceImperiale(getDistanceImperiale());
             calculerDenivele();
             setVitesseActuelleMetrique(getVitesseActuelleMetrique());
@@ -181,25 +191,27 @@ if(validernom(pNom))
         this.deniveleNegatifImperiale = deniveleNegatifImperiale;
     }
 
+    //calculer en km/h
     public double getVitesseActuelleMetrique()
     {
-        return  calculerDistance(tabDistanceMetrique.length-1,tabDistanceMetrique.length)*3.6;
+        return  calculerDistance(tabDistanceMetrique.size()-2,tabDistanceMetrique.size()-1)*3.6;
     }
 
     public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
         this.vitesseActuelleMetrique = vitesseActuelleMetrique;
     }
 
+    //calculer en miles/h
     public double getVitesseActuelleImperiale()
     {
-        return  (calculerDistance(tabDistanceMetrique.length-1,tabDistanceMetrique.length)*METRE_MILES)/3600;
+        return  (calculerDistance(tabDistanceMetrique.size()-2,tabDistanceMetrique.size()-1)*METRE_MILES)/3600;
     }
 
     public void setVitesseActuelleImperiale(double vitesseActuelleImperiale) {
         this.vitesseActuelleImperiale = vitesseActuelleImperiale;
     }
 
-
+    //calculer en km/h
     public double getVitesseMetrique() {
         return  getDistanceMetrique()*3.6;
     }
@@ -208,6 +220,7 @@ if(validernom(pNom))
         this.vitesseMetrique = vitesseMetrique;
     }
 
+    //calculer en miles/h
     public double getVitesseImperiale() {
         return getDistanceImperiale()/3600;
     }
@@ -216,28 +229,44 @@ if(validernom(pNom))
         this.vitesseImperiale = vitesseImperiale;
     }
 
-    public double[] getTabDistanceMetrique() {
+    public ArrayList<Double> getTabLatitude() {
+        return tabLatitude;
+    }
+
+    public void setTabLatitude(ArrayList<Double> tabLatitude) {
+        this.tabLatitude = tabLatitude;
+    }
+
+    public ArrayList<Double> getTabLongitude() {
+        return tabLongitude;
+    }
+
+    public void setTabLongitude(ArrayList<Double> tabLongitude) {
+        this.tabLongitude = tabLongitude;
+    }
+
+    public ArrayList<Double> getTabDistanceMetrique() {
         return tabDistanceMetrique;
     }
 
-    public void setTabDistanceMetrique(double[] tabDistanceMetrique) {
+    public void setTabDistanceMetrique(ArrayList<Double> tabDistanceMetrique) {
         this.tabDistanceMetrique = tabDistanceMetrique;
     }
 
-    public double[] getTabElevationMetrique() {
+    public ArrayList<Double> getTabElevationMetrique() {
         return tabElevationMetrique;
     }
 
-    public double[] getTabVitesseMetrique() {
+    public void setTabElevationMetrique(ArrayList<Double> tabElevationMetrique) {
+        this.tabElevationMetrique = tabElevationMetrique;
+    }
+
+    public ArrayList<Double> getTabVitesseMetrique() {
         return tabVitesseMetrique;
     }
 
-    public void setTabVitesseMetrique(double[] tabVitesseMetrique) {
+    public void setTabVitesseMetrique(ArrayList<Double> tabVitesseMetrique) {
         this.tabVitesseMetrique = tabVitesseMetrique;
-    }
-
-    public void setTabElevationMetrique(double[] tabElevationMetrique) {
-        this.tabElevationMetrique = tabElevationMetrique;
     }
 
     public Graphique getGraphique() {
@@ -256,7 +285,7 @@ if(validernom(pNom))
         this.statistique = statistique;
     }
 
-    private boolean validernom(String pNom)
+    private boolean validerNom(String pNom)
     {
         return !pNom.isEmpty();
     }
@@ -271,32 +300,50 @@ if(validernom(pNom))
         return pFichier != null;
     }
 
+    //Calcul en mètre
     public double calculerDistance(int debut, int fin)
     {
-        double distance =0;
+        double distance = 0;
+        double lat1;
+        double lon1;
+        double lat2;
+        double lon2;
 
-        for(int i = 0; i<tabDistanceMetrique.length-2;i++)
+        for(int i = debut; i<fin;i++)
         {
-            distance += tabDistanceMetrique[i+1] -tabDistanceMetrique[i];
+            lat1 = tabLatitude.get(i);
+            lon1 = tabLongitude.get(i);
+            lat2 = tabLatitude.get(i+1);
+            lon2 = tabLongitude.get(i+1);
+
+            double theta = lon1 - lon2;
+            double dx = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dx = Math.acos(dx);
+            dx = Math.toDegrees(dx);
+            dx = dx * 1.609344 * 1000;
+
+
+            distance += dx;
         }
         return distance;
     }
 
+    ///calcul en mètre et converti en impériale via setters
     public void calculerDenivele()
     {
 
         double montee = 0;
         double descente = 0;
 
-        for(int i = 0; i< tabElevationMetrique.length-2;i++)
+        for(int i = 0; i< tabElevationMetrique.size()-1;i++)
         {
-            if(tabElevationMetrique[i]<tabElevationMetrique[i+1])
+            if(tabElevationMetrique.get(i)<tabElevationMetrique.get(i+1))
             {
-                montee+=tabElevationMetrique[i+1] -tabElevationMetrique[i];
+                montee+=tabElevationMetrique.get(i+1) -tabElevationMetrique.get(i);
             }
-            else if(tabElevationMetrique[i]<tabElevationMetrique[i+1])
+            else if(tabElevationMetrique.get(i)>tabElevationMetrique.get(i+1))
             {
-                descente+=tabElevationMetrique[i+1] -tabElevationMetrique[i];
+                descente+=tabElevationMetrique.get(i+1) -tabElevationMetrique.get(i);
         }
             setDenivelePositifMetrique(montee);
             setDeniveleNegatifMetrique(descente);
@@ -305,14 +352,15 @@ if(validernom(pNom))
         }
     }
 
+
     public double getAltitudeMaxMetrique()
     {
         double maxVal = Double.MAX_VALUE;
 
-        for(int i = 0; i < tabElevationMetrique.length; i++) {
+        for(int i = 0; i < tabElevationMetrique.size(); i++) {
 
-            if (tabElevationMetrique[i] > maxVal) {
-                maxVal = tabElevationMetrique[i];
+            if (tabElevationMetrique.get(i) > maxVal) {
+                maxVal = tabElevationMetrique.get(i);
             }
         }
         return  maxVal;
@@ -335,10 +383,10 @@ if(validernom(pNom))
     {
         double minVal = Double.MIN_VALUE;
 
-        for(int i = 0; i < tabElevationMetrique.length; i++) {
+        for(int i = 0; i < tabElevationMetrique.size(); i++) {
 
-            if (tabElevationMetrique[i] > minVal) {
-                minVal = tabElevationMetrique[i];
+            if (tabElevationMetrique.get(i) > minVal) {
+                minVal = tabElevationMetrique.get(i);
             }
         }
         return  minVal;
@@ -359,7 +407,7 @@ if(validernom(pNom))
 
     public double getAltitudeActuelleMetrique()
     {
-        return  this.tabElevationMetrique[this.tabElevationMetrique.length];
+        return  this.tabElevationMetrique.get(tabElevationMetrique.size()-1);
     }
 
     public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {

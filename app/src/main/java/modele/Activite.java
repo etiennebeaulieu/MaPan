@@ -15,7 +15,22 @@ public class Activite {
     private Date duree = null;
     private Date heureDebut = null;
     private Date heureFin = null;
-    private double distance = 0;
+    private double distanceMetrique = 0;
+    private double distanceImperiale = 0;
+    private double denivelePositifMetrique = 0;
+    private double deniveleNegatifMetrique = 0;
+    private double denivelePositifImperiale = 0;
+    private double deniveleNegatifImperiale = 0;
+    private double vitesseActuelleMetrique = 0;
+    private double vitesseActuelleImperiale = 0;
+    private double vitesseMetrique = 0;
+    private double vitesseImperiale = 0;
+    private double altitudeMaxMetrique = 0;
+    private double altitudeMaxImperiale = 0;
+    private double altitudeMinMetrique = 0;
+    private double altitudeMinImperiale = 0;
+    private double altitudeActuelleMetrique = 0;
+    private double altitudeActuelleImperiale = 0;
     private Graphique graphique = null;
     private Map<String, Double> statistique = null;
 
@@ -33,7 +48,8 @@ if(validernom(pNom))
     setDuree(pDuree);
     setHeureDebut(pHeureDebut);
     setHeureFin(pHeureFin);
-    setDistance(pDistance);
+    setDistanceMetrique(pDistance);
+    setVitesseMetrique(getDistanceMetrique()*3.6);
 }
     }
     public Activite(String pNom, Date pDate, Sport pSport, File pFichier)
@@ -48,7 +64,20 @@ if(validernom(pNom))
             //heureDebut  = 1er point ficher
             //heureFin = dernier point fichier
             //duree = dernier-1er
-            //distance = dernier-1er
+
+            setDistanceMetrique(calculerDistance(0,tabDistanceMetrique.length));
+            setDistanceImperiale(getDistanceImperiale());
+            calculerDenivele();
+            setVitesseActuelleMetrique(getVitesseActuelleMetrique());
+            setVitesseActuelleImperiale(getVitesseActuelleImperiale());
+            setVitesseMetrique(getVitesseMetrique());
+            setVitesseImperiale(getVitesseImperiale());
+            setAltitudeMaxMetrique(getAltitudeMaxMetrique());
+            setAltitudeMaxImperiale(getAltitudeMaxImperiale());
+            setAltitudeMinMetrique(getAltitudeMinMetrique());
+            setAltitudeMinImperiale(getAltitudeMinImperiale());
+            setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
+            setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
         }
     }
 
@@ -100,12 +129,91 @@ if(validernom(pNom))
         this.heureFin = heureFin;
     }
 
-    public double getDistance() {
-        return distance;
+    public double getDistanceMetrique()
+    {
+        return  this.distanceMetrique;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    public void setDistanceMetrique(double distanceMetrique) {
+        this.distanceMetrique = distanceMetrique;
+    }
+
+    public double getDenivelePositifMetrique() {
+        return denivelePositifMetrique;
+    }
+
+    public double getDistanceImperiale()
+    {
+        return  this.getDistanceMetrique()*METRE_MILES;
+    }
+
+    public void setDistanceImperiale(double distanceImperiale) {
+        this.distanceImperiale = distanceImperiale;
+    }
+
+    public void setDenivelePositifMetrique(double denivelePositifMetrique) {
+        this.denivelePositifMetrique = denivelePositifMetrique;
+    }
+
+    public double getDeniveleNegatifMetrique() {
+        return deniveleNegatifMetrique;
+    }
+
+    public void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
+        this.deniveleNegatifMetrique = deniveleNegatifMetrique;
+    }
+
+    public double getDenivelePositifImperiale()
+    {
+        return  getDenivelePositifMetrique()*METRE_PIED;
+    }
+
+    public void setDenivelePositifImperiale(double denivelePositifImperiale) {
+        this.denivelePositifImperiale = denivelePositifImperiale;
+    }
+
+    public double getDeniveleNegatifImperiale()
+    {
+        return  getDeniveleNegatifMetrique()*METRE_PIED;
+    }
+
+    public void setDeniveleNegatifImperiale(double deniveleNegatifImperiale) {
+        this.deniveleNegatifImperiale = deniveleNegatifImperiale;
+    }
+
+    public double getVitesseActuelleMetrique()
+    {
+        return  calculerDistance(tabDistanceMetrique.length-1,tabDistanceMetrique.length)*3.6;
+    }
+
+    public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
+        this.vitesseActuelleMetrique = vitesseActuelleMetrique;
+    }
+
+    public double getVitesseActuelleImperiale()
+    {
+        return  (calculerDistance(tabDistanceMetrique.length-1,tabDistanceMetrique.length)*METRE_MILES)/3600;
+    }
+
+    public void setVitesseActuelleImperiale(double vitesseActuelleImperiale) {
+        this.vitesseActuelleImperiale = vitesseActuelleImperiale;
+    }
+
+
+    public double getVitesseMetrique() {
+        return  getDistanceMetrique()*3.6;
+    }
+
+    public void setVitesseMetrique(double vitesseMetrique) {
+        this.vitesseMetrique = vitesseMetrique;
+    }
+
+    public double getVitesseImperiale() {
+        return getDistanceImperiale()/3600;
+    }
+
+    public void setVitesseImperiale(double vitesseImperiale) {
+        this.vitesseImperiale = vitesseImperiale;
     }
 
     public double[] getTabDistanceMetrique() {
@@ -163,57 +271,38 @@ if(validernom(pNom))
         return pFichier != null;
     }
 
-    public double getDistanceMetrique()
+    public double calculerDistance(int debut, int fin)
     {
-        return  this.tabDistanceMetrique[this.tabDistanceMetrique.length]-this.tabDistanceMetrique[0];
+        double distance =0;
+
+        for(int i = 0; i<tabDistanceMetrique.length-2;i++)
+        {
+            distance += tabElevationMetrique[i+1] -tabElevationMetrique[i];
+        }
+        return distance;
     }
 
-    public double getDistanceImperiale()
-    {
-        return  this.getDistanceMetrique()*METRE_MILES;
-    }
-
-    public double getDenivelePositifMetrique()
+    public void calculerDenivele()
     {
 
-        return 0;
-    }
+        double montee = 0;
+        double descente = 0;
 
-    public double getDenivelePositifImperiale()
-    {
-        return  getDenivelePositifMetrique()*METRE_PIED;
-    }
-
-    public double getDeniveleNegatifMetrique()
-    {
-        return  0;
-    }
-
-    public double getDeniveleNegatifImperiale()
-    {
-        return  0;
-    }
-
-    public double getVitesseActuelleMetrique()
-    {
-        
-
-        return  0;
-    }
-
-    public double getVitesseActuelleImperiale()
-    {
-        return  0;
-    }
-
-    public double getVitesseMoyenneMetrique()
-    {
-        return  0;
-    }
-
-    public double getVitesseMoyenneImperiale()
-    {
-        return  0;
+        for(int i = 0; i< tabElevationMetrique.length-2;i++)
+        {
+            if(tabElevationMetrique[i]<tabElevationMetrique[i+1])
+            {
+                montee+=tabElevationMetrique[i+1] -tabElevationMetrique[i];
+            }
+            else if(tabElevationMetrique[i]<tabElevationMetrique[i+1])
+            {
+                descente+=tabElevationMetrique[i+1] -tabElevationMetrique[i];
+        }
+            setDenivelePositifMetrique(montee);
+            setDeniveleNegatifMetrique(descente);
+            setDenivelePositifImperiale(getDenivelePositifImperiale());
+            setDeniveleNegatifImperiale(getDeniveleNegatifImperiale());
+        }
     }
 
     public double getAltitudeMaxMetrique()
@@ -229,9 +318,17 @@ if(validernom(pNom))
         return  maxVal;
     }
 
+    public void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
+        this.altitudeMaxMetrique = altitudeMaxMetrique;
+    }
+
     public double getAltitudeMaxImperiale()
     {
         return  getAltitudeMaxMetrique()*METRE_PIED;
+    }
+
+    public void setAltitudeMaxImperiale(double altitudeMaxImperiale) {
+        this.altitudeMaxImperiale = altitudeMaxImperiale;
     }
 
     public double getAltitudeMinMetrique()
@@ -247,9 +344,17 @@ if(validernom(pNom))
         return  minVal;
     }
 
+    public void setAltitudeMinMetrique(double altitudeMinMetrique) {
+        this.altitudeMinMetrique = altitudeMinMetrique;
+    }
+
     public double getAltitudeMinImperiale()
     {
         return  getAltitudeMinMetrique()*METRE_PIED;
+    }
+
+    public void setAltitudeMinImperiale(double altitudeMinImperiale) {
+        this.altitudeMinImperiale = altitudeMinImperiale;
     }
 
     public double getAltitudeActuelleMetrique()
@@ -257,9 +362,16 @@ if(validernom(pNom))
         return  this.tabElevationMetrique[this.tabElevationMetrique.length];
     }
 
+    public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
+        this.altitudeActuelleMetrique = altitudeActuelleMetrique;
+    }
+
     public double getAltitudeActuelleImperiale()
     {
         return  METRE_PIED *getAltitudeActuelleMetrique();
     }
 
+    public void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
+        this.altitudeActuelleImperiale = altitudeActuelleImperiale;
+    }
 }

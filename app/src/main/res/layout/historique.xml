@@ -9,7 +9,9 @@
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#316C19" />
+        android:backgroundTint="#316C19"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -24,21 +26,58 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"><![CDATA[
+
+            android:layout_height="wrap_content"
+
+                android:layout_height="wrap_content"="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+            ]]>
 
             <TextView
-<<<<<<< Updated upstream
-                android:id="@+id/textViewModifier"
-                android:layout_width="0dp"
-=======
                 android:id="@+id/textView"
-                android:layout_width="534dp"
->>>>>>> Stashed changes
-                android:layout_height="45dp"
+                android:layout_width="528dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
                 android:text="HISTORIQUE"
-                android:textSize="30sp" />
+                android:textSize="30sp" /><![CDATA[
+
+            android:layout_height="wrap_content"="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+            android:layout_height="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+            android:layout_height="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+            android:layout_height="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+            =======
+            android:id="@+id/textView"
+            android:layout_width="534dp"
+            >>>>>>> Stashed changes
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="HISTORIQUE"
+            android:textSize="30sp" />
+
+            android:layout_height="wrap_content"="wrap_content"="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+
+
+
+
+
+
+            ]]>
 
             <ImageButton
                 android:id="@+id/imageButton8"

@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00FFFFFF"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
     android:backgroundTint="#FFFFFF">
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/pane"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#568A22"
+        android:background="#316C19"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,6 +20,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#00316C19"
+        android:backgroundTint="#00316C19"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="202dp"
         tools:layout_editor_absoluteY="212dp">
@@ -28,12 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="81dp"
             android:layout_marginBottom="10dp"
-            android:background="#568A22"
-            android:backgroundTint="#568A22"
+            android:background="#00316C19"
+            android:backgroundTint="#00316C19"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/textViewModifier"
                 android:layout_width="311dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="15dp"
@@ -44,18 +46,20 @@
                 android:textSize="36sp" />
 
             <ImageButton
-                android:id="@+id/imageButton6"
+                android:id="@+id/trier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitCenter"
+                android:tint="#00FFFFFF"
                 app:srcCompat="@drawable/tri" />
 
         </LinearLayout>
 
         <ListView
+            android:id="@+id/listActivites"
             android:layout_width="match_parent"
             android:layout_height="549dp"
             android:background="#FFFFFF">
@@ -70,36 +74,42 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/editbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:clickable="false"
                 android:scaleType="fitCenter"
+                android:tint="#808080"
                 app:srcCompat="@drawable/edit" />
 
             <ImageButton
-                android:id="@+id/Homebutton"
+                android:id="@+id/homebutton"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:clickable="false"
+                android:foregroundTint="#FFFFFF"
                 android:scaleType="fitCenter"
-                android:tint="#FFFFFF"
+                android:tint="#808080"
                 app:srcCompat="@drawable/maison"
                 tools:maxHeight="70dp"
                 tools:maxWidth="50dp" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/parametreButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:clickable="false"
                 android:scaleType="fitCenter"
+                android:tint="#808080"
                 app:srcCompat="@drawable/setting" />
 
         </LinearLayout>

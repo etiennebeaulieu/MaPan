@@ -1,36 +1,46 @@
 package controleur;
 
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Comparator;
 import java.util.List;
+import java.util.Observer;
 
 import modele.Activite;
 
-public class ControleurHistorique {
+public class ControleurHistorique extends AppCompatActivity{
 
-    private List<Activite> listeActivite;
+    private List<Activite> listeActivites;
+    private ListView historique_List;
+
+
 
 
     public List<Activite> getListeActivite() {
-        return listeActivite;
+        return listeActivites;
     }
 
+
    public void trierListeDate(){
-    listeActivite.sort(Comparator.comparing(Activite::getDate));
+    listeActivites.sort(Comparator.comparing(Activite::getDate));
    }
 
    public void trierListeDuree(){
-    listeActivite.sort(Comparator.comparing(Activite::getDuree));
+    listeActivites.sort(Comparator.comparing(Activite::getDuree));
    }
 
    public void trierListeDistance(){
-    listeActivite.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
+    listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
    }
 
    public void trierListeNom(){
-    listeActivite.sort(Comparator.comparing(Activite::getNom));
+    listeActivites.sort(Comparator.comparing(Activite::getNom));
    }
 
    public void trierListeSport(){
-    listeActivite.sort(Comparator.comparing(Activite::getSport));
+    listeActivites.sort(Comparator.comparing(Activite::getSport));
    }
 }

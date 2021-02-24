@@ -277,7 +277,7 @@ if(validernom(pNom))
 
         for(int i = 0; i<tabDistanceMetrique.length-2;i++)
         {
-            distance += tabElevationMetrique[i+1] -tabElevationMetrique[i];
+            distance += tabDistanceMetrique[i+1] -tabDistanceMetrique[i];
         }
         return distance;
     }

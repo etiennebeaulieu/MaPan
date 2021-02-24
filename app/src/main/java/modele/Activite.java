@@ -39,7 +39,7 @@ public class Activite {
     private double[] tabVitesseMetrique = null;
 
 
-    public Activite(String pNom, Date pDate, Sport pSport, Date pDuree, Date pHeureDebut, Date pHeureFin, double pDistance) {
+    public Activite(String pNom, Date pDate, Sport pSport, Date pDuree, Date pHeureDebut,Date pHeureFin,double pDistance) {
 if(validernom(pNom))
 {
     setNom(pNom);

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:padding="16dp"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/iconSport"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/course"
+
+        />
+
+    <TextView
+        android:id="@+id/textViewNom"
+        android:layout_toRightOf="@id/iconSport"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nom"
+        />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_toRightOf="@id/textViewNom"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        />
+
+    <TextView
+        android:id="@+id/textViewDuree"
+        android:layout_toRightOf="@id/iconSport"
+        android:layout_below="@id/textViewNom"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Durée"
+        />
+
+    <TextView
+        android:id="@+id/textViewDistance"
+        android:layout_toRightOf="@id/textViewDate"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance"
+        />
+
+
+</RelativeLayout>

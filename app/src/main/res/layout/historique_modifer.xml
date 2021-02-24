@@ -35,7 +35,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textViewModifier"
+                android:id="@+id/modifier_textView"
                 android:layout_width="280dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="15dp"
@@ -46,19 +46,20 @@
                 android:textSize="36sp" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/modifier_importer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/stat_sys_download" />
+                app:srcCompat="@android:drawable/stat_sys_download"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
 
         <ListView
-            android:id="@+id/listActivites"
+            android:id="@+id/modifier_listActivity"
             android:layout_width="match_parent"
             android:layout_height="549dp"
             android:background="#FFFFFF">
@@ -73,33 +74,37 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/modifier_exporter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/stat_sys_upload" />
+                app:srcCompat="@android:drawable/stat_sys_upload"
+                android:contentDescription="TODO" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/modifier_renameActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:contentDescription="renames activity"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/edit" />
 
             <ImageButton
-                android:id="@+id/imageButton5"
+                android:id="@+id/modifier_deleteActivity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:contentDescription="deletes selected activity"
                 android:scaleType="fitCenter"
+                android:tint="#FFFFFF"
                 app:srcCompat="@android:drawable/ic_menu_delete" />
         </LinearLayout>
 

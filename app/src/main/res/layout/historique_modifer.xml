@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#00FFFFFF"
+    android:backgroundTint="#FFFFFF">
 
     <View
         android:id="@+id/view2"
@@ -26,55 +27,80 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="81dp"
+            android:layout_marginBottom="10dp"
+            android:background="#568A22"
+            android:backgroundTint="#568A22"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="311dp"
                 android:layout_height="80dp"
+                android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:text="Modifier"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="36sp" />
+
+            <ImageButton
+                android:id="@+id/imageButton6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/tri" />
 
         </LinearLayout>
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="549dp">
+            android:layout_height="549dp"
+            android:background="#FFFFFF">
 
         </ListView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button3"
+            <ImageButton
+                android:id="@+id/imageButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/edit" />
 
             <ImageButton
                 android:id="@+id/Homebutton"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitCenter"
+                android:tint="#FFFFFF"
                 app:srcCompat="@drawable/maison"
-                tools:maxHeight="50dp"
+                tools:maxHeight="70dp"
                 tools:maxWidth="50dp" />
 
-            <Button
-                android:id="@+id/button2"
+            <ImageButton
+                android:id="@+id/imageButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/setting" />
 
         </LinearLayout>
 

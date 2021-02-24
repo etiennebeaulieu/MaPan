@@ -36,12 +36,13 @@
             <TextView
                 android:id="@+id/modifier_textView"
                 android:layout_width="280dp"
-                android:layout_height="80dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:fontFamily="sans-serif-black"
                 android:paddingTop="5dp"
-                android:text="MODIFIER"
+                android:text="@string/modifier"
                 android:textAlignment="textStart"
+                android:textAllCaps="true"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp"
                 tools:paddingLeft="10dp" />
@@ -53,7 +54,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/importer_l_activit_choisie"
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/stat_sys_download" />
 
@@ -74,7 +75,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:backgroundTint="#00FFFFFF"
-            android:text="changer le type d'activité" />
+            android:text="@string/changer_le_type_d_activit" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,7 +90,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/exporter_l_activit_choisie"
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/stat_sys_upload" />
 
@@ -100,7 +101,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="renames activity"
+                android:contentDescription="@string/renames_activity"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/edit" />
 
@@ -111,7 +112,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="deletes selected activity"
+                android:contentDescription="@string/deletes_selected_activity"
                 android:scaleType="fitCenter"
                 android:tint="#FFFFFF"
                 app:srcCompat="@android:drawable/ic_menu_delete" />

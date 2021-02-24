@@ -5,7 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#316C19" />
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -20,11 +27,27 @@
             android:orientation="horizontal">
 
             <TextView
+<<<<<<< Updated upstream
                 android:id="@+id/textViewModifier"
                 android:layout_width="0dp"
+=======
+                android:id="@+id/textView"
+                android:layout_width="534dp"
+>>>>>>> Stashed changes
                 android:layout_height="45dp"
                 android:layout_weight="1"
-                android:text="Historique" />
+                android:paddingLeft="10dp"
+                android:text="HISTORIQUE"
+                android:textSize="30sp" />
+
+            <ImageButton
+                android:id="@+id/imageButton8"
+                android:layout_width="239dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/tri" />
 
         </LinearLayout>
 
@@ -38,15 +61,17 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButton5"
+                android:id="@+id/imageButton6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/modifier" />
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/edit" />
 
             <ImageButton
                 android:id="@+id/imageButton"
-                android:layout_width="152dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
@@ -54,11 +79,13 @@
                 app:srcCompat="@drawable/maison" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/imageButton7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/setting_resize" />
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/setting" />
 
         </LinearLayout>
     </LinearLayout>

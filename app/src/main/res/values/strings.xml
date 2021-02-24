@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MaPan</string>
+    <string name="modifier">Modifier</string>
+    <string name="edit">edit</string>
+    <string name="home">home</string>
+    <string name="trier_activites">trier activites</string>
+    <string name="parametres">parametres</string>
 </resources>

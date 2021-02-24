@@ -89,7 +89,8 @@
                 android:paddingTop="5dp"
                 android:text="HISTORIQUE"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                tools:fontFamily="sans-serif-black" />
 
             <ImageButton
                 android:id="@+id/historique_sort"

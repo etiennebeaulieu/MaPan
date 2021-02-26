@@ -5,10 +5,10 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon_mapan"
-        android:label="@string/app_name"
+        android:label= "MaPan"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaPan">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity android:name="controleur.ControleurHistorique">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

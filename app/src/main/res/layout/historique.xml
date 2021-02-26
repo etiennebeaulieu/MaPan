@@ -99,6 +99,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:onClick="afficherMenuTri"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/tri" />
 

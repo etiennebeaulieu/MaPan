@@ -6,7 +6,11 @@ import android.database.DataSetObserver;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +40,7 @@ import java.util.Observer;
 import modele.Activite;
 import modele.Sport;
 
-public class ControleurHistorique extends AppCompatActivity {
+public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ArrayList<Activite> listeActivites = new ArrayList<>();
     private ListView historique_list;
@@ -134,9 +139,8 @@ public class ControleurHistorique extends AppCompatActivity {
     public void trierListeSport() {
         listeActivites.sort(Comparator.comparing(Activite::getSport));
     }
-
     public void afficherModifier(View view) {
-        ImageButton boutonModifier = (ImageButton)findViewById(R.id.historique_editButton);
+        ImageButton boutonModifier = (ImageButton) findViewById(R.id.historique_editButton);
 
         boutonModifier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,4 +160,43 @@ public class ControleurHistorique extends AppCompatActivity {
         });
 
     }
+
+
+    public void afficherMenuTri(View view) {
+        PopupMenu menuTri = new PopupMenu(this, view);
+        menuTri.setOnMenuItemClickListener(this);
+        MenuInflater inflater = menuTri.getMenuInflater();
+        inflater.inflate(R.menu.menu_tri, menuTri.getMenu());
+
+
+        menuTri.show();
+
+    }
+
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+       boolean retour = false;
+        switch (item.getItemId())
+        {
+            case R.id.triNom:
+                trierListeNom();
+                retour = true;
+            case R.id.triSport:
+                trierListeSport();
+                retour = true;
+            case R.id.triDistance:
+                trierListeDistance();
+                retour = true;
+            case R.id.triDuree:
+                trierListeDuree();
+                retour = true;
+            default:
+                retour = false;
+        }
+        return retour;
+    }
+
 }
+
+

@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
@@ -15,11 +16,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public static class Fichiers
+public  class Fichiers
 {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabele, ArrayList<Instant> tabTime)
+    public static ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabEle, ArrayList<Instant> tabTime)
     {
         ArrayList<ArrayList<?>> tabAtt = null;
 
@@ -50,7 +51,7 @@ tabAtt = new ArrayList<ArrayList<?>>();
 
 
                 Double ele = Double.parseDouble(node.getAttributeValue("ele"));
-                tabele.add(ele);
+                tabEle.add(ele);
 
                 Instant time = Instant.parse(node.getAttributeValue("time"));
                 tabTime.add(time);
@@ -58,11 +59,11 @@ tabAtt = new ArrayList<ArrayList<?>>();
             }
             tabAtt.add(tabLat);
             tabAtt.add(tabLon);
-            tabAtt.add(tabele);
+            tabAtt.add(tabEle);
             tabAtt.add(tabTime);
 
         }
-        catch (IOException io)
+        catch (IOException | JDOMException io)
         {
             System.out.println(io.getMessage());
         }
@@ -73,12 +74,12 @@ tabAtt = new ArrayList<ArrayList<?>>();
     }
 
 
-    public void ecrireFichier(Activite activite)
+    public static void ecrireFichier(Activite activite)
     {
         ArrayList<Double> tabLatitude = activite.getTabLatitude();
         ArrayList<Double> tabLongitude = activite.getTabLongitude();
         ArrayList<Double> tabElevation = activite.getTabElevationMetrique();
-        ArrayList<Date> tabTemps = activite.getTabTemps();
+        ArrayList<Instant> tabTemps = activite.getTabTemps();
 
         try
         {

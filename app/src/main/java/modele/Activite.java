@@ -45,11 +45,11 @@ public class Activite {
     private ArrayList<Instant> tabTemps = null;
 
 
-    public Activite(String pNom, Instant pDate, Sport pSport, Duration pDuree, double pDistance) {
+    public Activite(String pNom, Instant pDate, Sport pSport, int pDuree, double pDistance) {
 
         try
         {
-            if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree))
+            if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree)&& validerSport(pSport))
             {
                 setNom(pNom);
                 setDate(pDate);
@@ -57,7 +57,8 @@ public class Activite {
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance);
                 setDistanceImperiale(pDistance);
-                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3.6);
+                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000)*3600);
+                setVitesseImperiale(getVitesseMetrique()*1000*METRE_MILES);
             }
         }catch(Exception e)
         {
@@ -66,45 +67,56 @@ public class Activite {
     }
 
     public Activite(String pNom, Instant pDate, Sport pSport, File pFichier) {
-        if (validerNom(pNom) && validerFichier(pFichier)) {
 
-            tabLatitude = new ArrayList<>();
-            tabLongitude = new ArrayList<>();
-            tabTemps = new ArrayList<>();
-            tabElevationMetrique = new ArrayList<>();
-            tabDistanceMetrique = new ArrayList<>();
-            tabVitesseMetrique = new ArrayList<>();
+        try
+        {
 
 
-            setNom(pNom);
-            setDate(pDate);
-            setSport(pSport);
+            if (validerNom(pNom) && validerFichier(pFichier) && validerSport(pSport))
+            {
 
-            // lire fichier + setTableaux
-            ArrayList<ArrayList<?>> tabRetour = Fichiers.lireFichier(pFichier, tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
+                tabLatitude = new ArrayList<>();
+                tabLongitude = new ArrayList<>();
+                tabTemps = new ArrayList<>();
+                tabElevationMetrique = new ArrayList<>();
+                tabDistanceMetrique = new ArrayList<>();
+                tabVitesseMetrique = new ArrayList<>();
 
-            tabLatitude = (ArrayList<Double>) tabRetour.get(0);
-            tabLongitude = (ArrayList<Double>) tabRetour.get(1);
-            tabElevationMetrique = (ArrayList<Double>) tabRetour.get(2);
-            tabTemps = (ArrayList<Instant>) tabRetour.get(3);
 
-            heureDebut = tabTemps.get(0);
-            heureFin = tabTemps.get(tabTemps.size() - 1);
-            duree = Duration.between(heureDebut, heureFin);
+                setNom(pNom);
+                setDate(pDate);
+                setSport(pSport);
 
-            setDistanceMetrique(calculerDistance(0, tabDistanceMetrique.size() - 1));
-            setDistanceImperiale(getDistanceImperiale());
-            calculerDenivele();
-            setVitesseActuelleMetrique(getVitesseActuelleMetrique());
-            setVitesseActuelleImperiale(getVitesseActuelleImperiale());
-            setVitesseMetrique(getVitesseMetrique());
-            setVitesseImperiale(getVitesseImperiale());
-            setAltitudeMaxMetrique(getAltitudeMaxMetrique());
-            setAltitudeMaxImperiale(getAltitudeMaxImperiale());
-            setAltitudeMinMetrique(getAltitudeMinMetrique());
-            setAltitudeMinImperiale(getAltitudeMinImperiale());
-            setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
-            setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
+                // lire fichier + setTableaux
+                ArrayList<ArrayList<?>> tabRetour = Fichiers.lireFichier(pFichier, tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
+
+                tabLatitude = (ArrayList<Double>) tabRetour.get(0);
+                tabLongitude = (ArrayList<Double>) tabRetour.get(1);
+                tabElevationMetrique = (ArrayList<Double>) tabRetour.get(2);
+                tabTemps = (ArrayList<Instant>) tabRetour.get(3);
+
+                heureDebut = tabTemps.get(0);
+                heureFin = tabTemps.get(tabTemps.size() - 1);
+                duree = Duration.between(heureDebut, heureFin);
+
+                setDistanceMetrique(calculerDistance(0, tabDistanceMetrique.size() - 1));
+                setDistanceImperiale(getDistanceMetrique()*METRE_MILES);
+                calculerDenivele();
+                setVitesseActuelleMetrique(getVitesseActuelleMetrique());
+                setVitesseActuelleImperiale(getVitesseActuelleImperiale());
+                setVitesseMetrique(getVitesseMetrique());
+                setVitesseImperiale(getVitesseMetrique()*METRE_MILES);
+                setAltitudeMaxMetrique(getAltitudeMaxMetrique());
+                setAltitudeMaxImperiale(getAltitudeMaxImperiale());
+                setAltitudeMinMetrique(getAltitudeMinMetrique());
+                setAltitudeMinImperiale(getAltitudeMinImperiale());
+                setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
+                setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Paramètre invalide");
         }
     }
 
@@ -132,16 +144,20 @@ public class Activite {
     }
 
     public void setSport(Sport sport) {
+        if(validerSport(sport))
+        {
         this.sport = sport;
-    }
+    }}
 
     public Duration getDuree() {
         return duree;
     }
 
-    public void setDuree(Duration duree) {
-        this.duree = duree;
-    }
+    public void setDuree(int duree) {
+        if(validerDuree(duree))
+        {
+        this.duree = Duration.ofMinutes(duree);
+    }}
 
     public Instant getHeureDebut() {
         return heureDebut;
@@ -163,20 +179,27 @@ public class Activite {
         return this.distanceMetrique;
     }
 
-    public void setDistanceMetrique(double distanceMetrique) {
+    public void setDistanceMetrique(double distanceMetrique)
+    {
+        if(validerDistance(distanceMetrique))
+        {
         this.distanceMetrique = distanceMetrique;
+    }}
+
+    public double getDistanceImperiale() {
+        return this.getDistanceMetrique() ;
+    }
+
+    public void setDistanceImperiale(double distance)
+    {
+        if(validerDistance(distance))
+        {
+        this.distanceImperiale = distance;
+         }
     }
 
     public double getDenivelePositifMetrique() {
         return denivelePositifMetrique;
-    }
-
-    public double getDistanceImperiale() {
-        return this.getDistanceMetrique() * METRE_MILES;
-    }
-
-    public void setDistanceImperiale(double distanceImperiale) {
-        this.distanceImperiale = distanceImperiale;
     }
 
     public void setDenivelePositifMetrique(double denivelePositifMetrique) {
@@ -236,7 +259,7 @@ public class Activite {
 
     //calculer en miles/h
     public double getVitesseImperiale() {
-        return getDistanceImperiale() / 3600;
+        return this.vitesseImperiale;
     }
 
     public void setVitesseImperiale(double vitesseImperiale) {
@@ -316,8 +339,13 @@ public class Activite {
         return pDistance>0;
     }
 
-    private boolean validerDuree(Duration pDuree) {
-        return !pDuree.isZero() && !pDuree.isNegative();
+    private boolean validerDuree(int pDuree) {
+        return pDuree>0;
+    }
+
+    private boolean validerSport(Sport pSport)
+    {
+        return pSport!= null;
     }
 
     private boolean validerFichier(File pFichier) {

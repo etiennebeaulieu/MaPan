@@ -50,11 +50,11 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     }
 
     public void test() {
-        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 19.5);
-        Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, Duration.ofMillis(4500000), 20.5);
-        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, Duration.ofMillis(4500000), 21.5);
-        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, Duration.ofMillis(4500000), 90.5);
-        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, Duration.ofMillis(4500000), 50.5);
+        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(1700000), Sport.SKI_RANDONNEE, 75, 19.5);
+        Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, 75, 20.5);
+        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, 75, 21.5);
+        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, 75, 90.5);
+        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, 75, 50.5);
 
         listeActivites.add(a3);
         listeActivites.add(a1);

@@ -45,14 +45,12 @@ public class Activite {
     private ArrayList<Instant> tabTemps = null;
 
 
-    public Activite(String pNom, Instant pDate, Sport pSport, Duration pDuree, Instant pHeureDebut, Instant pHeureFin, double pDistance) {
+    public Activite(String pNom, Instant pDate, Sport pSport, Duration pDuree, double pDistance) {
         if (validerNom(pNom)) {
             setNom(pNom);
             setDate(pDate);
             setSport(pSport);
             setDuree(pDuree);
-            setHeureDebut(pHeureDebut);
-            setHeureFin(pHeureFin);
             setDistanceMetrique(pDistance);
             setDistanceImperiale(pDistance);
             setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().toEpochMilli(), getHeureFin().toEpochMilli()) * 3.6);

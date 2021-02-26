@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mapan.R;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -53,11 +55,11 @@ public class ControleurHistorique extends AppCompatActivity {
     }
 
     public void test() {
-        Activite a1 = new Activite("Activité 1", new Date(170000000), Sport.SKI_RANDONNEE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
-        Activite a2 = new Activite("Activité 2", new Date(170000000), Sport.COURSE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
-        Activite a3 = new Activite("Activité 3", new Date(170000000), Sport.RANDONNEE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
-        Activite a4 = new Activite("Activité 4", new Date(170000000), Sport.RAQUETTE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
-        Activite a5 = new Activite("Activité 5", new Date(170000000), Sport.VELO, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
+        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 20.5);
+        Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, Duration.ofMillis(4500000), 20.5);
+        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, Duration.ofMillis(4500000), 20.5);
+        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, Duration.ofMillis(4500000), 20.5);
+        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, Duration.ofMillis(4500000), 20.5);
 
         listeActivites.add(a1);
         listeActivites.add(a2);

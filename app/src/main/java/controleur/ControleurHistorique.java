@@ -40,7 +40,7 @@ import java.util.Observer;
 import modele.Activite;
 import modele.Sport;
 
-public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class ControleurHistorique extends AppCompatActivity {
 
     private ArrayList<Activite> listeActivites = new ArrayList<>();
     private ListView historique_list;
@@ -60,7 +60,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     }
 
     public void test() {
-        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 20.5);
+        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 20.5);
         Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, Duration.ofMillis(4500000), 20.5);
         Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, Duration.ofMillis(4500000), 20.5);
         Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, Duration.ofMillis(4500000), 20.5);

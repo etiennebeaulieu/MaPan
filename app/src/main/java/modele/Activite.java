@@ -53,7 +53,7 @@ public class Activite {
             setDuree(pDuree);
             setDistanceMetrique(pDistance);
             setDistanceImperiale(pDistance);
-            setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().toEpochMilli(), getHeureFin().toEpochMilli()) * 3.6);
+            setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis()/1000) * 3.6);
         }
     }
 
@@ -359,9 +359,7 @@ public class Activite {
         }
     }
 
-    public double calculerVitesseMoyenne(long debut, long fin) {
-        long temps = fin - debut / 1000;
-
+    public double calculerVitesseMoyenne(long temps) {
         return getDistanceMetrique() / temps;
     }
 

@@ -1,7 +1,9 @@
 package controleur;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -128,6 +131,17 @@ public class ControleurHistorique extends AppCompatActivity {
 
     public void trierListeSport() {
         listeActivites.sort(Comparator.comparing(Activite::getSport));
+    }
+
+    public void afficherModifier(View view) {
+        ImageButton boutonModifier = (ImageButton)findViewById(R.id.historique_editButton);
+
+        boutonModifier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent());
+            }
+        });
     }
 
     public void deleteActivity(View view) {

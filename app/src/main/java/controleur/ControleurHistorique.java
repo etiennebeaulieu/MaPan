@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +41,7 @@ import java.util.Observer;
 import modele.Activite;
 import modele.Sport;
 
-public class ControleurHistorique extends AppCompatActivity {
+public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     private ArrayList<Activite> listeActivites = new ArrayList<>();
     private ListView historique_list;
@@ -60,17 +61,17 @@ public class ControleurHistorique extends AppCompatActivity {
     }
 
     public void test() {
-        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 20.5);
+        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(170000), Sport.SKI_RANDONNEE, Duration.ofMillis(4500000), 19.5);
         Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, Duration.ofMillis(4500000), 20.5);
-        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, Duration.ofMillis(4500000), 20.5);
-        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, Duration.ofMillis(4500000), 20.5);
-        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, Duration.ofMillis(4500000), 20.5);
+        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, Duration.ofMillis(4500000), 21.5);
+        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, Duration.ofMillis(4500000), 90.5);
+        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, Duration.ofMillis(4500000), 50.5);
 
-        listeActivites.add(a1);
-        listeActivites.add(a2);
         listeActivites.add(a3);
-        listeActivites.add(a4);
+        listeActivites.add(a1);
         listeActivites.add(a5);
+        listeActivites.add(a2);
+        listeActivites.add(a4);
 
 
     }
@@ -122,22 +123,27 @@ public class ControleurHistorique extends AppCompatActivity {
 
     public void trierListeDate() {
         listeActivites.sort(Comparator.comparing(Activite::getDate));
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
 
     public void trierListeDuree() {
         listeActivites.sort(Comparator.comparing(Activite::getDuree));
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
 
     public void trierListeDistance() {
         listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
 
     public void trierListeNom() {
         listeActivites.sort(Comparator.comparing(Activite::getNom));
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
 
     public void trierListeSport() {
         listeActivites.sort(Comparator.comparing(Activite::getSport));
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
     public void afficherModifier(View view) {
         ImageButton boutonModifier = (ImageButton) findViewById(R.id.historique_editButton);
@@ -182,15 +188,23 @@ public class ControleurHistorique extends AppCompatActivity {
             case R.id.triNom:
                 trierListeNom();
                 retour = true;
+                break;
+
             case R.id.triSport:
                 trierListeSport();
                 retour = true;
+                break;
+
             case R.id.triDistance:
                 trierListeDistance();
                 retour = true;
+                break;
+
             case R.id.triDuree:
                 trierListeDuree();
                 retour = true;
+                break;
+
             default:
                 retour = false;
         }

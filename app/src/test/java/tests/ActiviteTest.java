@@ -118,12 +118,18 @@ catch (Exception e)
         activite1.setNom("Nouveau nom");
         assertTrue(activite1.getNom().equals("Nouveau nom"));
 
-        
+        activite1.setNom(null);
+        assertTrue(activite1.getNom().equals("Nouveau nom"));
+
+        activite1.setNom("");
+        assertTrue(activite1.getNom().equals("Nouveau nom"));
+
     }
 
     @Test
     public void getDate()
     {
+
     }
 
     @Test
@@ -134,6 +140,7 @@ catch (Exception e)
     @Test
     public void getSport()
     {
+
     }
 
     @Test

@@ -1,5 +1,6 @@
 package controleur;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.application.Application;
 import com.example.mapan.R;
 
 public class ControleurParametre extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -58,4 +60,9 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    public void ouvrirAccueil(View view){
+        startActivity(new Intent(ControleurParametre.this, Application.class));
+    }
+
 }

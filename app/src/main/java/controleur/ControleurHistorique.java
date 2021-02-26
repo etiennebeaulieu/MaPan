@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.application.Application;
 import com.example.mapan.R;
 
 import java.time.Duration;
@@ -154,6 +155,14 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
                 startActivity(new Intent());
             }
         });
+    }
+
+    public void ouvrirAccueil(View view){
+        startActivity(new Intent(ControleurHistorique.this, Application.class));
+    }
+
+    public void ouvrirParametre(View view){
+        startActivity(new Intent(ControleurHistorique.this, ControleurParametre.class));
     }
 
     public void deleteActivity(View view) {

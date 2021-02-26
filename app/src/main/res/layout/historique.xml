@@ -142,6 +142,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:onClick="ouvrirAccueil"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/maison" />
 
@@ -152,6 +153,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:onClick="ouvrirParametre"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/setting" />
 

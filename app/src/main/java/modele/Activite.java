@@ -46,14 +46,22 @@ public class Activite {
 
 
     public Activite(String pNom, Instant pDate, Sport pSport, Duration pDuree, double pDistance) {
-        if (validerNom(pNom)) {
-            setNom(pNom);
-            setDate(pDate);
-            setSport(pSport);
-            setDuree(pDuree);
-            setDistanceMetrique(pDistance);
-            setDistanceImperiale(pDistance);
-            setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis()/1000) * 3.6);
+
+        try
+        {
+            if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree))
+            {
+                setNom(pNom);
+                setDate(pDate);
+                setSport(pSport);
+                setDuree(pDuree);
+                setDistanceMetrique(pDistance);
+                setDistanceImperiale(pDistance);
+                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3.6);
+            }
+        }catch(Exception e)
+        {
+            System.out.println("Paramètre invalide");
         }
     }
 
@@ -105,7 +113,10 @@ public class Activite {
     }
 
     public void setNom(String nom) {
-        this.nom = nom;
+        if(validerNom(nom))
+        {
+            this.nom = nom;
+        }
     }
 
     public Instant getDate() {
@@ -300,8 +311,13 @@ public class Activite {
         return !pNom.isEmpty();
     }
 
-    private boolean validerDate() {
-        return true;
+    private boolean validerDistance(double pDistance)
+    {
+        return pDistance>0;
+    }
+
+    private boolean validerDuree(Duration pDuree) {
+        return !pDuree.isZero() && !pDuree.isNegative();
     }
 
     private boolean validerFichier(File pFichier) {

@@ -12,7 +12,7 @@ public enum Sport {
     private final String nom;
     private final int image;
 
-    Sport(String nom, int image) {
+    private Sport(String nom, int image) {
         this.nom = nom;
         this.image = image;
     }

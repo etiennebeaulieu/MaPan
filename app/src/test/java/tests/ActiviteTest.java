@@ -3,15 +3,41 @@ package tests;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.Duration;
+import java.time.Instant;
+
+import modele.Activite;
+import modele.Sport;
+
 import static org.junit.Assert.*;
 
 public class ActiviteTest
 {
 
+    Activite activite1,activite2,activite3,activite4,
+            activite5,activite6,activite7,activite8,
+            activite9,activite10,activite11,activite12,
+            activite13,activite14,activite15,activite16;
+
     @Before
     public void ActiviteTest()
     {
-
+        activite1 = new Activite("Activité 1", Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(60), 6.0);
+        activite2 = new Activite("Activité 2",Instant.now(),Sport.RANDONNEE,Duration.ofMinutes(80),6.40);
+        activite3 = new Activite("Activité 3",Instant.now(),Sport.COURSE,Duration.ofMinutes(10),2.21);
+        activite4 = new Activite("Activité 4",Instant.now(),Sport.COURSE,Duration.ofMinutes(30),4.60);
+        activite5 = new Activite("Activité 5",Instant.now(),Sport.VELO,Duration.ofMinutes(90),20.73);
+        activite6 = new Activite("Activité 6",Instant.now(),Sport.VELO,Duration.ofMinutes(20),10.20);
+        activite7 = new Activite("Activité 7",Instant.now(),Sport.RAQUETTE,Duration.ofMinutes(50),4.75);
+        activite8 = new Activite("Activité 8",Instant.now(),Sport.RAQUETTE,Duration.ofMinutes(60),5.20);
+        activite9 = new Activite("Activité 9",Instant.now(),Sport.SKI_RANDONNEE,Duration.ofMinutes(120),12.30);
+        activite10 = new Activite("Activité 10",Instant.now(),Sport.SKI_RANDONNEE,Duration.ofMinutes(100),4.90);
+        activite11 = new Activite("Activité 11",Instant.now(),Sport.SKI,Duration.ofMinutes(70),7.60);
+        activite12 = new Activite("Activité 12",Instant.now(),Sport.SKI,Duration.ofMinutes(90),9.42);
+        activite13 = new Activite("Activité 13",Instant.now(),Sport.PATIN,Duration.ofMinutes(45),7.3);
+        activite14 = new Activite("Activité 14",Instant.now(),Sport.PATIN,Duration.ofMinutes(25),3.4);
+        activite15 = new Activite("Activité 15",Instant.now(),Sport.SKI_FOND,Duration.ofMinutes(35),8.4);
+        activite16 = new Activite("Activité 16",Instant.now(),Sport.SKI_FOND,Duration.ofMinutes(12),1.9);
     }
 
     @Before
@@ -21,13 +47,78 @@ public class ActiviteTest
     }
 
     @Test
+    public void ActiviteInvalide()
+    {
+try
+{
+   new Activite("", Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(60), 6.0);
+
+}
+catch (Exception e)
+{
+}
+        try
+        {
+            new Activite(null, Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(60), 6.0);
+
+        }
+        catch (Exception e)
+        {
+        }
+        try
+        {
+            new Activite("Allo", Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(0), 6.0);
+
+        }
+        catch (Exception e)
+        {
+        }
+        try
+        {
+            new Activite("Allo", Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(-5), 6.0);
+
+        }
+        catch (Exception e)
+        {
+        }
+        try
+        {
+            new Activite("Allo", Instant.now(), Sport.RANDONNEE, Duration.ofMinutes(60), -1);
+        }
+        catch (Exception e)
+        {
+        }
+    }
+
+    @Test
     public void getNom()
     {
+       assertTrue(activite1.getNom().equals("Activité 1"));
+       assertTrue(activite2.getNom().equals("Activité 2"));
+       assertTrue(activite3.getNom().equals("Activité 3"));
+       assertTrue(activite4.getNom().equals("Activité 4"));
+        assertTrue(activite5.getNom().equals("Activité 5"));
+        assertTrue(activite6.getNom().equals("Activité 6"));
+        assertTrue(activite7.getNom().equals("Activité 7"));
+        assertTrue(activite8.getNom().equals("Activité 8"));
+        assertTrue(activite9.getNom().equals("Activité 9"));
+        assertTrue(activite10.getNom().equals("Activité 10"));
+        assertTrue(activite11.getNom().equals("Activité 11"));
+        assertTrue(activite12.getNom().equals("Activité 12"));
+        assertTrue(activite13.getNom().equals("Activité 13"));
+        assertTrue(activite14.getNom().equals("Activité 14"));
+        assertTrue(activite15.getNom().equals("Activité 15"));
+        assertTrue(activite16.getNom().equals("Activité 16"));
+
     }
 
     @Test
     public void setNom()
     {
+        activite1.setNom("Nouveau nom");
+        assertTrue(activite1.getNom().equals("Nouveau nom"));
+
+        
     }
 
     @Test

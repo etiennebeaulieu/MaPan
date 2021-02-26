@@ -5,20 +5,26 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icon_mapan"
-        android:label= "Historique"
+        android:label= "MaPan"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaPan">
+            <activity android:name="com.example.application.Application">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN"/>
+                    <category android:name="android.intent.category.LAUNCHER"/>
+                </intent-filter>
+            </activity>
         <activity android:name="controleur.ControleurHistorique">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name="controleur.ControleurParametre">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
     </application>

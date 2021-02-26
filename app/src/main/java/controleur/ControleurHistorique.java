@@ -2,23 +2,15 @@ package controleur;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.renderscript.ScriptGroup;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -26,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.application.Application;
 import com.example.mapan.R;
@@ -35,9 +26,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Observer;
 
 import modele.Activite;
 import modele.Sport;
@@ -53,7 +41,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique);
-        historique_list = findViewById(R.id.historique_list);
+        historique_list = findViewById(R.id.modifier_list);
 
         test();
 
@@ -146,19 +134,13 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         listeActivites.sort(Comparator.comparing(Activite::getSport));
         historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
     }
-    public void afficherModifier(View view) {
-        ImageButton boutonModifier = (ImageButton) findViewById(R.id.historique_editButton);
-
-        boutonModifier.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent());
-            }
-        });
-    }
 
     public void ouvrirAccueil(View view){
         startActivity(new Intent(ControleurHistorique.this, Application.class));
+    }
+
+    public void ouvrirModifier(View view){
+        startActivity(new Intent(ControleurHistorique.this, ControleurHistoriqueModifier.class));
     }
 
     public void ouvrirParametre(View view){

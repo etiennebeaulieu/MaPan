@@ -58,6 +58,17 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/stat_sys_download" />
 
+            <ImageButton
+                android:id="@+id/modifier_retour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:onClick="ouvrirHistorique"
+                android:scaleType="fitCenter"
+                app:srcCompat="@android:drawable/ic_menu_revert" />
+
         </LinearLayout>
 
         <FrameLayout
@@ -66,7 +77,7 @@
             tools:layout_weight="1">
 
             <ListView
-                android:id="@+id/historique_list"
+                android:id="@+id/modifier_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#FFFFFF">

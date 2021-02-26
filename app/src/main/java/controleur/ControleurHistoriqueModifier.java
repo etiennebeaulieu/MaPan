@@ -37,9 +37,6 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique_modifier);
-
-        listeActivites = historique.getListeActivite();
-        
     }
 
 

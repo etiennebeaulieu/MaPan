@@ -66,7 +66,7 @@
             tools:layout_weight="1">
 
             <ListView
-                android:id="@+id/modifier_listActivity"
+                android:id="@+id/historique_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#FFFFFF">
@@ -119,6 +119,7 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/deletes_selected_activity"
+                android:onClick="deleteActivity"
                 android:scaleType="fitCenter"
                 android:tint="#FFFFFF"
                 app:srcCompat="@android:drawable/ic_menu_delete" />

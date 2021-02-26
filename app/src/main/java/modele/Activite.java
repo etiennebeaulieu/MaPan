@@ -56,7 +56,7 @@ if(validerNom(pNom))
     setHeureFin(pHeureFin);
     setDistanceMetrique(pDistance);
     setDistanceImperiale(pDistance);
-    setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().getTime(), getHeureFin().getTime())*3.6);
+    setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().toEpochMilli(), getHeureFin().toEpochMilli())*3.6);
 }
     }
     public Activite(String pNom, Instant pDate, Sport pSport, File pFichier)
@@ -77,14 +77,11 @@ if(validerNom(pNom))
             setSport(pSport);
 
             // lire fichier + setTableaux
-            Fichiers.lireFichier(tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
+            Fichiers.lireFichier(pFichier, tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
 
             heureDebut = tabTemps.get(0);
             heureFin = tabTemps.get(tabTemps.size()-1);
             duree = Duration.between(heureDebut, heureFin);
-            //heureDebut  = 1er point ficher
-            //heureFin = dernier point fichier
-            //duree = dernier-1er
 
             setDistanceMetrique(calculerDistance(0,tabDistanceMetrique.size()-1));
             setDistanceImperiale(getDistanceImperiale());

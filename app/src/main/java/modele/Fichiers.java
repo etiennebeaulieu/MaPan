@@ -16,73 +16,64 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public  class Fichiers
-{
+public class Fichiers {
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabEle, ArrayList<Instant> tabTime)
-    {
+    public static ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabEle, ArrayList<Instant> tabTime) {
         ArrayList<ArrayList<?>> tabAtt = null;
 
         SAXBuilder builder = new SAXBuilder();
         File xmlFile = new File("c:\\file.xml");
 
-        if(fichier != null ){
-tabAtt = new ArrayList<ArrayList<?>>();
+        if (fichier != null) {
+            tabAtt = new ArrayList<ArrayList<?>>();
 
-        try
-        {
+            try {
 
-            Document document = (Document) builder.build(xmlFile);
-            Element rootNode = document.getRootElement();
-            List list = rootNode.getChildren("trkpt");
+                Document document = (Document) builder.build(xmlFile);
+                Element rootNode = document.getRootElement();
+                List list = rootNode.getChildren("trkpt");
 
-            for (int i = 0; i < list.size(); i++)
-            {
+                for (int i = 0; i < list.size(); i++) {
 
-                Element node = (Element) list.get(i);
+                    Element node = (Element) list.get(i);
 
 
-                Double lat = Double.parseDouble(node.getAttributeValue("lat"));
-                tabLat.add(lat);
+                    Double lat = Double.parseDouble(node.getAttributeValue("lat"));
+                    tabLat.add(lat);
 
-                Double lon = Double.parseDouble(node.getAttributeValue("lon"));
-                tabLon.add(lon);
+                    Double lon = Double.parseDouble(node.getAttributeValue("lon"));
+                    tabLon.add(lon);
 
 
-                Double ele = Double.parseDouble(node.getAttributeValue("ele"));
-                tabEle.add(ele);
+                    Double ele = Double.parseDouble(node.getAttributeValue("ele"));
+                    tabEle.add(ele);
 
-                Instant time = Instant.parse(node.getAttributeValue("time"));
-                tabTime.add(time);
+                    Instant time = Instant.parse(node.getAttributeValue("time"));
+                    tabTime.add(time);
 
+                }
+                tabAtt.add(tabLat);
+                tabAtt.add(tabLon);
+                tabAtt.add(tabEle);
+                tabAtt.add(tabTime);
+
+            } catch (IOException | JDOMException io) {
+                System.out.println(io.getMessage());
             }
-            tabAtt.add(tabLat);
-            tabAtt.add(tabLon);
-            tabAtt.add(tabEle);
-            tabAtt.add(tabTime);
-
         }
-        catch (IOException | JDOMException io)
-        {
-            System.out.println(io.getMessage());
-        }
-    }
 
 
         return tabAtt;
     }
 
 
-    public static void ecrireFichier(Activite activite)
-    {
+    public static void ecrireFichier(Activite activite) {
         ArrayList<Double> tabLatitude = activite.getTabLatitude();
         ArrayList<Double> tabLongitude = activite.getTabLongitude();
         ArrayList<Double> tabElevation = activite.getTabElevationMetrique();
         ArrayList<Instant> tabTemps = activite.getTabTemps();
 
-        try
-        {
+        try {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
             doc.setRootElement(gpx);
@@ -93,9 +84,8 @@ tabAtt = new ArrayList<ArrayList<?>>();
 
             Element segment = new Element("trkseg");
 
-            for (int i = 0; i < tabLatitude.size(); i++)
-            {
-                Element point = new Element("trkpt")
+            for (int i = 0; i < tabLatitude.size(); i++) {
+                Element point = new Element("trkpt");
                 point.setAttribute(new Attribute("lat", tabLatitude.get(i).toString()));
                 point.setAttribute(new Attribute("lon", tabLongitude.get(i).toString()));
                 point.addContent(new Element("ele").setText(tabElevation.get(i).toString()));
@@ -104,8 +94,7 @@ tabAtt = new ArrayList<ArrayList<?>>();
                 segment.addContent(point);
             }
 
-        } catch (IOException e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

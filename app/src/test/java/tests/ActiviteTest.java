@@ -140,7 +140,22 @@ catch (Exception e)
     @Test
     public void getSport()
     {
-
+        assertTrue(activite1.getSport().equals(Sport.RANDONNEE));
+        assertTrue(activite2.getSport().equals(Sport.RANDONNEE));
+        assertTrue(activite3.getSport().equals(Sport.COURSE));
+        assertTrue(activite4.getSport().equals(Sport.COURSE));
+        assertTrue(activite5.getSport().equals(Sport.VELO));
+        assertTrue(activite6.getSport().equals(Sport.VELO));
+        assertTrue(activite7.getSport().equals(Sport.RAQUETTE));
+        assertTrue(activite8.getSport().equals(Sport.RAQUETTE));
+        assertTrue(activite9.getSport().equals(Sport.SKI_RANDONNEE));
+        assertTrue(activite10.getSport().equals(Sport.SKI_RANDONNEE));
+        assertTrue(activite11.getSport().equals(Sport.SKI));
+        assertTrue(activite12.getSport().equals(Sport.SKI));
+        assertTrue(activite13.getSport().equals(Sport.PATIN));
+        assertTrue(activite14.getSport().equals(Sport.PATIN));
+        assertTrue(activite15.getSport().equals(Sport.SKI_FOND));
+        assertTrue(activite16.getSport().equals(Sport.SKI_FOND));
     }
 
     @Test

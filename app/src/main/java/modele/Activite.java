@@ -308,7 +308,7 @@ public class Activite {
     }
 
     private boolean validerNom(String pNom) {
-        return !pNom.isEmpty();
+        return !pNom.isEmpty() && pNom != null;
     }
 
     private boolean validerDistance(double pDistance)

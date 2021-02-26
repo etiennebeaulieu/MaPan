@@ -1,24 +1,87 @@
 package modele;
 
-import org.jdom2.*;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
-import modele.Activite;
+public static class Fichiers
+{
 
-public class Fichiers {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabele, ArrayList<Instant> tabTime)
+    {
+        ArrayList<ArrayList<?>> tabAtt = null;
 
-    public void lireFichier() {
+        SAXBuilder builder = new SAXBuilder();
+        File xmlFile = new File("c:\\file.xml");
 
+        if(fichier != null ){
+tabAtt = new ArrayList<ArrayList<?>>();
+
+        try
+        {
+
+            Document document = (Document) builder.build(xmlFile);
+            Element rootNode = document.getRootElement();
+            List list = rootNode.getChildren("trkpt");
+
+            for (int i = 0; i < list.size(); i++)
+            {
+
+                Element node = (Element) list.get(i);
+
+
+                Double lat = Double.parseDouble(node.getAttributeValue("lat"));
+                tabLat.add(lat);
+
+                Double lon = Double.parseDouble(node.getAttributeValue("lon"));
+                tabLon.add(lon);
+
+
+                Double ele = Double.parseDouble(node.getAttributeValue("ele"));
+                tabele.add(ele);
+
+                Instant time = Instant.parse(node.getAttributeValue("time"));
+                tabTime.add(time);
+
+            }
+            tabAtt.add(tabLat);
+            tabAtt.add(tabLon);
+            tabAtt.add(tabele);
+            tabAtt.add(tabTime);
+
+        }
+        catch (IOException io)
+        {
+            System.out.println(io.getMessage());
+        }
     }
 
-    public void ecrireFichier(Activite activite) {
+
+        return tabAtt;
+    }
+
+
+    public void ecrireFichier(Activite activite)
+    {
         ArrayList<Double> tabLatitude = activite.getTabLatitude();
         ArrayList<Double> tabLongitude = activite.getTabLongitude();
         ArrayList<Double> tabElevation = activite.getTabElevationMetrique();
         ArrayList<Date> tabTemps = activite.getTabTemps();
 
-        try {
+        try
+        {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
             doc.setRootElement(gpx);
@@ -29,16 +92,20 @@ public class Fichiers {
 
             Element segment = new Element("trkseg");
 
-            for (int i = 0; i < tabLatitude.size(); i++) {
+            for (int i = 0; i < tabLatitude.size(); i++)
+            {
                 Element point = new Element("trkpt")
                 point.setAttribute(new Attribute("lat", tabLatitude.get(i).toString()));
                 point.setAttribute(new Attribute("lon", tabLongitude.get(i).toString()));
                 point.addContent(new Element("ele").setText(tabElevation.get(i).toString()));
-                point.addContent(new Element("time").setText(tabTemps.get(i).toString));
+                point.addContent(new Element("time").setText(tabTemps.get(i).toString()));
 
                 segment.addContent(point);
             }
 
+        } catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 

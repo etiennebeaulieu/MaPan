@@ -52,22 +52,28 @@ if(validerNom(pNom))
     setHeureDebut(pHeureDebut);
     setHeureFin(pHeureFin);
     setDistanceMetrique(pDistance);
-    setVitesseMetrique(getDistanceMetrique()*3.6);
+    setDistanceImperiale(pDistance);
+    setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().getTime(), getHeureFin().getTime())*3.6);
 }
     }
     public Activite(String pNom, Date pDate, Sport pSport, File pFichier)
     {
         if(validerNom(pNom) && validerFichier(pFichier))
         {
-            setNom(pNom);
-            setDate(pDate);
-            setSport(pSport);
 
             tabLatitude = new ArrayList<>();
             tabLongitude = new ArrayList<>();
             tabElevationMetrique = new ArrayList<>();
             tabDistanceMetrique = new ArrayList<>();
             tabVitesseMetrique = new ArrayList<>();
+
+            heureDebut = new Date();
+            heureFin = new Date();
+            duree = new Date();
+
+            setNom(pNom);
+            setDate(pDate);
+            setSport(pSport);
 
             // lire fichier + setTableaux
 
@@ -213,7 +219,7 @@ if(validerNom(pNom))
 
     //calculer en km/h
     public double getVitesseMetrique() {
-        return  getDistanceMetrique()*3.6;
+        return  vitesseMetrique;
     }
 
     public void setVitesseMetrique(double vitesseMetrique) {
@@ -308,6 +314,8 @@ if(validerNom(pNom))
         double lon1;
         double lat2;
         double lon2;
+        double ele1;
+        double ele2;
 
         for(int i = debut; i<fin;i++)
         {
@@ -315,12 +323,16 @@ if(validerNom(pNom))
             lon1 = tabLongitude.get(i);
             lat2 = tabLatitude.get(i+1);
             lon2 = tabLongitude.get(i+1);
+            ele1 = tabElevationMetrique.get(i);
+            ele2 = tabElevationMetrique.get(i+1);
 
             double theta = lon1 - lon2;
             double dx = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
             dx = Math.acos(dx);
             dx = Math.toDegrees(dx);
-            dx = dx * 1.609344 * 1000;
+            dx = dx * 6371009;
+
+            dx = Math.sqrt(Math.pow(dx,2)+Math.pow(ele2-ele1,2));
 
 
             distance += dx;
@@ -350,6 +362,13 @@ if(validerNom(pNom))
             setDenivelePositifImperiale(getDenivelePositifImperiale());
             setDeniveleNegatifImperiale(getDeniveleNegatifImperiale());
         }
+    }
+
+    public double calculerVitesseMoyenne(long debut, long fin)
+    {
+        long temps = fin - debut /1000;
+
+        return getDistanceMetrique()/temps;
     }
 
 

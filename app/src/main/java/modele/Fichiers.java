@@ -9,8 +9,11 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -67,7 +70,7 @@ public class Fichiers {
     }
 
 
-    public static void ecrireFichier(Activite activite) {
+    public static void ecrireFichier(Activite activite, File fichier) {
         ArrayList<Double> tabLatitude = activite.getTabLatitude();
         ArrayList<Double> tabLongitude = activite.getTabLongitude();
         ArrayList<Double> tabElevation = activite.getTabElevationMetrique();
@@ -94,7 +97,11 @@ public class Fichiers {
                 segment.addContent(point);
             }
 
-        } catch (Exception e) {
+            XMLOutputter xmlOutput = new XMLOutputter();
+            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.output(doc, new FileWriter(fichier));
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

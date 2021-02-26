@@ -122,7 +122,9 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour tout"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:trackTint="#FF5722"
+                        android:trackTintMode="src_over" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,7 +143,9 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour la distance"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:trackTint="#FF5722"
+                        android:trackTintMode="src_over" />
 
                 </LinearLayout>
 

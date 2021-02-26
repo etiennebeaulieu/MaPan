@@ -1,2 +1,3 @@
+include ':jdom-2.0.2'
 include ':app'
 rootProject.name = "MaPan"

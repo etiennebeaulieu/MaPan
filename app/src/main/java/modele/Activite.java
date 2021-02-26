@@ -1,6 +1,8 @@
 package modele;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -11,11 +13,11 @@ public class Activite {
     public static final double METRE_MILES = 0.000621371;
 
     private String nom = null;
-    private Date date = null;
+    private Instant date = null;
     private Sport sport = null;
-    private Date duree = null;
-    private Date heureDebut = null;
-    private Date heureFin = null;
+    private Duration duree = null;
+    private Instant heureDebut = null;
+    private Instant heureFin = null;
     private double distanceMetrique = 0;
     private double distanceImperiale = 0;
     private double denivelePositifMetrique = 0;
@@ -40,9 +42,10 @@ public class Activite {
     private ArrayList<Double> tabElevationMetrique = null;
     private ArrayList<Double> tabDistanceMetrique = null;
     private ArrayList<Double> tabVitesseMetrique = null;
+    private ArrayList<Instant> tabTemps = null;
 
 
-    public Activite(String pNom, Date pDate, Sport pSport, Date pDuree, Date pHeureDebut,Date pHeureFin,double pDistance) {
+    public Activite(String pNom, Instant pDate, Sport pSport, Duration pDuree, Instant pHeureDebut,Instant pHeureFin,double pDistance) {
 if(validerNom(pNom))
 {
     setNom(pNom);
@@ -56,27 +59,29 @@ if(validerNom(pNom))
     setVitesseMetrique(calculerVitesseMoyenne(getHeureDebut().getTime(), getHeureFin().getTime())*3.6);
 }
     }
-    public Activite(String pNom, Date pDate, Sport pSport, File pFichier)
+    public Activite(String pNom, Instant pDate, Sport pSport, File pFichier)
     {
         if(validerNom(pNom) && validerFichier(pFichier))
         {
 
             tabLatitude = new ArrayList<>();
             tabLongitude = new ArrayList<>();
+            tabTemps = new ArrayList<>();
             tabElevationMetrique = new ArrayList<>();
             tabDistanceMetrique = new ArrayList<>();
             tabVitesseMetrique = new ArrayList<>();
 
-            heureDebut = new Date();
-            heureFin = new Date();
-            duree = new Date();
 
             setNom(pNom);
             setDate(pDate);
             setSport(pSport);
 
             // lire fichier + setTableaux
+            Fichiers.lireFichier(tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
 
+            heureDebut = tabTemps.get(0);
+            heureFin = tabTemps.get(tabTemps.size()-1);
+            duree = Duration.between(heureDebut, heureFin);
             //heureDebut  = 1er point ficher
             //heureFin = dernier point fichier
             //duree = dernier-1er
@@ -105,11 +110,11 @@ if(validerNom(pNom))
         this.nom = nom;
     }
 
-    public Date getDate() {
+    public Instant getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Instant date) {
         this.date = date;
     }
 
@@ -121,27 +126,27 @@ if(validerNom(pNom))
         this.sport = sport;
     }
 
-    public Date getDuree() {
+    public Duration getDuree() {
         return duree;
     }
 
-    public void setDuree(Date duree) {
+    public void setDuree(Duration duree) {
         this.duree = duree;
     }
 
-    public Date getHeureDebut() {
+    public Instant getHeureDebut() {
         return heureDebut;
     }
 
-    public void setHeureDebut(Date heureDebut) {
+    public void setHeureDebut(Instant heureDebut) {
         this.heureDebut = heureDebut;
     }
 
-    public Date getHeureFin() {
+    public Instant getHeureFin() {
         return heureFin;
     }
 
-    public void setHeureFin(Date heureFin) {
+    public void setHeureFin(Instant heureFin) {
         this.heureFin = heureFin;
     }
 
@@ -273,6 +278,14 @@ if(validerNom(pNom))
 
     public void setTabVitesseMetrique(ArrayList<Double> tabVitesseMetrique) {
         this.tabVitesseMetrique = tabVitesseMetrique;
+    }
+
+    public ArrayList<Instant> getTabTemps() {
+        return tabTemps;
+    }
+
+    public void setTabTemps(ArrayList<Instant> tabTemps) {
+        this.tabTemps = tabTemps;
     }
 
     public Graphique getGraphique() {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,11 +30,12 @@ import java.util.Observer;
 import modele.Activite;
 import modele.Sport;
 
-public class ControleurHistorique extends AppCompatActivity{
+public class ControleurHistorique extends AppCompatActivity {
 
     private ArrayList<Activite> listeActivites = new ArrayList<>();
     private ListView historique_list;
     private boolean isDistanceMetrique = true;
+    private Button modifier_DeleteActivity;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,11 +45,11 @@ public class ControleurHistorique extends AppCompatActivity{
 
         test();
 
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row,listeActivites));
+        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
 
     }
 
-    public void test(){
+    public void test() {
         Activite a1 = new Activite("Activité 1", new Date(170000000), Sport.SKI_RANDONNEE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
         Activite a2 = new Activite("Activité 2", new Date(170000000), Sport.COURSE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
         Activite a3 = new Activite("Activité 3", new Date(170000000), Sport.RANDONNEE, new Date(15000), new Date(15000000), new Date(450000000), 20.5);
@@ -71,7 +73,7 @@ public class ControleurHistorique extends AppCompatActivity{
 
         public activiteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
             super(context, resource, objects);
-            this.mContext=context;
+            this.mContext = context;
             this.mResource = resource;
         }
 
@@ -92,7 +94,7 @@ public class ControleurHistorique extends AppCompatActivity{
             txtNom.setText(getItem(position).getNom());
             txtDate.setText(getItem(position).getDate().toString());
             txtDuree.setText(getItem(position).getDuree().toString());
-            if(isDistanceMetrique)
+            if (isDistanceMetrique)
                 txtDistance.setText(getItem(position).getDistanceMetrique() + "km");
             else
                 txtDistance.setText(getItem(position).getDistanceImperiale() + "mi");
@@ -108,25 +110,34 @@ public class ControleurHistorique extends AppCompatActivity{
     }
 
 
-   public void trierListeDate(){
-    listeActivites.sort(Comparator.comparing(Activite::getDate));
-   }
+    public void trierListeDate() {
+        listeActivites.sort(Comparator.comparing(Activite::getDate));
+    }
 
-   public void trierListeDuree(){
-    listeActivites.sort(Comparator.comparing(Activite::getDuree));
-   }
+    public void trierListeDuree() {
+        listeActivites.sort(Comparator.comparing(Activite::getDuree));
+    }
 
-   public void trierListeDistance(){
-    listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
-   }
+    public void trierListeDistance() {
+        listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
+    }
 
-   public void trierListeNom(){
-    listeActivites.sort(Comparator.comparing(Activite::getNom));
-   }
+    public void trierListeNom() {
+        listeActivites.sort(Comparator.comparing(Activite::getNom));
+    }
 
-   public void trierListeSport(){
-    listeActivites.sort(Comparator.comparing(Activite::getSport));
-   }
+    public void trierListeSport() {
+        listeActivites.sort(Comparator.comparing(Activite::getSport));
+    }
 
+    public void deleteActivity(View view) {
+        modifier_DeleteActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                historique_list.removeViewAt(historique_list.getSelectedItemPosition());
+                historique_list.deferNotifyDataSetChanged();
+            }
+        });
 
+    }
 }

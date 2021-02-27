@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.application.Application;
 import com.example.mapan.R;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,17 +35,28 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private ListView historique_list;
     private boolean isDistanceMetrique = true;
     private Button modifier_DeleteActivity;
+    private ActiviteAdapter adapter;
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique);
         historique_list = findViewById(R.id.modifier_list);
+        adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
+        historique_list.setAdapter(adapter);
 
-        test();
 
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
 
+        //test();
+
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        adapter.notifyDataSetChanged();
     }
 
     public void test() {
@@ -66,12 +76,12 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     }
 
 
-    private class activiteAdapter extends ArrayAdapter<Activite> {
+    private class ActiviteAdapter extends ArrayAdapter<Activite> {
 
         private Context mContext;
         private int mResource;
 
-        public activiteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
+        public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
             super(context, resource, objects);
             this.mContext = context;
             this.mResource = resource;
@@ -112,27 +122,27 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     public void trierListeDate() {
         listeActivites.sort(Comparator.comparing(Activite::getDate));
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
+        adapter.notifyDataSetChanged();
     }
 
     public void trierListeDuree() {
         listeActivites.sort(Comparator.comparing(Activite::getDuree));
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
+        adapter.notifyDataSetChanged();
     }
 
     public void trierListeDistance() {
         listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
+        adapter.notifyDataSetChanged();
     }
 
     public void trierListeNom() {
         listeActivites.sort(Comparator.comparing(Activite::getNom));
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
+        adapter.notifyDataSetChanged();
     }
 
     public void trierListeSport() {
         listeActivites.sort(Comparator.comparing(Activite::getSport));
-        historique_list.setAdapter(new activiteAdapter(this, R.layout.list_row, listeActivites));
+        adapter.notifyDataSetChanged();
     }
 
     public void ouvrirAccueil(View view){

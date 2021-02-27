@@ -80,12 +80,18 @@ public class Fichiers {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
             doc.setRootElement(gpx);
+            Element metadata = new Element("metadata");
+            metadata.addContent(new Element("nom").setText(activite.getNom()));
+            metadata.addContent(new Element("sport").setText(activite.getSport().getNom()));
+            metadata.addContent(new Element("date").setText(activite.getDate().toString()));
+
+            gpx.addContent(metadata);
 
 
             Element trace = new Element("trk");
-            trace.addContent(new Element("name").setText(activite.getNom()));
-
+            gpx.addContent(trace);
             Element segment = new Element("trkseg");
+            trace.addContent(segment);
 
             for (int i = 0; i < tabLatitude.size(); i++) {
                 Element point = new Element("trkpt");

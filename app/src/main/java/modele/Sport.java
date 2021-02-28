@@ -4,6 +4,8 @@ package modele;
 import android.media.Image;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.example.mapan.R;
 
 public enum Sport {
@@ -17,6 +19,7 @@ public enum Sport {
         this.image = image;
     }
 
+
     public String getNom() {
         return nom;
     }
@@ -24,4 +27,6 @@ public enum Sport {
     public int getImage() {
         return image;
     }
+
+
 }

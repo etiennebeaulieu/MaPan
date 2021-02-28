@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -65,33 +67,28 @@ public class Activite {
 
     public Activite(String pNom, Instant pDate, Sport pSport, int pDuree, double pDistance) {
 
-        try
-        {
-            if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree)&& validerSport(pSport))
-            {
+        try {
+            if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree) && validerSport(pSport)) {
                 setNom(pNom);
                 setDate(pDate);
                 setSport(pSport);
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance);
                 setDistanceImperiale(pDistance);
-                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000)*3600);
-                setVitesseImperiale(getVitesseMetrique()*1000*METRE_MILES);
+                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3600);
+                setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Paramètre invalide");
         }
     }
 
     public Activite(String pNom, Instant pDate, Sport pSport, File pFichier) {
 
-        try
-        {
+        try {
 
 
-            if (validerNom(pNom) && validerFichier(pFichier) && validerSport(pSport))
-            {
+            if (validerNom(pNom) && validerFichier(pFichier) && validerSport(pSport)) {
 
                 tabLatitude = new ArrayList<>();
                 tabLongitude = new ArrayList<>();
@@ -106,24 +103,19 @@ public class Activite {
                 setSport(pSport);
 
                 // lire fichier + setTableaux
-                ArrayList<ArrayList<?>> tabRetour = Fichiers.lireFichier(pFichier, tabLatitude, tabLongitude, tabElevationMetrique, tabTemps);
-
-                tabLatitude = (ArrayList<Double>) tabRetour.get(0);
-                tabLongitude = (ArrayList<Double>) tabRetour.get(1);
-                tabElevationMetrique = (ArrayList<Double>) tabRetour.get(2);
-                tabTemps = (ArrayList<Instant>) tabRetour.get(3);
+                this.lireFichier(pFichier);
 
                 heureDebut = tabTemps.get(0);
                 heureFin = tabTemps.get(tabTemps.size() - 1);
                 duree = Duration.between(heureDebut, heureFin);
 
                 setDistanceMetrique(calculerDistance(0, tabDistanceMetrique.size() - 1));
-                setDistanceImperiale(getDistanceMetrique()*METRE_MILES);
+                setDistanceImperiale(getDistanceMetrique() * METRE_MILES);
                 calculerDenivele();
                 setVitesseActuelleMetrique(getVitesseActuelleMetrique());
                 setVitesseActuelleImperiale(getVitesseActuelleImperiale());
                 setVitesseMetrique(getVitesseMetrique());
-                setVitesseImperiale(getVitesseMetrique()*METRE_MILES);
+                setVitesseImperiale(getVitesseMetrique() * METRE_MILES);
                 setAltitudeMaxMetrique(getAltitudeMaxMetrique());
                 setAltitudeMaxImperiale(getAltitudeMaxImperiale());
                 setAltitudeMinMetrique(getAltitudeMinMetrique());
@@ -131,9 +123,7 @@ public class Activite {
                 setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
                 setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
             }
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Paramètre invalide");
         }
     }
@@ -143,8 +133,7 @@ public class Activite {
     }
 
     public void setNom(String nom) {
-        if(validerNom(nom))
-        {
+        if (validerNom(nom)) {
             this.nom = nom;
         }
     }
@@ -162,20 +151,21 @@ public class Activite {
     }
 
     public void setSport(Sport sport) {
-        if(validerSport(sport))
-        {
-        this.sport = sport;
-    }}
+        if (validerSport(sport)) {
+            this.sport = sport;
+        }
+    }
+
 
     public Duration getDuree() {
         return duree;
     }
 
     public void setDuree(int duree) {
-        if(validerDuree(duree))
-        {
-        this.duree = Duration.ofMinutes(duree);
-    }}
+        if (validerDuree(duree)) {
+            this.duree = Duration.ofMinutes(duree);
+        }
+    }
 
     public Instant getHeureDebut() {
         return heureDebut;
@@ -197,23 +187,20 @@ public class Activite {
         return this.distanceMetrique;
     }
 
-    public void setDistanceMetrique(double distanceMetrique)
-    {
-        if(validerDistance(distanceMetrique))
-        {
-        this.distanceMetrique = distanceMetrique;
-    }}
-
-    public double getDistanceImperiale() {
-        return this.getDistanceMetrique() ;
+    public void setDistanceMetrique(double distanceMetrique) {
+        if (validerDistance(distanceMetrique)) {
+            this.distanceMetrique = distanceMetrique;
+        }
     }
 
-    public void setDistanceImperiale(double distance)
-    {
-        if(validerDistance(distance))
-        {
-        this.distanceImperiale = distance;
-         }
+    public double getDistanceImperiale() {
+        return this.getDistanceMetrique();
+    }
+
+    public void setDistanceImperiale(double distance) {
+        if (validerDistance(distance)) {
+            this.distanceImperiale = distance;
+        }
     }
 
     public double getDenivelePositifMetrique() {
@@ -349,21 +336,19 @@ public class Activite {
     }
 
     private boolean validerNom(String pNom) {
-        return pNom != null &&!pNom.isEmpty() ;
+        return pNom != null && !pNom.isEmpty();
     }
 
-    private boolean validerDistance(double pDistance)
-    {
-        return pDistance>0;
+    private boolean validerDistance(double pDistance) {
+        return pDistance > 0;
     }
 
     private boolean validerDuree(int pDuree) {
-        return pDuree>0;
+        return pDuree > 0;
     }
 
-    private boolean validerSport(Sport pSport)
-    {
-        return pSport!= null;
+    private boolean validerSport(Sport pSport) {
+        return pSport != null;
     }
 
     private boolean validerFichier(File pFichier) {
@@ -491,23 +476,32 @@ public class Activite {
     }
 
     public void enregistrer(File fichier) {
-        Fichiers.ecrireFichier(this, fichier);
+        this.ecrireFichier(fichier);
     }
 
-    public static ArrayList<ArrayList<?>> lireFichier(File fichier, ArrayList<Double> tabLat, ArrayList<Double> tabLon, ArrayList<Double> tabEle, ArrayList<Instant> tabTime) {
-        ArrayList<ArrayList<?>> tabAtt = null;
+    public void lireFichier(File fichier) {
 
         SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File("c:\\file.xml");
+        File xmlFile = fichier;
 
         if (fichier != null) {
-            tabAtt = new ArrayList<ArrayList<?>>();
-
             try {
 
                 Document document = (Document) builder.build(xmlFile);
                 Element rootNode = document.getRootElement();
-                List list = rootNode.getChildren("trkpt");
+                Element metadata = rootNode.getChild("metadata");
+
+                this.setNom(metadata.getChildText("nom"));
+                this.setDate(Instant.parse(metadata.getChildText("date")));
+                String sport = metadata.getChildText("sport");
+                try {
+                    this.setSport(Sport.valueOf(sport));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+
+
+                List list = rootNode.getChild("trk").getChild("trkseg").getChildren("trkpt");
 
                 for (int i = 0; i < list.size(); i++) {
 
@@ -515,23 +509,21 @@ public class Activite {
 
 
                     Double lat = Double.parseDouble(node.getAttributeValue("lat"));
-                    tabLat.add(lat);
+                    this.tabLatitude.add(lat);
+
 
                     Double lon = Double.parseDouble(node.getAttributeValue("lon"));
-                    tabLon.add(lon);
+                    this.tabLongitude.add(lon);
 
 
-                    Double ele = Double.parseDouble(node.getAttributeValue("ele"));
-                    tabEle.add(ele);
+                    Double ele = Double.parseDouble(node.getChildText("ele"));
+                    this.tabElevationMetrique.add(ele);
 
-                    Instant time = Instant.parse(node.getAttributeValue("time"));
-                    tabTime.add(time);
+                    Instant time = Instant.parse(node.getChildText("time"));
+                    this.tabTemps.add(time);
 
                 }
-                tabAtt.add(tabLat);
-                tabAtt.add(tabLon);
-                tabAtt.add(tabEle);
-                tabAtt.add(tabTime);
+
 
             } catch (IOException | JDOMException io) {
                 System.out.println(io.getMessage());
@@ -539,7 +531,6 @@ public class Activite {
         }
 
 
-        return tabAtt;
     }
 
 
@@ -555,7 +546,7 @@ public class Activite {
             doc.setRootElement(gpx);
             Element metadata = new Element("metadata");
             metadata.addContent(new Element("nom").setText(this.getNom()));
-            metadata.addContent(new Element("sport").setText(this.getSport().getNom()));
+            metadata.addContent(new Element("sport").setText(this.getSport().toString()));
             metadata.addContent(new Element("date").setText(this.getDate().toString()));
 
             gpx.addContent(metadata);

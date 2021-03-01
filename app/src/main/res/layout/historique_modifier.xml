@@ -80,7 +80,9 @@
                 android:id="@+id/modifier_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF">
+                android:background="#FFFFFF"
+                android:choiceMode="singleChoice"
+                android:listSelector="@android:color/darker_gray">
 
             </ListView>
         </FrameLayout>

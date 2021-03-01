@@ -1,13 +1,24 @@
 package modele;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import android.content.Context;
 import android.os.Build;
+import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -27,7 +38,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Activite {
+public class Activite implements Serializable {
 
     public static final double METRE_PIED = 3.28084;
     public static final double METRE_MILES = 0.000621371;
@@ -475,9 +486,7 @@ public class Activite {
         this.altitudeActuelleImperiale = altitudeActuelleImperiale;
     }
 
-    public void enregistrer(File fichier) {
-        this.ecrireFichier(fichier);
-    }
+
 
     public void lireFichier(File fichier) {
 
@@ -491,12 +500,18 @@ public class Activite {
                 Element rootNode = document.getRootElement();
                 Element metadata = rootNode.getChild("metadata");
 
-                this.setNom(metadata.getChildText("nom"));
-                this.setDate(Instant.parse(metadata.getChildText("date")));
-                String sport = metadata.getChildText("sport");
                 try {
-                    this.setSport(Sport.valueOf(sport));
-                } catch (IllegalArgumentException e) {
+
+
+                    this.setNom(metadata.getChildText("nom"));
+                    this.setDate(Instant.parse(metadata.getChildText("date")));
+                    String sport = metadata.getChildText("sport");
+                    try {
+                        this.setSport(Sport.valueOf(sport));
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    }
+                }catch (Exception e){
                     e.printStackTrace();
                 }
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.application.Application;
 import com.example.mapan.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,6 +52,9 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list = findViewById(R.id.modifier_list);
         adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
         historique_list.setAdapter(adapter);
+
+        loadActivites();
+        adapter.notifyDataSetChanged();
 
 
 
@@ -210,6 +221,50 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
                 retour = false;
         }
         return retour;
+    }
+
+    public void enregistrer(Activite activite) {
+        String nomFichier = activite.getNom() + ".mp";
+
+        try{
+            FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this);
+            oos.close();
+            fos.close();
+            Toast.makeText(this.getApplicationContext(), "Enregistré", Toast.LENGTH_SHORT).show();
+        }catch (IOException io){
+            io.printStackTrace();
+        }
+    }
+
+    public void loadActivites(){
+        String[] fichiers = this.getApplicationContext().fileList();
+
+        for(int i = 0; i<fichiers.length; i++) {
+            Activite activite = null;
+            try {
+                FileInputStream fis = this.getApplicationContext().openFileInput(fichiers[i]);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                activite = (Activite) ois.readObject();
+                ois.close();
+                fis.close();
+                listeActivites.add(activite);
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public void partager(Activite activite){
+        File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom()+".gpx");
+        activite.ecrireFichier(fichier);
     }
 
 }

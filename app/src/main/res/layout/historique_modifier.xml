@@ -108,6 +108,7 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/exporter_l_activit_choisie"
+                android:onClick="exporterGPX"
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/stat_sys_upload" />
 

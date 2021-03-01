@@ -64,6 +64,10 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
     }
 
+    public void exporterGPX(View view){
+        modifier_list.getSelectedItem()
+    }
+
     public void loadActivites(){
         String[] fichiers = this.getApplicationContext().fileList();
 

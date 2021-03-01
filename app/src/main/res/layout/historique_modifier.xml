@@ -55,6 +55,7 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/importer_l_activit_choisie"
+                android:onClick="importerGPX"
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/stat_sys_download" />
 

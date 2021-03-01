@@ -21,8 +21,10 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import controleur.ControleurHistorique;
@@ -36,6 +38,7 @@ import com.example.mapan.R;
 
 import modele.Activite;
 import modele.ActiviteAdapter;
+import modele.Sport;
 
 import static com.example.mapan.R.id.modifier_exporter;
 
@@ -94,6 +97,18 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
 
     }
 
+    public void importerGPX(View view){
+        //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
+        String nom = "Test Import";
+        Sport sport = Sport.VELO;
+        File fichier = new File("D:/test fichiers.gpx");
+
+        Activite importation = new Activite(nom, sport, fichier);
+       enregistrer(importation);
+       adapter.notifyDataSetChanged();
+
+    }
+
     public void loadActivites(){
         String[] fichiers = this.getApplicationContext().fileList();
 
@@ -121,5 +136,21 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
     public void partager(Activite activite){
         File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom()+".gpx");
         activite.ecrireFichier(fichier);
+    }
+
+    public void enregistrer(Activite activite) {
+        String nomFichier = activite.getNom() + ".mp";
+
+        try{
+            //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
+            FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(activite);
+            oos.close();
+            fos.close();
+            Toast.makeText(this.getApplicationContext(), activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
+        }catch (IOException io){
+            io.printStackTrace();
+        }
     }
 }

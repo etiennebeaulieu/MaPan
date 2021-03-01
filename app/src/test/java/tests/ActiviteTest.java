@@ -604,4 +604,14 @@ public class ActiviteTest
     public void setAltitudeActuelleImperiale()
     {
     }
+
+    @Test
+    public void lireFichier()
+    {
+    }
+
+    @Test
+    public void ecrireFichier()
+    {
+    }
 }

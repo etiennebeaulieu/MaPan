@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import modele.Activite;
+import modele.ActiviteAdapter;
 import modele.Sport;
 
 public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
@@ -53,12 +54,14 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
         historique_list.setAdapter(adapter);
 
+
+        //enregistrerActivitesTest();
         loadActivites();
         adapter.notifyDataSetChanged();
 
 
 
-        //test();
+
 
 
 
@@ -70,60 +73,23 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         adapter.notifyDataSetChanged();
     }
 
-    public void test() {
+    public void enregistrerActivitesTest() {
         Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(1700000), Sport.SKI_RANDONNEE, 75, 19.5);
         Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, 75, 20.5);
         Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, 75, 21.5);
         Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, 75, 90.5);
         Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, 75, 50.5);
 
-        listeActivites.add(a3);
-        listeActivites.add(a1);
-        listeActivites.add(a5);
-        listeActivites.add(a2);
-        listeActivites.add(a4);
-
+        enregistrer(a1);
+        enregistrer(a2);
+        enregistrer(a3);
+        enregistrer(a4);
+        enregistrer(a5);
 
     }
 
 
-    private class ActiviteAdapter extends ArrayAdapter<Activite> {
 
-        private Context mContext;
-        private int mResource;
-
-        public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
-            super(context, resource, objects);
-            this.mContext = context;
-            this.mResource = resource;
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-
-            convertView = layoutInflater.inflate(mResource, parent, false);
-
-            ImageView iconSport = convertView.findViewById(R.id.iconSport);
-            TextView txtNom = convertView.findViewById(R.id.textViewNom);
-            TextView txtDate = convertView.findViewById(R.id.textViewDate);
-            TextView txtDuree = convertView.findViewById(R.id.textViewDuree);
-            TextView txtDistance = convertView.findViewById(R.id.textViewDistance);
-
-            iconSport.setImageResource(getItem(position).getSport().getImage());
-            txtNom.setText(getItem(position).getNom());
-            txtDate.setText(getItem(position).getDate().toString());
-            txtDuree.setText(getItem(position).getDuree().toString());
-            if (isDistanceMetrique)
-                txtDistance.setText(getItem(position).getDistanceMetrique() + "km");
-            else
-                txtDistance.setText(getItem(position).getDistanceImperiale() + "mi");
-
-
-            return convertView;
-        }
-    }
 
 
     public ArrayList<Activite> getListeActivite() {
@@ -227,12 +193,13 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         String nomFichier = activite.getNom() + ".mp";
 
         try{
+            //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
             FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(this);
+            oos.writeObject(activite);
             oos.close();
             fos.close();
-            Toast.makeText(this.getApplicationContext(), "Enregistré", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
         }catch (IOException io){
             io.printStackTrace();
         }
@@ -244,7 +211,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         for(int i = 0; i<fichiers.length; i++) {
             Activite activite = null;
             try {
-                FileInputStream fis = this.getApplicationContext().openFileInput(fichiers[i]);
+                FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(),fichiers[i]));
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 activite = (Activite) ois.readObject();
                 ois.close();

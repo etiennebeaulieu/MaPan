@@ -11,6 +11,7 @@ import java.lang.reflect.Array;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class Activite implements Serializable {
         }
     }
 
-    public Activite(String pNom, Instant pDate, Sport pSport, File pFichier) {
+    public Activite(String pNom, Sport pSport, File pFichier) {
 
         try {
 
@@ -110,11 +111,11 @@ public class Activite implements Serializable {
 
 
                 setNom(pNom);
-                setDate(pDate);
                 setSport(pSport);
 
                 // lire fichier + setTableaux
                 this.lireFichier(pFichier);
+                setDate(tabTemps.get(0).truncatedTo(ChronoUnit.DAYS));
 
                 heureDebut = tabTemps.get(0);
                 heureFin = tabTemps.get(tabTemps.size() - 1);
@@ -498,22 +499,6 @@ public class Activite implements Serializable {
 
                 Document document = (Document) builder.build(xmlFile);
                 Element rootNode = document.getRootElement();
-                Element metadata = rootNode.getChild("metadata");
-
-                try {
-
-
-                    this.setNom(metadata.getChildText("nom"));
-                    this.setDate(Instant.parse(metadata.getChildText("date")));
-                    String sport = metadata.getChildText("sport");
-                    try {
-                        this.setSport(Sport.valueOf(sport));
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
 
 
                 List list = rootNode.getChild("trk").getChild("trkseg").getChildren("trkpt");
@@ -559,13 +544,6 @@ public class Activite implements Serializable {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
             doc.setRootElement(gpx);
-            Element metadata = new Element("metadata");
-            metadata.addContent(new Element("nom").setText(this.getNom()));
-            metadata.addContent(new Element("sport").setText(this.getSport().toString()));
-            metadata.addContent(new Element("date").setText(this.getDate().toString()));
-
-            gpx.addContent(metadata);
-
 
             Element trace = new Element("trk");
             gpx.addContent(trace);

@@ -20,8 +20,7 @@ public class ActiviteTest
             activite9,activite10,activite11,activite12,
             activite13,activite14,activite15,activite16;
 
-Activite activite17, activite18, activite19, activite20,
-         activite21, activite22, activite23, activite24;
+Activite activite17, activite18;
 
     @Before
     public void ActiviteTest()
@@ -48,13 +47,8 @@ Activite activite17, activite18, activite19, activite20,
     public void ActiviteFichierTest()
     {
         activite17 = new Activite("Activité 17", Sport.RANDONNEE, new File("D:test fichiers.gpx"));
-        activite18 = new Activite("Activité 18",  Sport.COURSE, new File("D:test fichiers.gpx"));
-        activite19 = new Activite("Activité 19",  Sport.VELO, new File("D:test fichiers.gpx"));
-        activite20 = new Activite("Activité 20", Sport.RAQUETTE, new File("D:test fichiers.gpx"));
-        activite21 = new Activite("Activité 21",  Sport.SKI_RANDONNEE, new File("D:test fichiers.gpx"));
-        activite22 = new Activite("Activité 22",  Sport.SKI, new File("D:test fichiers.gpx"));
-        activite23 = new Activite("Activité 23",  Sport.PATIN, new File("D:test fichiers.gpx"));
-        activite24 = new Activite("Activité 24",  Sport.SKI_FOND, new File("D:test fichiers.gpx"));
+
+        activite18 = new Activite("Activité 18",  Sport.SKI_FOND, new File("D:test fichiers2.gpx"));
     }
 
     @Test
@@ -140,13 +134,6 @@ Activite activite17, activite18, activite19, activite20,
         assertEquals("Activité 16", activite16.getNom());
         assertEquals("Activité 17", activite17.getNom());
         assertEquals("Activité 18", activite18.getNom());
-        assertEquals("Activité 19", activite19.getNom());
-        assertEquals("Activité 20", activite20.getNom());
-        assertEquals("Activité 21", activite21.getNom());
-        assertEquals("Activité 22", activite22.getNom());
-        assertEquals("Activité 23", activite23.getNom());
-        assertEquals("Activité 24", activite24.getNom());
-
     }
 
     @Test
@@ -166,21 +153,31 @@ Activite activite17, activite18, activite19, activite20,
     @Test
     public void getDate()
     {
-        assertEquals(activite17.getDate(), Instant.ofEpochSecond(1000));
-        assertEquals(activite18.getDate(), Instant.ofEpochSecond(10000));
-        assertEquals(activite19.getDate(), Instant.ofEpochSecond(100000));
-        assertEquals(activite20.getDate(), Instant.ofEpochSecond(2000));
-        assertEquals(activite21.getDate(), Instant.ofEpochSecond(20000));
-        assertEquals(activite22.getDate(), Instant.ofEpochSecond(200000));
-        assertEquals(activite23.getDate(), Instant.ofEpochSecond(300000));
-        assertEquals(activite24.getDate(), Instant.ofEpochSecond(400000));
-    }
+        assertEquals(activite1.getDate(), Instant.ofEpochSecond(1000));
+        assertEquals(activite2.getDate(), Instant.ofEpochSecond(10000));
+        assertEquals(activite3.getDate(), Instant.ofEpochSecond(100000));
+        assertEquals(activite4.getDate(), Instant.ofEpochSecond(2000));
+        assertEquals(activite5.getDate(), Instant.ofEpochSecond(20000));
+        assertEquals(activite6.getDate(), Instant.ofEpochSecond(200000));
+        assertEquals(activite7.getDate(), Instant.ofEpochSecond(3000));
+        assertEquals(activite8.getDate(), Instant.ofEpochSecond(30000));
+        assertEquals(activite9.getDate(), Instant.ofEpochSecond(300000));
+        assertEquals(activite10.getDate(), Instant.ofEpochSecond(4000));
+        assertEquals(activite11.getDate(), Instant.ofEpochSecond(40000));
+        assertEquals(activite12.getDate(), Instant.ofEpochSecond(400000));
+        assertEquals(activite13.getDate(), Instant.ofEpochSecond(5000));
+        assertEquals(activite14.getDate(), Instant.ofEpochSecond(50000));
+        assertEquals(activite15.getDate(), Instant.ofEpochSecond(500000));
+        assertEquals(activite16.getDate(), Instant.ofEpochSecond(600000));
+        //assertEquals(activite17.getDate(), Instant.ofEpochSecond(1000));
+      //  assertEquals(activite18.getDate(), Instant.ofEpochSecond(1000));
+     //   assertEquals(activite19.getDate(), Instant.ofEpochSecond(1000));
+      //  assertEquals(activite20.getDate(), Instant.ofEpochSecond(1000));
+     //   assertEquals(activite21.getDate(), Instant.ofEpochSecond(1000));
+      //  assertEquals(activite22.getDate(), Instant.ofEpochSecond(1000));
+       // assertEquals(activite23.getDate(), Instant.ofEpochSecond(1000));
+      //  assertEquals(activite24.getDate(), Instant.ofEpochSecond(1000));
 
-    @Test
-    public void setDate()
-    {
-        activite17.setDate(Instant.ofEpochSecond(15000));
-        assertEquals(activite17.getDate(), Instant.ofEpochSecond(15000));
     }
 
     @Test
@@ -257,37 +254,15 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setDuree()
-    {
-        activite1.setDuree(20);
-        assertEquals(activite1.getDuree(), Duration.ofMinutes(20));
-
-        activite1.setDuree(0);
-        assertEquals(activite1.getDuree(), Duration.ofMinutes(20));
-
-        activite1.setDuree(-20);
-        assertEquals(activite1.getDuree(), Duration.ofMinutes(20));
-    }
-
-    @Test
     public void getHeureDebut()
     {
-
-    }
-
-    @Test
-    public void setHeureDebut()
-    {
+        assertEquals(Instant.parse("2012-10-24T23:29:40Z"), activite17.getHeureDebut());
     }
 
     @Test
     public void getHeureFin()
     {
-    }
-
-    @Test
-    public void setHeureFin()
-    {
+        assertEquals(Instant.parse("2012-10-24T23:45:28Z"), activite17.getHeureFin());
     }
 
     @Test
@@ -312,16 +287,6 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setDistanceMetrique()
-    {
-        activite1.setDistanceMetrique(10.43);
-        assertEquals(10.43, activite1.getDistanceMetrique(), 0.0);
-
-        activite1.setDistanceMetrique(-1);
-        assertEquals(10.43, activite1.getDistanceMetrique(), 0.0);
-    }
-
-    @Test
     public void getDistanceImperiale()
     {
         assertEquals(6, activite1.getDistanceImperiale(), 0.0);
@@ -343,74 +308,37 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setDistanceImperiale()
-    {
-        activite1.setDistanceImperiale(10);
-        //System.out.println(activite1.getDistanceImperiale());
-      // assertEquals(10,activite1.getDistanceImperiale(), 0.0);
-
-      //  activite1.setDistanceImperiale(-1);
-      //  assertEquals(10, activite1.getDistanceImperiale(), 0.0);
-    }
-
-    @Test
     public void getDenivelePositifMetrique()
     {
-
-    }
-
-    @Test
-    public void setDenivelePositifMetrique()
-    {
+        assertEquals(158.4000015258789, activite17.getDenivelePositifMetrique(), 0.0);
     }
 
     @Test
     public void getDeniveleNegatifMetrique()
     {
-    }
-
-    @Test
-    public void setDeniveleNegatifMetrique()
-    {
+        assertEquals(135.40000343322754, activite17.getDeniveleNegatifMetrique(), 0.0);
     }
 
     @Test
     public void getDenivelePositifImperiale()
     {
-    }
-
-    @Test
-    public void setDenivelePositifImperiale()
-    {
+        assertEquals(519.68506100616453, activite17.getDenivelePositifImperiale(), 0.0);
     }
 
     @Test
     public void getDeniveleNegatifImperiale()
     {
-    }
-
-    @Test
-    public void setDeniveleNegatifImperiale()
-    {
+        assertEquals(444.22574726387024, activite17.getDeniveleNegatifImperiale(), 0.0);
     }
 
     @Test
     public void getVitesseActuelleMetrique()
     {
-    }
 
-    @Test
-    public void setVitesseActuelleMetrique()
-    {
     }
 
     @Test
     public void getVitesseActuelleImperiale()
-    {
-    }
-
-    @Test
-    public void setVitesseActuelleImperiale()
     {
     }
 
@@ -436,13 +364,6 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setVitesseMetrique()
-    {
-        activite1.setVitesseMetrique(8);
-        assertEquals(8, activite1.getVitesseMetrique(), 0.0);
-    }
-
-    @Test
     public void getVitesseImperiale()
     {
         assertEquals(activite1.getVitesseImperiale(), activite1.getVitesseMetrique() * 1000 * Activite.METRE_MILES, 0.0);
@@ -464,30 +385,15 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setVitesseImperiale()
-    {
-        activite1.setVitesseMetrique(8);
-        assertEquals(8, activite1.getVitesseMetrique(), 0.0);
-    }
-
-    @Test
     public void getTabLatitude()
     {
-    }
-
-    @Test
-    public void setTabLatitude()
-    {
+        assertTrue(activite17.getTabLatitude().size() ==206 && activite17.getTabLatitude().get(0)==38.92747367732227 && activite17.getTabLatitude().get(activite17.getTabLatitude().size()-1)==38.92482256516814);
     }
 
     @Test
     public void getTabLongitude()
     {
-    }
-
-    @Test
-    public void setTabLongitude()
-    {
+        assertTrue(activite17.getTabLongitude().size() ==206 && activite17.getTabLongitude().get(0)==-77.02016168273985 && activite17.getTabLongitude().get(activite17.getTabLongitude().size()-1)==-77.02575484290719);
     }
 
     @Test
@@ -496,18 +402,9 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setTabDistanceMetrique()
-    {
-    }
-
-    @Test
     public void getTabElevationMetrique()
     {
-    }
-
-    @Test
-    public void setTabElevationMetrique()
-    {
+        assertTrue(activite17.getTabElevationMetrique().size() ==206 && activite17.getTabElevationMetrique().get(0)==25.600000381469727 && activite17.getTabElevationMetrique().get(activite17.getTabElevationMetrique().size()-1)==48.599998474121094);
     }
 
     @Test
@@ -516,18 +413,9 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setTabVitesseMetrique()
-    {
-    }
-
-    @Test
     public void getTabTemps()
     {
-    }
-
-    @Test
-    public void setTabTemps()
-    {
+        assertTrue(activite17.getTabTemps().size() ==206 && activite17.getTabTemps().get(0).equals(Instant.parse("2012-10-24T23:29:40.000Z")) && activite17.getTabTemps().get(activite17.getTabTemps().size()-1).equals(Instant.parse("2012-10-24T23:45:28.000Z")));
     }
 
     @Test
@@ -541,23 +429,10 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void getStatistique()
-    {
-    }
-
-    @Test
-    public void setStatistique()
-    {
-    }
-
-    @Test
     public void calculerDistance()
     {
-    }
-
-    @Test
-    public void calculerDenivele()
-    {
+          double  distance  = activite18.calculerDistance(0,activite18.getTabTemps().size()-1);
+        System.out.println(distance);
     }
 
     @Test
@@ -588,17 +463,7 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setAltitudeMaxMetrique()
-    {
-    }
-
-    @Test
     public void getAltitudeMaxImperiale()
-    {
-    }
-
-    @Test
-    public void setAltitudeMaxImperiale()
     {
     }
 
@@ -607,18 +472,9 @@ Activite activite17, activite18, activite19, activite20,
     {
     }
 
-    @Test
-    public void setAltitudeMinMetrique()
-    {
-    }
 
     @Test
     public void getAltitudeMinImperiale()
-    {
-    }
-
-    @Test
-    public void setAltitudeMinImperiale()
     {
     }
 
@@ -628,17 +484,7 @@ Activite activite17, activite18, activite19, activite20,
     }
 
     @Test
-    public void setAltitudeActuelleMetrique()
-    {
-    }
-
-    @Test
     public void getAltitudeActuelleImperiale()
-    {
-    }
-
-    @Test
-    public void setAltitudeActuelleImperiale()
     {
     }
 

@@ -68,7 +68,6 @@ public class Activite implements Serializable {
     private double altitudeActuelleMetrique = 0;
     private double altitudeActuelleImperiale = 0;
     private Graphique graphique = null;
-    private Map<String, Double> statistique = null;
 
     private ArrayList<Double> tabLatitude = null;
     private ArrayList<Double> tabLongitude = null;
@@ -118,23 +117,25 @@ public class Activite implements Serializable {
                 this.lireFichier(pFichier);
                 setDate(tabTemps.get(0).truncatedTo(ChronoUnit.DAYS));
 
-                heureDebut = tabTemps.get(0);
-                heureFin = tabTemps.get(tabTemps.size() - 1);
+               setHeureDebut( tabTemps.get(0));
+               setHeureFin(tabTemps.get(tabTemps.size() - 1));
                 duree = Duration.between(heureDebut, heureFin);
 
-                setDistanceMetrique(calculerDistance(0, tabDistanceMetrique.size() - 1));
+                setDistanceMetrique(calculerDistance(0, tabTemps.size() - 1));
                 setDistanceImperiale(getDistanceMetrique() * METRE_MILES);
                 calculerDenivele();
+           /*
                 setVitesseActuelleMetrique(getVitesseActuelleMetrique());
                 setVitesseActuelleImperiale(getVitesseActuelleImperiale());
                 setVitesseMetrique(getVitesseMetrique());
                 setVitesseImperiale(getVitesseMetrique() * METRE_MILES);
-                setAltitudeMaxMetrique(getAltitudeMaxMetrique());
+               setAltitudeMaxMetrique(getAltitudeMaxMetrique());
                 setAltitudeMaxImperiale(getAltitudeMaxImperiale());
-                setAltitudeMinMetrique(getAltitudeMinMetrique());
-                setAltitudeMinImperiale(getAltitudeMinImperiale());
+                 setAltitudeMinMetrique(getAltitudeMinMetrique());
+                 setAltitudeMinImperiale(getAltitudeMinImperiale());
                 setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
-                setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
+               setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
+           */
             }
         } catch (Exception e) {
             System.out.println("Paramètre invalide");
@@ -155,7 +156,7 @@ public class Activite implements Serializable {
         return date;
     }
 
-    public void setDate(Instant date) {
+    private void setDate(Instant date) {
         this.date = date;
     }
 
@@ -174,7 +175,7 @@ public class Activite implements Serializable {
         return duree;
     }
 
-    public void setDuree(int duree) {
+    private void setDuree(int duree) {
         if (validerDuree(duree)) {
             this.duree = Duration.ofMinutes(duree);
         }
@@ -184,7 +185,7 @@ public class Activite implements Serializable {
         return heureDebut;
     }
 
-    public void setHeureDebut(Instant heureDebut) {
+    private void setHeureDebut(Instant heureDebut) {
         this.heureDebut = heureDebut;
     }
 
@@ -192,7 +193,7 @@ public class Activite implements Serializable {
         return heureFin;
     }
 
-    public void setHeureFin(Instant heureFin) {
+    private void setHeureFin(Instant heureFin) {
         this.heureFin = heureFin;
     }
 
@@ -200,7 +201,7 @@ public class Activite implements Serializable {
         return this.distanceMetrique;
     }
 
-    public void setDistanceMetrique(double distanceMetrique) {
+    private void setDistanceMetrique(double distanceMetrique) {
         if (validerDistance(distanceMetrique)) {
             this.distanceMetrique = distanceMetrique;
         }
@@ -210,7 +211,7 @@ public class Activite implements Serializable {
         return this.getDistanceMetrique();
     }
 
-    public void setDistanceImperiale(double distance) {
+    private void setDistanceImperiale(double distance) {
         if (validerDistance(distance)) {
             this.distanceImperiale = distance;
         }
@@ -220,7 +221,7 @@ public class Activite implements Serializable {
         return denivelePositifMetrique;
     }
 
-    public void setDenivelePositifMetrique(double denivelePositifMetrique) {
+    private void setDenivelePositifMetrique(double denivelePositifMetrique) {
         this.denivelePositifMetrique = denivelePositifMetrique;
     }
 
@@ -228,15 +229,15 @@ public class Activite implements Serializable {
         return deniveleNegatifMetrique;
     }
 
-    public void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
+    private void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
         this.deniveleNegatifMetrique = deniveleNegatifMetrique;
     }
 
     public double getDenivelePositifImperiale() {
-        return getDenivelePositifMetrique() * METRE_PIED;
+        return denivelePositifImperiale;
     }
 
-    public void setDenivelePositifImperiale(double denivelePositifImperiale) {
+    private void setDenivelePositifImperiale(double denivelePositifImperiale) {
         this.denivelePositifImperiale = denivelePositifImperiale;
     }
 
@@ -244,7 +245,7 @@ public class Activite implements Serializable {
         return getDeniveleNegatifMetrique() * METRE_PIED;
     }
 
-    public void setDeniveleNegatifImperiale(double deniveleNegatifImperiale) {
+    private void setDeniveleNegatifImperiale(double deniveleNegatifImperiale) {
         this.deniveleNegatifImperiale = deniveleNegatifImperiale;
     }
 
@@ -253,7 +254,7 @@ public class Activite implements Serializable {
         return calculerDistance(tabDistanceMetrique.size() - 2, tabDistanceMetrique.size() - 1) * 3.6;
     }
 
-    public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
+    private void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
         this.vitesseActuelleMetrique = vitesseActuelleMetrique;
     }
 
@@ -262,7 +263,7 @@ public class Activite implements Serializable {
         return (calculerDistance(tabDistanceMetrique.size() - 2, tabDistanceMetrique.size() - 1) * METRE_MILES) / 3600;
     }
 
-    public void setVitesseActuelleImperiale(double vitesseActuelleImperiale) {
+    private void setVitesseActuelleImperiale(double vitesseActuelleImperiale) {
         this.vitesseActuelleImperiale = vitesseActuelleImperiale;
     }
 
@@ -271,7 +272,7 @@ public class Activite implements Serializable {
         return vitesseMetrique;
     }
 
-    public void setVitesseMetrique(double vitesseMetrique) {
+    private void setVitesseMetrique(double vitesseMetrique) {
         this.vitesseMetrique = vitesseMetrique;
     }
 
@@ -280,7 +281,7 @@ public class Activite implements Serializable {
         return this.vitesseImperiale;
     }
 
-    public void setVitesseImperiale(double vitesseImperiale) {
+    private void setVitesseImperiale(double vitesseImperiale) {
         this.vitesseImperiale = vitesseImperiale;
     }
 
@@ -288,7 +289,7 @@ public class Activite implements Serializable {
         return tabLatitude;
     }
 
-    public void setTabLatitude(ArrayList<Double> tabLatitude) {
+    private void setTabLatitude(ArrayList<Double> tabLatitude) {
         this.tabLatitude = tabLatitude;
     }
 
@@ -296,7 +297,7 @@ public class Activite implements Serializable {
         return tabLongitude;
     }
 
-    public void setTabLongitude(ArrayList<Double> tabLongitude) {
+    private void setTabLongitude(ArrayList<Double> tabLongitude) {
         this.tabLongitude = tabLongitude;
     }
 
@@ -304,7 +305,7 @@ public class Activite implements Serializable {
         return tabDistanceMetrique;
     }
 
-    public void setTabDistanceMetrique(ArrayList<Double> tabDistanceMetrique) {
+    private void setTabDistanceMetrique(ArrayList<Double> tabDistanceMetrique) {
         this.tabDistanceMetrique = tabDistanceMetrique;
     }
 
@@ -312,7 +313,7 @@ public class Activite implements Serializable {
         return tabElevationMetrique;
     }
 
-    public void setTabElevationMetrique(ArrayList<Double> tabElevationMetrique) {
+    private void setTabElevationMetrique(ArrayList<Double> tabElevationMetrique) {
         this.tabElevationMetrique = tabElevationMetrique;
     }
 
@@ -320,7 +321,7 @@ public class Activite implements Serializable {
         return tabVitesseMetrique;
     }
 
-    public void setTabVitesseMetrique(ArrayList<Double> tabVitesseMetrique) {
+    private void setTabVitesseMetrique(ArrayList<Double> tabVitesseMetrique) {
         this.tabVitesseMetrique = tabVitesseMetrique;
     }
 
@@ -328,7 +329,7 @@ public class Activite implements Serializable {
         return tabTemps;
     }
 
-    public void setTabTemps(ArrayList<Instant> tabTemps) {
+    private void setTabTemps(ArrayList<Instant> tabTemps) {
         this.tabTemps = tabTemps;
     }
 
@@ -338,14 +339,6 @@ public class Activite implements Serializable {
 
     public void setGraphique(Graphique graphique) {
         this.graphique = graphique;
-    }
-
-    public Map<String, Double> getStatistique() {
-        return statistique;
-    }
-
-    public void setStatistique(Map<String, Double> statistique) {
-        this.statistique = statistique;
     }
 
     private boolean validerNom(String pNom) {
@@ -388,12 +381,13 @@ public class Activite implements Serializable {
 
             double theta = lon1 - lon2;
             double dx = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
-            dx = Math.acos(dx);
+            dx = 60*Math.acos(dx);
             dx = Math.toDegrees(dx);
-            dx = dx * 6371009;
+            dx = dx*1852;
 
             dx = Math.sqrt(Math.pow(dx, 2) + Math.pow(ele2 - ele1, 2));
 
+            tabDistanceMetrique.add(dx);
 
             distance += dx;
         }
@@ -401,7 +395,7 @@ public class Activite implements Serializable {
     }
 
     ///calcul en mètre et converti en impériale via setters
-    public void calculerDenivele() {
+    private void calculerDenivele() {
 
         double montee = 0;
         double descente = 0;
@@ -410,13 +404,14 @@ public class Activite implements Serializable {
             if (tabElevationMetrique.get(i) < tabElevationMetrique.get(i + 1)) {
                 montee += tabElevationMetrique.get(i + 1) - tabElevationMetrique.get(i);
             } else if (tabElevationMetrique.get(i) > tabElevationMetrique.get(i + 1)) {
-                descente += tabElevationMetrique.get(i + 1) - tabElevationMetrique.get(i);
+                descente += tabElevationMetrique.get(i) - tabElevationMetrique.get(i+1);
             }
-            setDenivelePositifMetrique(montee);
-            setDeniveleNegatifMetrique(descente);
-            setDenivelePositifImperiale(getDenivelePositifImperiale());
-            setDeniveleNegatifImperiale(getDeniveleNegatifImperiale());
+
         }
+        setDenivelePositifMetrique(montee);
+        setDeniveleNegatifMetrique(descente);
+        setDenivelePositifImperiale(montee*METRE_PIED);
+        setDeniveleNegatifImperiale(descente*METRE_PIED);
     }
 
     public double calculerVitesseMoyenne(long temps) {
@@ -436,7 +431,7 @@ public class Activite implements Serializable {
         return maxVal;
     }
 
-    public void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
+    private void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
         this.altitudeMaxMetrique = altitudeMaxMetrique;
     }
 
@@ -444,7 +439,7 @@ public class Activite implements Serializable {
         return getAltitudeMaxMetrique() * METRE_PIED;
     }
 
-    public void setAltitudeMaxImperiale(double altitudeMaxImperiale) {
+    private void setAltitudeMaxImperiale(double altitudeMaxImperiale) {
         this.altitudeMaxImperiale = altitudeMaxImperiale;
     }
 
@@ -460,7 +455,7 @@ public class Activite implements Serializable {
         return minVal;
     }
 
-    public void setAltitudeMinMetrique(double altitudeMinMetrique) {
+    private void setAltitudeMinMetrique(double altitudeMinMetrique) {
         this.altitudeMinMetrique = altitudeMinMetrique;
     }
 
@@ -468,7 +463,7 @@ public class Activite implements Serializable {
         return getAltitudeMinMetrique() * METRE_PIED;
     }
 
-    public void setAltitudeMinImperiale(double altitudeMinImperiale) {
+    private void setAltitudeMinImperiale(double altitudeMinImperiale) {
         this.altitudeMinImperiale = altitudeMinImperiale;
     }
 
@@ -476,7 +471,7 @@ public class Activite implements Serializable {
         return this.tabElevationMetrique.get(tabElevationMetrique.size() - 1);
     }
 
-    public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
+    private void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
         this.altitudeActuelleMetrique = altitudeActuelleMetrique;
     }
 
@@ -484,7 +479,7 @@ public class Activite implements Serializable {
         return METRE_PIED * getAltitudeActuelleMetrique();
     }
 
-    public void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
+    private void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
         this.altitudeActuelleImperiale = altitudeActuelleImperiale;
     }
 

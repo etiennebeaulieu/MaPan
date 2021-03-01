@@ -1,9 +1,14 @@
 package controleur;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +28,21 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import controleur.ControleurHistorique;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.application.Application;
 import com.example.mapan.R;
@@ -98,16 +109,56 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
     }
 
     public void importerGPX(View view){
-        //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
-        String nom = "Test Import";
-        Sport sport = Sport.VELO;
-        File fichier = new File("D:/test fichiers.gpx");
 
-        Activite importation = new Activite(nom, sport, fichier);
-       enregistrer(importation);
-       adapter.notifyDataSetChanged();
+        if(ContextCompat.checkSelfPermission(ControleurHistoriqueModifier.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
+            //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
+            String nom = "Test Import";
+            Sport sport = Sport.VELO;
+            File fichier = new File(this.getApplicationContext().getFilesDir(), "run.gpx");
 
+            Activite importation = new Activite(nom, sport, fichier);
+            enregistrer(importation);
+            adapter.notifyDataSetChanged();
+        }else{
+            requestStoragePermission();
+        }
     }
+
+    private void requestStoragePermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La permission est nécessaire pour avoir accès aux fichiers")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(ControleurHistoriqueModifier.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        }
+                    })
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }else{
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     public void loadActivites(){
         String[] fichiers = this.getApplicationContext().fileList();

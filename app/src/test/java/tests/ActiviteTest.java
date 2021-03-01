@@ -3,6 +3,7 @@ package tests;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -19,31 +20,41 @@ public class ActiviteTest
             activite9,activite10,activite11,activite12,
             activite13,activite14,activite15,activite16;
 
+Activite activite17, activite18, activite19, activite20,
+         activite21, activite22, activite23, activite24;
+
     @Before
     public void ActiviteTest()
     {
-        activite1 = new Activite("Activité 1", Instant.now(), Sport.RANDONNEE, 60, 6.0);
-        activite2 = new Activite("Activité 2",Instant.now(),Sport.RANDONNEE,80,6.40);
-        activite3 = new Activite("Activité 3",Instant.now(),Sport.COURSE,10,2.21);
-        activite4 = new Activite("Activité 4",Instant.now(),Sport.COURSE,30,4.60);
-        activite5 = new Activite("Activité 5",Instant.now(),Sport.VELO,90,20.73);
-        activite6 = new Activite("Activité 6",Instant.now(),Sport.VELO,20,10.20);
-        activite7 = new Activite("Activité 7",Instant.now(),Sport.RAQUETTE,50,4.75);
-        activite8 = new Activite("Activité 8",Instant.now(),Sport.RAQUETTE,60,5.20);
-        activite9 = new Activite("Activité 9",Instant.now(),Sport.SKI_RANDONNEE,120,12.30);
-        activite10 = new Activite("Activité 10",Instant.now(),Sport.SKI_RANDONNEE,100,4.90);
-        activite11 = new Activite("Activité 11",Instant.now(),Sport.SKI,75,7.60);
-        activite12 = new Activite("Activité 12",Instant.now(),Sport.SKI,90,9.42);
-        activite13 = new Activite("Activité 13",Instant.now(),Sport.PATIN,45,7.35);
-        activite14 = new Activite("Activité 14",Instant.now(),Sport.PATIN,25,3.4);
-        activite15 = new Activite("Activité 15",Instant.now(),Sport.SKI_FOND,35,8.4);
-        activite16 = new Activite("Activité 16",Instant.now(),Sport.SKI_FOND,12,1.9);
+        activite1 = new Activite("Activité 1", Instant.ofEpochSecond(1000), Sport.RANDONNEE, 60, 6.0);
+        activite2 = new Activite("Activité 2",Instant.ofEpochSecond(10000),Sport.RANDONNEE,80,6.40);
+        activite3 = new Activite("Activité 3",Instant.ofEpochSecond(100000),Sport.COURSE,10,2.21);
+        activite4 = new Activite("Activité 4",Instant.ofEpochSecond(2000),Sport.COURSE,30,4.60);
+        activite5 = new Activite("Activité 5",Instant.ofEpochSecond(20000),Sport.VELO,90,20.73);
+        activite6 = new Activite("Activité 6",Instant.ofEpochSecond(200000),Sport.VELO,20,10.20);
+        activite7 = new Activite("Activité 7",Instant.ofEpochSecond(3000),Sport.RAQUETTE,50,4.75);
+        activite8 = new Activite("Activité 8",Instant.ofEpochSecond(30000),Sport.RAQUETTE,60,5.20);
+        activite9 = new Activite("Activité 9",Instant.ofEpochSecond(300000),Sport.SKI_RANDONNEE,120,12.30);
+        activite10 = new Activite("Activité 10",Instant.ofEpochSecond(4000),Sport.SKI_RANDONNEE,100,4.90);
+        activite11 = new Activite("Activité 11",Instant.ofEpochSecond(40000),Sport.SKI,75,7.60);
+        activite12 = new Activite("Activité 12",Instant.ofEpochSecond(400000),Sport.SKI,90,9.42);
+        activite13 = new Activite("Activité 13",Instant.ofEpochSecond(5000),Sport.PATIN,45,7.35);
+        activite14 = new Activite("Activité 14",Instant.ofEpochSecond(50000),Sport.PATIN,25,3.4);
+        activite15 = new Activite("Activité 15",Instant.ofEpochSecond(500000),Sport.SKI_FOND,35,8.4);
+        activite16 = new Activite("Activité 16",Instant.ofEpochSecond(600000),Sport.SKI_FOND,12,1.9);
     }
 
     @Before
     public void ActiviteFichierTest()
     {
-
+        activite17 = new Activite("Activité 17", Sport.RANDONNEE, new File("D:test fichiers.gpx"));
+        activite18 = new Activite("Activité 18",  Sport.COURSE, new File("D:test fichiers.gpx"));
+        activite19 = new Activite("Activité 19",  Sport.VELO, new File("D:test fichiers.gpx"));
+        activite20 = new Activite("Activité 20", Sport.RAQUETTE, new File("D:test fichiers.gpx"));
+        activite21 = new Activite("Activité 21",  Sport.SKI_RANDONNEE, new File("D:test fichiers.gpx"));
+        activite22 = new Activite("Activité 22",  Sport.SKI, new File("D:test fichiers.gpx"));
+        activite23 = new Activite("Activité 23",  Sport.PATIN, new File("D:test fichiers.gpx"));
+        activite24 = new Activite("Activité 24",  Sport.SKI_FOND, new File("D:test fichiers.gpx"));
     }
 
     @Test
@@ -97,6 +108,15 @@ public class ActiviteTest
         {
         }
 
+        try
+        {
+            new Activite("Allo", Sport.VELO,null);
+
+        }
+        catch (Exception ignored)
+        {
+        }
+
     }
 
     @Test
@@ -118,6 +138,14 @@ public class ActiviteTest
         assertEquals("Activité 14", activite14.getNom());
         assertEquals("Activité 15", activite15.getNom());
         assertEquals("Activité 16", activite16.getNom());
+        assertEquals("Activité 17", activite17.getNom());
+        assertEquals("Activité 18", activite18.getNom());
+        assertEquals("Activité 19", activite19.getNom());
+        assertEquals("Activité 20", activite20.getNom());
+        assertEquals("Activité 21", activite21.getNom());
+        assertEquals("Activité 22", activite22.getNom());
+        assertEquals("Activité 23", activite23.getNom());
+        assertEquals("Activité 24", activite24.getNom());
 
     }
 
@@ -138,12 +166,21 @@ public class ActiviteTest
     @Test
     public void getDate()
     {
-
+        assertEquals(activite17.getDate(), Instant.ofEpochSecond(1000));
+        assertEquals(activite18.getDate(), Instant.ofEpochSecond(10000));
+        assertEquals(activite19.getDate(), Instant.ofEpochSecond(100000));
+        assertEquals(activite20.getDate(), Instant.ofEpochSecond(2000));
+        assertEquals(activite21.getDate(), Instant.ofEpochSecond(20000));
+        assertEquals(activite22.getDate(), Instant.ofEpochSecond(200000));
+        assertEquals(activite23.getDate(), Instant.ofEpochSecond(300000));
+        assertEquals(activite24.getDate(), Instant.ofEpochSecond(400000));
     }
 
     @Test
     public void setDate()
     {
+        activite17.setDate(Instant.ofEpochSecond(15000));
+        assertEquals(activite17.getDate(), Instant.ofEpochSecond(15000));
     }
 
     @Test
@@ -602,11 +639,6 @@ public class ActiviteTest
 
     @Test
     public void setAltitudeActuelleImperiale()
-    {
-    }
-
-    @Test
-    public void lireFichier()
     {
     }
 

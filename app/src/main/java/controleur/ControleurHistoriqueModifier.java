@@ -65,7 +65,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
     }
 
     public void exporterGPX(View view){
-        modifier_list.getSelectedItem()
+        modifier_list.getSelectedItem();
     }
 
     public void loadActivites(){

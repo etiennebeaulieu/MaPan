@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import org.jdom2.Attribute;
+import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -499,9 +500,11 @@ public class Activite implements Serializable {
 
                 Document document = (Document) builder.build(xmlFile);
                 Element rootNode = document.getRootElement();
+                //List<Content> trk2 = rootNode.getContent();
+               Element trk = rootNode.getChild("trk", rootNode.getNamespace());
+                Element trkseg = trk.getChild("trkseg" , trk.getNamespace());
 
-
-                List list = rootNode.getChild("trk").getChild("trkseg").getChildren("trkpt");
+                List list = trkseg.getChildren("trkpt", trkseg.getNamespace());
 
                 for (int i = 0; i < list.size(); i++) {
 
@@ -516,10 +519,10 @@ public class Activite implements Serializable {
                     this.tabLongitude.add(lon);
 
 
-                    Double ele = Double.parseDouble(node.getChildText("ele"));
+                    Double ele = Double.parseDouble(node.getChildText("ele", node.getNamespace()));
                     this.tabElevationMetrique.add(ele);
 
-                    Instant time = Instant.parse(node.getChildText("time"));
+                    Instant time = Instant.parse(node.getChildText("time", node.getNamespace()));
                     this.tabTemps.add(time);
 
                 }

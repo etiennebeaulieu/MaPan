@@ -50,7 +50,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
         iconSport.setImageResource(getItem(position).getSport().getImage());
         txtNom.setText(getItem(position).getNom());
-        txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
+        txtDate.setText(DateTimeFormatter.ofPattern("dd MMMM yyyy").withZone(ZoneId.of("UTC")).format(getItem(position).getDate()));
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
         if (isDistanceMetrique)
             txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique()/1000) + "km");

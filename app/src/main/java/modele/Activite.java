@@ -55,10 +55,11 @@ public class Activite implements Serializable {
     private ArrayList<Instant> tabTemps = null;
 
 
-    //Constructeur
+    /*Constructeur sans fichier
+    Permet de créer une activité à partir de données fournis par l'utilisateur*/
     public Activite(String pNom, Instant pDate, Sport pSport, int pDuree, double pDistance) {
 
-        try {
+        //Valide les paramètres fournis par l'utilisateur (non-null et non-vide) puis initialize les attributs avec ces données
             if (validerNom(pNom) && validerDistance(pDistance) && validerDuree(pDuree) && validerSport(pSport)) {
                 setNom(pNom);
                 setDate(pDate);
@@ -69,16 +70,17 @@ public class Activite implements Serializable {
                 setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3600);
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }
-        } catch (Exception e) {
-            System.out.println("Paramètre invalide");
-        }
+
     }
 
+    /*Contructeur avec fichier
+    Permet de créer une activité à partir d'un fichier et d'un nom + sport fournis par l'utilisateur
+     */
     public Activite(String pNom, Sport pSport, File pFichier) {
 
         try {
 
-
+            //Valide les données et initialize les tableaux de données
             if (validerNom(pNom) && validerFichier(pFichier) && validerSport(pSport)) {
 
                 tabLatitude = new ArrayList<>();
@@ -91,12 +93,12 @@ public class Activite implements Serializable {
 
                 setNom(pNom);
                 setSport(pSport);
-
+                //Lis le fichier gpx pour en extaire les données et les ajouter aux tableaux
                 this.lireFichier(pFichier);
                 setDate(tabTemps.get(0).truncatedTo(ChronoUnit.DAYS));
 
-               setHeureDebut( tabTemps.get(0));
-               setHeureFin(tabTemps.get(tabTemps.size() - 1));
+                setHeureDebut(tabTemps.get(0));
+                setHeureFin(tabTemps.get(tabTemps.size() - 1));
                 duree = Duration.between(heureDebut, heureFin);
 
                 construireTabDistance();
@@ -107,18 +109,18 @@ public class Activite implements Serializable {
                 calculerDenivele();
 
                 setVitesseActuelleMetrique(getVitesseActuelleMetrique());
-                setVitesseActuelleImperiale(getVitesseActuelleMetrique()*1000*METRE_MILES);
+                setVitesseActuelleImperiale(getVitesseActuelleMetrique() * 1000 * METRE_MILES);
 
-                long t2 = tabTemps.get(tabTemps.size()-1).getEpochSecond()-Instant.EPOCH.getEpochSecond();
-                long t1 = tabTemps.get(tabTemps.size()-2).getEpochSecond()-Instant.EPOCH.getEpochSecond();
-                long dt = t2-t1;
+                long t2 = tabTemps.get(tabTemps.size() - 1).getEpochSecond() - Instant.EPOCH.getEpochSecond();
+                long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
+                long dt = t2 - t1;
 
                 setVitesseMetrique(calculerVitesseMoyenne(dt));
-                setVitesseImperiale(getVitesseMetrique() *1000* METRE_MILES);
+                setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
                 setAltitudeMaxMetrique(getAltitudeMaxMetrique());
-                setAltitudeMaxImperiale(getAltitudeMaxMetrique()*METRE_PIED);
+                setAltitudeMaxImperiale(getAltitudeMaxMetrique() * METRE_PIED);
                 setAltitudeMinMetrique(getAltitudeMinMetrique());
-                setAltitudeMinImperiale(getAltitudeMinMetrique()*METRE_PIED);
+                setAltitudeMinImperiale(getAltitudeMinMetrique() * METRE_PIED);
                 setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
                 setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
 
@@ -229,7 +231,7 @@ public class Activite implements Serializable {
     }
 
     public double getDeniveleNegatifImperiale() {
-        return this.deniveleNegatifImperiale ;
+        return this.deniveleNegatifImperiale;
     }
 
     private void setDeniveleNegatifImperiale(double deniveleNegatifImperiale) {
@@ -239,10 +241,10 @@ public class Activite implements Serializable {
     //calculer en km/h
     public double getVitesseActuelleMetrique() {
 
-       long t2 = tabTemps.get(tabTemps.size()-1).getEpochSecond()-Instant.EPOCH.getEpochSecond();
-       long t1 = tabTemps.get(tabTemps.size()-2).getEpochSecond()-Instant.EPOCH.getEpochSecond();
-       long dt = t2-t1;
-        return (tabDistanceMetrique.get(tabDistanceMetrique.size()-1)/dt) * 3.6;
+        long t2 = tabTemps.get(tabTemps.size() - 1).getEpochSecond() - Instant.EPOCH.getEpochSecond();
+        long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
+        long dt = t2 - t1;
+        return (tabDistanceMetrique.get(tabDistanceMetrique.size() - 1) / dt) * 3.6;
     }
 
     private void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
@@ -347,11 +349,13 @@ public class Activite implements Serializable {
             ele2 = tabElevationMetrique.get(i + 1);
 
             double theta = lon1 - lon2;
+            //Calcule la la distance entre 2 points
             double dx = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
-            dx = 60*Math.acos(dx);
+            dx = 60 * Math.acos(dx);
             dx = Math.toDegrees(dx);
-            dx = dx*1852;
+            dx = dx * 1852;
 
+            //Prend en compte le dénivelé dans la distance calculée
             dx = Math.sqrt(Math.pow(dx, 2) + Math.pow(ele2 - ele1, 2));
 
             distance += dx;
@@ -369,14 +373,14 @@ public class Activite implements Serializable {
             if (tabElevationMetrique.get(i) < tabElevationMetrique.get(i + 1)) {
                 montee += tabElevationMetrique.get(i + 1) - tabElevationMetrique.get(i);
             } else if (tabElevationMetrique.get(i) > tabElevationMetrique.get(i + 1)) {
-                descente += tabElevationMetrique.get(i) - tabElevationMetrique.get(i+1);
+                descente += tabElevationMetrique.get(i) - tabElevationMetrique.get(i + 1);
             }
 
         }
         setDenivelePositifMetrique(montee);
         setDeniveleNegatifMetrique(descente);
-        setDenivelePositifImperiale(montee*METRE_PIED);
-        setDeniveleNegatifImperiale(descente*METRE_PIED);
+        setDenivelePositifImperiale(montee * METRE_PIED);
+        setDeniveleNegatifImperiale(descente * METRE_PIED);
     }
 
     public double calculerVitesseMoyenne(long temps) {
@@ -448,26 +452,28 @@ public class Activite implements Serializable {
         this.altitudeActuelleImperiale = altitudeActuelleImperiale;
     }
 
-private void construireTabDistance()
-{
-    tabDistanceMetrique.add(0.0);
-    for (int i = 0;i<tabTemps.size()-1;i++)
-    {
-        tabDistanceMetrique.add(calculerDistance(i,i+1));
+    private void construireTabDistance() {
+        tabDistanceMetrique.add(0.0);
+        for (int i = 0; i < tabTemps.size() - 1; i++) {
+            tabDistanceMetrique.add(calculerDistance(i, i + 1));
+        }
+
     }
 
-}
-/*
-private void construireTabVitesse()
-    {
-        tabVitesseMetrique.add(0.0);
-        for (int i = 0;i<tabTemps.size()-1;i++)
+    /*
+    private void construireTabVitesse()
         {
-            tabDistanceMetrique.add(getVitesseActuelleMetrique());
+            tabVitesseMetrique.add(0.0);
+            for (int i = 0;i<tabTemps.size()-1;i++)
+            {
+                tabDistanceMetrique.add(getVitesseActuelleMetrique());
+            }
+            System.out.println(tabVitesseMetrique.size());
         }
-        System.out.println(tabVitesseMetrique.size());
-    }
-*/
+    */
+
+
+    // Lis un fichier GPX pour inscrire ses données dans un objet de type activité
     public void lireFichier(File fichier) {
 
         SAXBuilder builder = new SAXBuilder();
@@ -478,12 +484,16 @@ private void construireTabVitesse()
 
                 Document document = (Document) builder.build(xmlFile);
                 Element rootNode = document.getRootElement();
-                //List<Content> trk2 = rootNode.getContent();
-               Element trk = rootNode.getChild("trk", rootNode.getNamespace());
-                Element trkseg = trk.getChild("trkseg" , trk.getNamespace());
 
+                //Sort l'élément "trk" du fichier
+                Element trk = rootNode.getChild("trk", rootNode.getNamespace());
+                //Sort l'élément "trkseg" du fichier
+                Element trkseg = trk.getChild("trkseg", trk.getNamespace());
+
+                //Sort les élément "trkpt" du fichier
                 List list = trkseg.getChildren("trkpt", trkseg.getNamespace());
 
+                //Itère sur chaque élément "trkpt" pour en sortir les différents attributs
                 for (int i = 0; i < list.size(); i++) {
 
                     Element node = (Element) list.get(i);
@@ -515,6 +525,7 @@ private void construireTabVitesse()
     }
 
 
+    //Écrit un fichier GPX à partir d'un objet de type activité
     public void ecrireFichier(File fichier) {
         ArrayList<Double> tabLatitude = this.getTabLatitude();
         ArrayList<Double> tabLongitude = this.getTabLongitude();
@@ -531,6 +542,7 @@ private void construireTabVitesse()
             Element segment = new Element("trkseg");
             trace.addContent(segment);
 
+            //Itere sur chaque éléments des tableaux de données pour créer les éléments nécessaire dans le fichiers gpx
             for (int i = 0; i < tabLatitude.size(); i++) {
                 Element point = new Element("trkpt");
                 point.setAttribute(new Attribute("lat", tabLatitude.get(i).toString()));

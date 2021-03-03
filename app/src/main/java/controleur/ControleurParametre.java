@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.application.Application;
 import com.example.mapan.R;
 
+import modele.Sport;
+
 public class ControleurParametre extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     String[] nom = { "Sport - Date", "Date", "Date - Durée", "Date - Distance"};
@@ -65,4 +67,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         startActivity(new Intent(ControleurParametre.this, Application.class));
     }
 
+    /*public Sport choisirTypeDéfaut(String type){
+
+    }*/
 }

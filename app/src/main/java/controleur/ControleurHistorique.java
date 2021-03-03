@@ -134,17 +134,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         startActivity(new Intent(ControleurHistorique.this, ControleurParametre.class));
     }
 
-    public void deleteActivity(View view) {
-        modifier_DeleteActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historique_list.removeViewAt(historique_list.getSelectedItemPosition());
-                historique_list.deferNotifyDataSetChanged();
-            }
-        });
-
-    }
-
 
     public void afficherMenuTri(View view) {
         PopupMenu menuTri = new PopupMenu(this, view);

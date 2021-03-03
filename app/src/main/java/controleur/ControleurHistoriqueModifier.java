@@ -207,7 +207,10 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
 
     public void deleteActivity(View view) {
         if(activiteSelect != null){
+            //modifier_list.removeViewAt(listeActivites.indexOf(activiteSelect));
             listeActivites.remove(activiteSelect);
+            adapter.notifyDataSetChanged();
+            modifier_list.refreshDrawableState();
         }
     }
 }

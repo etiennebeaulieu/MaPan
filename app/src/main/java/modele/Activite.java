@@ -55,6 +55,7 @@ public class Activite implements Serializable {
     private ArrayList<Instant> tabTemps = null;
 
 
+    //Constructeur
     public Activite(String pNom, Instant pDate, Sport pSport, int pDuree, double pDistance) {
 
         try {

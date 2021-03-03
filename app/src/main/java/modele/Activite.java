@@ -535,7 +535,6 @@ public class Activite implements Serializable {
         try {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
-            doc.setRootElement(gpx);
 
             Element trace = new Element("trk");
             gpx.addContent(trace);

@@ -83,6 +83,10 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         startActivity(new Intent(ControleurParametre.this, Application.class));
     }
 
+    public void ouvrirHistorique(View view){
+        startActivity(new Intent(ControleurParametre.this, ControleurHistorique.class));
+    }
+
     public void choisirNomDefaut(){
         String nom = spin_nom.getSelectedItem().toString();
 

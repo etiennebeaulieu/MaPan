@@ -36,6 +36,7 @@ import java.util.Comparator;
 
 import modele.Activite;
 import modele.ActiviteAdapter;
+import modele.Fichier;
 import modele.Sport;
 
 public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
@@ -46,29 +47,22 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private Button modifier_DeleteActivity;
     private ActiviteAdapter adapter;
 
+
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique);
         historique_list = findViewById(R.id.modifier_list);
-        adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
+        //adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
+        adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         historique_list.setAdapter(adapter);
 
 
         //enregistrerActivitesTest();
-        loadActivites();
+        Fichier.rafraichir(this.getApplicationContext());
+        //Fichier.loadActivites(this.getApplicationContext());
         adapter.notifyDataSetChanged();
 
-
-
-
-
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        adapter.notifyDataSetChanged();
     }
 
     public void enregistrerActivitesTest() {
@@ -78,60 +72,49 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, 75, 90.5);
         Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, 75, 50.5);
 
-        enregistrer(a1);
-        enregistrer(a2);
-        enregistrer(a3);
-        enregistrer(a4);
-        enregistrer(a5);
-
+        Fichier.enregistrer(this.getApplicationContext(), a1);
+        Fichier.enregistrer(this.getApplicationContext(), a2);
+        Fichier.enregistrer(this.getApplicationContext(), a3);
+        Fichier.enregistrer(this.getApplicationContext(), a4);
+        Fichier.enregistrer(this.getApplicationContext(), a5);
     }
-
-
-
-
-
-    public ArrayList<Activite> getListeActivite() {
-        return listeActivites;
-    }
-
 
     public void trierListeDate() {
-        listeActivites.sort(Comparator.comparing(Activite::getDate));
+        Fichier.getListeActivites().sort(Comparator.comparing(Activite::getDate));
         adapter.notifyDataSetChanged();
     }
 
     public void trierListeDuree() {
-        listeActivites.sort(Comparator.comparing(Activite::getDuree));
+        Fichier.getListeActivites().sort(Comparator.comparing(Activite::getDuree));
         adapter.notifyDataSetChanged();
     }
 
     public void trierListeDistance() {
-        listeActivites.sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
+        Fichier.getListeActivites().sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
         adapter.notifyDataSetChanged();
     }
 
     public void trierListeNom() {
-        listeActivites.sort(Comparator.comparing(Activite::getNom));
+        Fichier.getListeActivites().sort(Comparator.comparing(Activite::getNom));
         adapter.notifyDataSetChanged();
     }
 
     public void trierListeSport() {
-        listeActivites.sort(Comparator.comparing(Activite::getSport));
+        Fichier.getListeActivites().sort(Comparator.comparing(Activite::getSport));
         adapter.notifyDataSetChanged();
     }
 
-    public void ouvrirAccueil(View view){
+    public void ouvrirAccueil(View view) {
         startActivity(new Intent(ControleurHistorique.this, Application.class));
     }
 
-    public void ouvrirModifier(View view){
+    public void ouvrirModifier(View view) {
         startActivity(new Intent(ControleurHistorique.this, ControleurHistoriqueModifier.class));
     }
 
-    public void ouvrirParametre(View view){
+    public void ouvrirParametre(View view) {
         startActivity(new Intent(ControleurHistorique.this, ControleurParametre.class));
     }
-
 
     public void afficherMenuTri(View view) {
         PopupMenu menuTri = new PopupMenu(this, view);
@@ -139,17 +122,14 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         MenuInflater inflater = menuTri.getMenuInflater();
         inflater.inflate(R.menu.menu_tri, menuTri.getMenu());
 
-
         menuTri.show();
 
     }
 
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-       boolean retour = false;
-        switch (item.getItemId())
-        {
+        boolean retour = false;
+        switch (item.getItemId()) {
             case R.id.triNom:
                 trierListeNom();
                 retour = true;
@@ -175,53 +155,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         }
         return retour;
     }
-
-    public void enregistrer(Activite activite) {
-        String nomFichier = activite.getNom() + ".mp";
-
-        try{
-            //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
-            FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(activite);
-            oos.close();
-            fos.close();
-            Toast.makeText(this.getApplicationContext(), activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
-        }catch (IOException io){
-            io.printStackTrace();
-        }
-    }
-
-    public void loadActivites(){
-        String[] fichiers = this.getApplicationContext().fileList();
-        listeActivites.clear();
-
-        for(int i = 0; i<fichiers.length; i++) {
-            Activite activite = null;
-            try {
-                FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(),fichiers[i]));
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                activite = (Activite) ois.readObject();
-                ois.close();
-                fis.close();
-                listeActivites.add(activite);
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    public void partager(Activite activite){
-        File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom()+".gpx");
-        activite.ecrireFichier(fichier);
-    }
-
 }
 
 

@@ -204,4 +204,10 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
             io.printStackTrace();
         }
     }
+
+    public void deleteActivity(View view) {
+        if(activiteSelect != null){
+            listeActivites.remove(activiteSelect);
+        }
+    }
 }

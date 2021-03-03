@@ -55,7 +55,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list.setAdapter(adapter);
 
 
-        enregistrerActivitesTest();
+        //enregistrerActivitesTest();
         loadActivites();
         adapter.notifyDataSetChanged();
 
@@ -194,6 +194,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     public void loadActivites(){
         String[] fichiers = this.getApplicationContext().fileList();
+        listeActivites.clear();
 
         for(int i = 0; i<fichiers.length; i++) {
             Activite activite = null;

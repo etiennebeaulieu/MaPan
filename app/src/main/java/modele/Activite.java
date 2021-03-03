@@ -65,8 +65,8 @@ public class Activite implements Serializable {
                 setDate(pDate);
                 setSport(pSport);
                 setDuree(pDuree);
-                setDistanceMetrique(pDistance);
-                setDistanceImperiale(pDistance);
+                setDistanceMetrique(pDistance*1000);
+                setDistanceImperiale(pDistance*0.621371);
                 setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3600);
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }
@@ -535,7 +535,6 @@ public class Activite implements Serializable {
         try {
             Element gpx = new Element("gpx");
             Document doc = new Document(gpx);
-            doc.setRootElement(gpx);
 
             Element trace = new Element("trk");
             gpx.addContent(trace);

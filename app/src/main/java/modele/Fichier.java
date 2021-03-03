@@ -90,18 +90,11 @@ public class Fichier {
         }
     }
 
-    public static void partager(Context context, Activite activite){
+    public static File partager(Context context, Activite activite){
         File fichier = new File(context.getFilesDir(), activite.getNom()+".gpx");
         activite.ecrireFichier(fichier);
 
-        Uri path = FileProvider.getUriForFile(context, "controleur", fichier);
-
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, path);
-        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        shareIntent.setType("application/gpx");
-        context.startActivity(Intent.createChooser(shareIntent, "Share..."));
+        return fichier;
     }
 
     public static void rafraichir(Context context){

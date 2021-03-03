@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
@@ -46,6 +47,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.example.application.Application;
 import com.example.mapan.R;
@@ -100,8 +102,22 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     public void exporterGPX(View view) {
 
         if(!activiteSelect.equals(null)) {
-            Toast.makeText(ControleurHistoriqueModifier.this, activiteSelect.getNom(), Toast.LENGTH_SHORT).show();
-            Fichier.partager(this.getApplicationContext(), activiteSelect);
+            if(activiteSelect.getTabLatitude() != null) {
+
+                File fichier = Fichier.partager(this.getApplicationContext(), activiteSelect);
+
+                Uri path = FileProvider.getUriForFile(this, "controleur", fichier);
+
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                shareIntent.setType("application/gpx");
+                startActivity(Intent.createChooser(shareIntent, "Partager..."));
+            }
+            else{
+                Toast.makeText(this, "Le fichier doit avoir des données de localisation", Toast.LENGTH_SHORT).show();
+            }
 
 
 

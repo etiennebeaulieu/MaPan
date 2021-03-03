@@ -60,7 +60,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
         //enregistrerActivitesTest();
         Fichier.rafraichir(this.getApplicationContext());
-        //Fichier.loadActivites(this.getApplicationContext());
         adapter.notifyDataSetChanged();
 
     }

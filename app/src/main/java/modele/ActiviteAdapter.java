@@ -13,7 +13,11 @@ import androidx.annotation.Nullable;
 
 import com.example.mapan.R;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
@@ -42,8 +46,8 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
         iconSport.setImageResource(getItem(position).getSport().getImage());
         txtNom.setText(getItem(position).getNom());
-        txtDate.setText(getItem(position).getDate().toString());
-        txtDuree.setText(getItem(position).getDuree().toString());
+        txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("EST")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
         if (isDistanceMetrique)
             txtDistance.setText(getItem(position).getDistanceMetrique() + "km");
         else

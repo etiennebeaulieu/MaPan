@@ -13,11 +13,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.application.Application;
 import com.example.mapan.R;
 
+import modele.Sport;
+
 public class ControleurParametre extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    String[] nom = { "Sport - Date", "Date", "Date - Durée", "Date - Distance"};
-    String[] type = { "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
-    SharedPreferences.Editor editor;
+    private String[] nom = { "Sport - Date", "Date", "Date - Durée", "Date - Distance"};
+    private String[] type = { "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
+    private SharedPreferences.Editor editor;
+    private Spinner spin_nom;
+    private Spinner spin_type;
+    private ArrayAdapter aa1;
+    private ArrayAdapter aa2;
+    private Sport sportDefaut;
+    private String nomDefaut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,20 +36,32 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         SharedPreferences pref = getApplicationContext().getSharedPreferences("Preferences", 0);
         editor = pref.edit();
 
-        Spinner spin_nom = (Spinner) findViewById(R.id.choix_nom_defaut);
+        spin_nom = (Spinner) findViewById(R.id.choix_nom_defaut);
         spin_nom.setOnItemSelectedListener(this);
 
-        ArrayAdapter aa1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,nom);
+        aa1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,nom);
         aa1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_nom.setAdapter(aa1);
 
 
-        Spinner spin_type = (Spinner) findViewById(R.id.choix_type_defaut);
+        spin_type = (Spinner) findViewById(R.id.choix_type_defaut);
         spin_type.setOnItemSelectedListener(this);
 
-        ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,type);
+        aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,type);
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_type.setAdapter(aa2);
+
+        /*if(spin_type.isSelected()){
+            choisirTypeDefaut();
+            aa2.notifyDataSetChanged();
+            spin_type.refreshDrawableState();
+        }
+
+        if(spin_nom.isSelected()){
+            choisirNomDefaut();
+            aa1.notifyDataSetChanged();
+            spin_nom.refreshDrawableState();
+        }*/
     }
 
     @Override
@@ -65,4 +85,31 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         startActivity(new Intent(ControleurParametre.this, Application.class));
     }
 
+    public void choisirNomDefaut(){
+        String nom = spin_nom.getSelectedItem().toString();
+
+        if(!nom.isEmpty() && !nom.equals(null)){
+            nomDefaut = nom;
+            aa1.notifyDataSetChanged();
+            spin_nom.refreshDrawableState();
+        }
+    }
+
+    public String getNomDefaut(){
+        return nomDefaut;
+    }
+
+    public void choisirTypeDefaut(){
+        String sport = spin_type.getSelectedItem().toString();
+
+        if(!sport.equals(null) && !sport.isEmpty()) {
+            sportDefaut = Sport.valueOf(sport);
+            aa2.notifyDataSetChanged();
+            spin_type.refreshDrawableState();
+        }
+    }
+
+    public Sport getTypeDefaut(){
+        return sportDefaut;
+    }
 }

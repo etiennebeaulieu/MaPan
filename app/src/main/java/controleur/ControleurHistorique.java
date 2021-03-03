@@ -55,11 +55,9 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list.setAdapter(adapter);
 
 
-        //enregistrerActivitesTest();
+        enregistrerActivitesTest();
         loadActivites();
         adapter.notifyDataSetChanged();
-
-
 
 
 
@@ -132,17 +130,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     public void ouvrirParametre(View view){
         startActivity(new Intent(ControleurHistorique.this, ControleurParametre.class));
-    }
-
-    public void deleteActivity(View view) {
-        modifier_DeleteActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                historique_list.removeViewAt(historique_list.getSelectedItemPosition());
-                historique_list.deferNotifyDataSetChanged();
-            }
-        });
-
     }
 
 

@@ -1,54 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:padding="16dp"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:padding="15dp">
 
 
     <ImageView
         android:id="@+id/iconSport"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/course"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
 
-        />
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp"
+        android:src="@drawable/course" />
 
     <TextView
         android:id="@+id/textViewNom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/textViewDate"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/textViewDistance"
+        android:layout_toEndOf="@+id/iconSport"
         android:layout_toRightOf="@id/iconSport"
+        android:gravity="center_vertical"
         android:text="Nom"
-        android:textColor="#000000" />
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/textViewDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/textViewNom"
-        android:text="Date" />
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="10dp"
+        android:layout_toEndOf="@+id/iconSport"
+        android:gravity="center_vertical"
+        android:text="Date"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewDuree"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewNom"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="128dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="15dp"
+        android:layout_toStartOf="@+id/textViewDistance"
         android:layout_toRightOf="@id/iconSport"
-        android:text="Durée" />
+        android:gravity="center_vertical"
+        android:text="Durée"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewDistance"
-        android:layout_width="70dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/textViewDate"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:gravity="center"
         android:text="Distance"
-        android:textAlignment="textStart"
-        android:textSize="25sp" />
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

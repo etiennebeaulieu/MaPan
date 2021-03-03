@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import android.widget.AdapterView;
 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,8 +119,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
 
             Activite importation = new Activite(nom, sport, fichier);
             enregistrer(importation);
-            loadActivites();
-            adapter.notifyDataSetChanged();
+            rafraichir();
         } else {
             requestStoragePermission();
         }
@@ -202,20 +204,73 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
         }
     }
 
-    public void deleteActivity(View view) {
-        if (!activiteSelect.equals(null)) {
-            if (new File(this.getApplicationContext().getFilesDir(), activiteSelect.getNom() + ".mp").delete()) {
-                Toast.makeText(this, "Activité supprimée", Toast.LENGTH_SHORT).show();
-            }
-
-            loadActivites();
-            adapter.notifyDataSetChanged();
+    public void supprimer(Activite activite){
+        String nom = activite.getNom();
+        if(new File(this.getApplicationContext().getFilesDir(), nom + ".mp").delete()){
+            Toast.makeText(this, nom +" supprimée", Toast.LENGTH_SHORT).show();
         }
     }
 
-    /*public void renommer(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder();
-    }*/
+    public void rafraichir(){
+        loadActivites();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void deleteActivity(View view) {
+        if (!activiteSelect.equals(null)) {
+            supprimer(activiteSelect);
+
+            rafraichir();
+        }
+    }
+
+    public void renommer(View view){
+        if(activiteSelect != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            builder.setTitle("Renommer l'activité").setMessage("Entrez le nouveau nom").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    supprimer(activiteSelect);
+                    activiteSelect.setNom(input.getText().toString());
+                    enregistrer(activiteSelect);
+                    rafraichir();
+                }
+            }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }
+    }
+
+    public void changerSport(View view){
+        if(activiteSelect != null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            Spinner spinner = new Spinner(this);
+            ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+            aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(aa2);
+            builder.setTitle("Changer le type d'activité").setMessage("Sélectionner le type d'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            supprimer(activiteSelect);
+                            activiteSelect.setSport(Sport.valueOf(spinner.getSelectedItem().toString()));
+                            enregistrer(activiteSelect);
+                            rafraichir();
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(spinner).show();
+        }
+    }
 
 
 }

@@ -97,6 +97,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:backgroundTint="#00FFFFFF"
+            android:onClick="changerSport"
             android:text="changer le type d'activité" />
 
         <LinearLayout

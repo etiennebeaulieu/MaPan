@@ -65,8 +65,8 @@ public class Activite implements Serializable {
                 setDate(pDate);
                 setSport(pSport);
                 setDuree(pDuree);
-                setDistanceMetrique(pDistance);
-                setDistanceImperiale(pDistance);
+                setDistanceMetrique(pDistance*1000);
+                setDistanceImperiale(pDistance*0.621371);
                 setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3600);
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }

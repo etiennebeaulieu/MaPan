@@ -38,6 +38,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         NumberFormat formatter = new DecimalFormat("#0.00");
+        Activite activite = getItem(position);
 
         convertView = layoutInflater.inflate(mResource, parent, false);
 

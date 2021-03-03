@@ -1,7 +1,11 @@
 package modele;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +38,6 @@ public class Fichier {
 
 
         try{
-            //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
             FileOutputStream fos = new FileOutputStream(fichier);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(activite);
@@ -47,21 +50,17 @@ public class Fichier {
     }
 
     public static void loadActivites(Context context){
-        //ArrayList<Activite> listeActivites = new ArrayList<>();
         File directory = context.getFilesDir();
         File dossierActivite = new File(directory, "activites");
         if(!dossierActivite.exists())
             dossierActivite.mkdir();
 
         File[] fichiers = dossierActivite.listFiles();
-        //String[] fichiers = this.getApplicationContext().fileList();
 
         listeActivites.clear();
         for(int i = 0; i<fichiers.length; i++) {
             Activite activite = null;
             try {
-                //FileInputStream fis = this.getApplicationContext().openFileInput(fichiers[i]);
-                //FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(),fichiers[i]));
                 FileInputStream fis = new FileInputStream(fichiers[i]);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 activite = (Activite) ois.readObject();
@@ -94,6 +93,15 @@ public class Fichier {
     public static void partager(Context context, Activite activite){
         File fichier = new File(context.getFilesDir(), activite.getNom()+".gpx");
         activite.ecrireFichier(fichier);
+
+        Uri path = FileProvider.getUriForFile(context, "controleur", fichier);
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        shareIntent.setType("application/gpx");
+        context.startActivity(Intent.createChooser(shareIntent, "Share..."));
     }
 
     public static void rafraichir(Context context){

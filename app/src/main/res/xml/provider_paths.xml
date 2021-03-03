@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path
+        name="fichiers_internes"
+        path=".">
+    </files-path>
+
+    <files-path
+        name="fichiers_activites"
+        path="activites/">
+    </files-path>
+</paths>

@@ -65,7 +65,6 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     private ActiviteAdapter adapter;
     private Activite activiteSelect;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,14 +99,19 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
 
     public void exporterGPX(View view) {
 
-        Toast.makeText(ControleurHistoriqueModifier.this, activiteSelect.getNom(), Toast.LENGTH_SHORT).show();
-        //partager(activiteSelect);
-        Fichier.partager(this.getApplicationContext(), activiteSelect);
+        if(!activiteSelect.equals(null)) {
+            Toast.makeText(ControleurHistoriqueModifier.this, activiteSelect.getNom(), Toast.LENGTH_SHORT).show();
+            Fichier.partager(this.getApplicationContext(), activiteSelect);
 
 
 
-        modifier_list.clearChoices();
-        adapter.notifyDataSetChanged();
+            modifier_list.clearChoices();
+            adapter.notifyDataSetChanged();
+        }
+
+
+
+
 
     }
 
@@ -175,7 +179,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     }
 
     public void renommer(View view){
-        if(activiteSelect != null) {
+        if(!activiteSelect.equals(null)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -200,7 +204,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     }
 
     public void changerSport(View view){
-        if(activiteSelect != null){
+        if(!activiteSelect.equals(null)){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Spinner spinner = new Spinner(this);
             ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());

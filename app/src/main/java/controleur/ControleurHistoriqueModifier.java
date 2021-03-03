@@ -212,4 +212,10 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
             modifier_list.refreshDrawableState();
         }
     }
+
+    /*public void renommer(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder();
+    }*/
+
+
 }

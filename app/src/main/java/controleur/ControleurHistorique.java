@@ -59,7 +59,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         loadActivites();
         adapter.notifyDataSetChanged();
 
-        if()
 
 
 

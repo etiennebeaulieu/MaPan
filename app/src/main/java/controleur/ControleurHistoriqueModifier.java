@@ -53,7 +53,7 @@ import modele.Sport;
 
 import static com.example.mapan.R.id.modifier_exporter;
 
-public class ControleurHistoriqueModifier extends AppCompatActivity{
+public class ControleurHistoriqueModifier extends AppCompatActivity {
 
     private ListView modifier_list;
     private ImageButton modifier_exporter;
@@ -85,32 +85,29 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
         });
 
 
-
-
         loadActivites();
         adapter.notifyDataSetChanged();
     }
 
 
-
-    public void ouvrirAccueil(View view){
+    public void ouvrirAccueil(View view) {
         startActivity(new Intent(ControleurHistoriqueModifier.this, Application.class));
     }
 
-    public void ouvrirHistorique(View view){
+    public void ouvrirHistorique(View view) {
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
     }
 
-    public void exporterGPX(View view){
+    public void exporterGPX(View view) {
 
         Toast.makeText(ControleurHistoriqueModifier.this, activiteSelect.getNom(), Toast.LENGTH_SHORT).show();
         partager(activiteSelect);
 
     }
 
-    public void importerGPX(View view){
+    public void importerGPX(View view) {
 
-        if(ContextCompat.checkSelfPermission(ControleurHistoriqueModifier.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(ControleurHistoriqueModifier.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
             //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
             String nom = "Test Import";
@@ -119,14 +116,15 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
 
             Activite importation = new Activite(nom, sport, fichier);
             enregistrer(importation);
+            loadActivites();
             adapter.notifyDataSetChanged();
-        }else{
+        } else {
             requestStoragePermission();
         }
     }
 
-    private void requestStoragePermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+    private void requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La permission est nécessaire pour avoir accès aux fichiers")
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -141,7 +139,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
                         }
                     })
                     .create().show();
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
@@ -159,21 +157,20 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
     }
 
 
-
-    public void loadActivites(){
+    public void loadActivites() {
         String[] fichiers = this.getApplicationContext().fileList();
+        listeActivites.clear();
 
-        for(int i = 0; i<fichiers.length; i++) {
+        for (int i = 0; i < fichiers.length; i++) {
             Activite activite = null;
             try {
-                FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(),fichiers[i]));
+                FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(), fichiers[i]));
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 activite = (Activite) ois.readObject();
                 ois.close();
                 fis.close();
                 listeActivites.add(activite);
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -184,15 +181,15 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
         }
     }
 
-    public void partager(Activite activite){
-        File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom()+".gpx");
+    public void partager(Activite activite) {
+        File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom() + ".gpx");
         activite.ecrireFichier(fichier);
     }
 
     public void enregistrer(Activite activite) {
         String nomFichier = activite.getNom() + ".mp";
 
-        try{
+        try {
             //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
             FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -200,16 +197,19 @@ public class ControleurHistoriqueModifier extends AppCompatActivity{
             oos.close();
             fos.close();
             Toast.makeText(this.getApplicationContext(), activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
-        }catch (IOException io){
+        } catch (IOException io) {
             io.printStackTrace();
         }
     }
 
     public void deleteActivity(View view) {
-        if(!activiteSelect.equals(null)){
-            listeActivites.remove(activiteSelect);
+        if (!activiteSelect.equals(null)) {
+            if (new File(this.getApplicationContext().getFilesDir(), activiteSelect.getNom() + ".mp").delete()) {
+                Toast.makeText(this, "Activité supprimée", Toast.LENGTH_SHORT).show();
+            }
+
+            loadActivites();
             adapter.notifyDataSetChanged();
-            modifier_list.refreshDrawableState();
         }
     }
 

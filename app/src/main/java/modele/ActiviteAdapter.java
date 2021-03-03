@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 
 import com.example.mapan.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +37,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        NumberFormat formatter = new DecimalFormat("#0.00");
 
         convertView = layoutInflater.inflate(mResource, parent, false);
 
@@ -47,11 +50,11 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
         iconSport.setImageResource(getItem(position).getSport().getImage());
         txtNom.setText(getItem(position).getNom());
         txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
-        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("EST")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
         if (isDistanceMetrique)
-            txtDistance.setText(getItem(position).getDistanceMetrique() + "km");
+            txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique()/1000) + "km");
         else
-            txtDistance.setText(getItem(position).getDistanceImperiale() + "mi");
+            txtDistance.setText(formatter.format(getItem(position).getDistanceImperiale()) + "mi");
 
 
         return convertView;

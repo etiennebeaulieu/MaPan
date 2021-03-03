@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import android.widget.AdapterView;
 
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,7 @@ import com.example.mapan.R;
 
 import modele.Activite;
 import modele.ActiviteAdapter;
+import modele.Fichier;
 import modele.Sport;
 
 import static com.example.mapan.R.id.modifier_exporter;
@@ -57,8 +61,6 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
 
     private ListView modifier_list;
     private ImageButton modifier_exporter;
-    private ArrayList<Activite> listeActivites;
-    private ControleurHistorique historique;
     private boolean isDistanceMetrique = true;
     private ActiviteAdapter adapter;
     private Activite activiteSelect;
@@ -69,12 +71,11 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique_modifier);
 
-        listeActivites = new ArrayList<Activite>();
         modifier_list = findViewById(R.id.modifier_list);
         modifier_exporter = findViewById(R.id.modifier_exporter);
         activiteSelect = null;
 
-        adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
+        adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         modifier_list.setAdapter(adapter);
 
         modifier_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,8 +85,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
             }
         });
 
-
-        loadActivites();
+        Fichier.rafraichir(this.getApplicationContext());
         adapter.notifyDataSetChanged();
     }
 
@@ -101,7 +101,13 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     public void exporterGPX(View view) {
 
         Toast.makeText(ControleurHistoriqueModifier.this, activiteSelect.getNom(), Toast.LENGTH_SHORT).show();
-        partager(activiteSelect);
+        //partager(activiteSelect);
+        Fichier.partager(this.getApplicationContext(), activiteSelect);
+
+
+
+        modifier_list.clearChoices();
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -109,14 +115,16 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(ControleurHistoriqueModifier.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
+
+
             //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
             String nom = "Test Import";
             Sport sport = Sport.VELO;
             File fichier = new File(this.getApplicationContext().getFilesDir(), "run.gpx");
 
             Activite importation = new Activite(nom, sport, fichier);
-            enregistrer(importation);
-            loadActivites();
+            Fichier.enregistrer(this.getApplicationContext(), importation);
+            Fichier.rafraichir(this.getApplicationContext());
             adapter.notifyDataSetChanged();
         } else {
             requestStoragePermission();
@@ -157,65 +165,66 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     }
 
 
-    public void loadActivites() {
-        String[] fichiers = this.getApplicationContext().fileList();
-        listeActivites.clear();
-
-        for (int i = 0; i < fichiers.length; i++) {
-            Activite activite = null;
-            try {
-                FileInputStream fis = new FileInputStream(new File(this.getApplicationContext().getFilesDir(), fichiers[i]));
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                activite = (Activite) ois.readObject();
-                ois.close();
-                fis.close();
-                listeActivites.add(activite);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    public void partager(Activite activite) {
-        File fichier = new File(this.getApplicationContext().getFilesDir(), activite.getNom() + ".gpx");
-        activite.ecrireFichier(fichier);
-    }
-
-    public void enregistrer(Activite activite) {
-        String nomFichier = activite.getNom() + ".mp";
-
-        try {
-            //FileOutputStream fos = this.getApplicationContext().openFileOutput(nomFichier, Context.MODE_PRIVATE);
-            FileOutputStream fos = new FileOutputStream(new File(this.getApplicationContext().getFilesDir(), nomFichier));
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(activite);
-            oos.close();
-            fos.close();
-            Toast.makeText(this.getApplicationContext(), activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
-    }
-
     public void deleteActivity(View view) {
         if (!activiteSelect.equals(null)) {
-            if (new File(this.getApplicationContext().getFilesDir(), activiteSelect.getNom() + ".mp").delete()) {
-                Toast.makeText(this, "Activité supprimée", Toast.LENGTH_SHORT).show();
-            }
-
-            loadActivites();
+            Fichier.supprimer(this.getApplicationContext(), activiteSelect);
+            Fichier.rafraichir(this.getApplicationContext());
+            modifier_list.clearChoices();
             adapter.notifyDataSetChanged();
         }
     }
 
-    /*public void renommer(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder();
-    }*/
+    public void renommer(View view){
+        if(activiteSelect != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            builder.setTitle("Renommer l'activité").setMessage("Entrez le nouveau nom").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Fichier.supprimer(ControleurHistoriqueModifier.this, activiteSelect);
+                    activiteSelect.setNom(input.getText().toString());
+                    Fichier.enregistrer(ControleurHistoriqueModifier.this, activiteSelect);
+                    Fichier.rafraichir(ControleurHistoriqueModifier.this);
+                    modifier_list.clearChoices();
+                    adapter.notifyDataSetChanged();
+                }
+            }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }
+    }
+
+    public void changerSport(View view){
+        if(activiteSelect != null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            Spinner spinner = new Spinner(this);
+            ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+            aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(aa2);
+            builder.setTitle("Changer le type d'activité").setMessage("Sélectionner le type d'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Fichier.supprimer(ControleurHistoriqueModifier.this, activiteSelect);
+                            activiteSelect.setSport(Sport.valueOf(spinner.getSelectedItem().toString()));
+                            Fichier.enregistrer(ControleurHistoriqueModifier.this, activiteSelect);
+                            Fichier.rafraichir(ControleurHistoriqueModifier.this);
+                            modifier_list.clearChoices();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(spinner).show();
+        }
+    }
 
 
 }

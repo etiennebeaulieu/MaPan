@@ -8,8 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +45,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -66,6 +69,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     private boolean isDistanceMetrique = true;
     private ActiviteAdapter adapter;
     private Activite activiteSelect;
+    private static final int CHOISIR_GPX = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +118,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 shareIntent.setType("application/gpx");
                 startActivity(Intent.createChooser(shareIntent, "Partager..."));
+                fichier.delete();
             }
             else{
                 Toast.makeText(this, "Le fichier doit avoir des données de localisation", Toast.LENGTH_SHORT).show();
@@ -131,23 +136,55 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void importerGPX(View view) {
 
-        if (ContextCompat.checkSelfPermission(ControleurHistoriqueModifier.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (Environment.isExternalStorageManager()) {
             Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
+
+            Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            //loadIntent.addCategory(Intent.CATEGORY_OPENABLE);
+            loadIntent.setType("application/*");
+            startActivityForResult(loadIntent, CHOISIR_GPX);
 
 
             //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
-            String nom = "Test Import";
+/*            String nom = "Test Import";
             Sport sport = Sport.VELO;
-            File fichier = new File(this.getApplicationContext().getFilesDir(), "run.gpx");
+            File fichier = new File(Environment.getExternalStorageDirectory(), "Download/run.gpx");
 
             Activite importation = new Activite(nom, sport, fichier);
             Fichier.enregistrer(this.getApplicationContext(), importation);
             Fichier.rafraichir(this.getApplicationContext());
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();*/
         } else {
             requestStoragePermission();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK) {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+
+                File fichier = new File(uri.getPath());
+                //final String[] split = fichier.getPath().split(":");
+                //File fichier2 = new File(split[1]);
+
+                if(fichier.exists()) {
+                    String nom = "Test Import";
+                    Sport sport = Sport.VELO;
+
+                    Activite importation = new Activite(nom, sport, fichier);
+                    Fichier.enregistrer(this.getApplicationContext(), importation);
+                    Fichier.rafraichir(this.getApplicationContext());
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
         }
     }
 

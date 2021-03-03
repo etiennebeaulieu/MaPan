@@ -225,7 +225,7 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/edit" />
+                app:srcCompat="@drawable/book" />
 
             <ImageButton
                 android:id="@+id/historique_homeButton"

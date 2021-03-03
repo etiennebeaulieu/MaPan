@@ -54,13 +54,11 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         /*if(spin_type.isSelected()){
             choisirTypeDefaut();
             aa2.notifyDataSetChanged();
-            spin_type.refreshDrawableState();
         }
 
         if(spin_nom.isSelected()){
             choisirNomDefaut();
             aa1.notifyDataSetChanged();
-            spin_nom.refreshDrawableState();
         }*/
     }
 
@@ -91,7 +89,6 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         if(!nom.isEmpty() && !nom.equals(null)){
             nomDefaut = nom;
             aa1.notifyDataSetChanged();
-            spin_nom.refreshDrawableState();
         }
     }
 
@@ -105,7 +102,6 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         if(!sport.equals(null) && !sport.isEmpty()) {
             sportDefaut = Sport.valueOf(sport);
             aa2.notifyDataSetChanged();
-            spin_type.refreshDrawableState();
         }
     }
 

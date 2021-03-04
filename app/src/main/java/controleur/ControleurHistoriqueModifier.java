@@ -177,11 +177,33 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                 if(fichier.exists()) {
                     String nom = "Test Import";
                     Sport sport = Sport.VELO;
-
+/*
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    EditText input = new EditText(this);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+                    Spinner spinner = new Spinner(this);
+                    ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+                    aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(aa2);
+                    builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
+                            adapter.add(importation);
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+                    */
                     Activite importation = new Activite(nom, sport, fichier);
-                    Fichier.enregistrer(this.getApplicationContext(), importation);
+                   // Fichier.enregistrer(this.getApplicationContext(), adapter.getItem(adapter.getCount()-1));
                     Fichier.rafraichir(this.getApplicationContext());
                     adapter.notifyDataSetChanged();
+                  //  adapter.remove(adapter.getItem(adapter.getCount()-1));
                 }
 
             }

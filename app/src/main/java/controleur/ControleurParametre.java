@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,6 +27,11 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     private ArrayAdapter aa2;
     private Sport sportDefaut;
     private String nomDefaut;
+    private Switch imperial_pour_tout;
+    private Switch imperial_pour_distance;
+    private Switch imperial_pour_vitesse;
+    private Switch imperial_pour_altitude;
+    private Switch imperial_pour_denivele;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,45 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,type);
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_type.setAdapter(aa2);
+
+        imperial_pour_tout=(Switch)findViewById(R.id.imperial_pour_tout);
+        imperial_pour_tout.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+            imperial_pour_distance.setChecked(false);
+            imperial_pour_vitesse.setChecked(false);
+            imperial_pour_altitude.setChecked(false);
+            imperial_pour_denivele.setChecked(false);
+
+            imperial_pour_distance.setEnabled(!imperial_pour_tout.isChecked());
+            imperial_pour_vitesse.setEnabled(!imperial_pour_tout.isChecked());
+            imperial_pour_altitude.setEnabled(!imperial_pour_tout.isChecked());
+            imperial_pour_denivele.setEnabled(!imperial_pour_tout.isChecked());
+            editor.putBoolean("impérial pour tout", imperial_pour_tout.isChecked());
+
+        });
+
+        imperial_pour_distance=(Switch)findViewById(R.id.imperial_pour_distance);
+        imperial_pour_distance.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean("impérial pour distance", imperial_pour_distance.isSelected());
+        });
+
+        imperial_pour_vitesse=(Switch)findViewById(R.id.imperial_pour_vitesse);
+        imperial_pour_vitesse.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean("impérial pour vitesse", imperial_pour_distance.isSelected());
+
+        });
+
+        imperial_pour_altitude=(Switch)findViewById(R.id.imperial_pour_altitude);
+        imperial_pour_altitude.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean("impérial pour altitude", imperial_pour_distance.isSelected());
+
+        });
+
+        imperial_pour_denivele=(Switch)findViewById(R.id.imperial_pour_denivele);
+        imperial_pour_denivele.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean("impérial pour denivele", imperial_pour_distance.isSelected());
+
+        });
 
         /*if(spin_type.isSelected()){
             choisirTypeDefaut();

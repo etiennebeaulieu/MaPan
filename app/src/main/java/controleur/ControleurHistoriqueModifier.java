@@ -200,6 +200,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                     }).show();
                     */
                     Activite importation = new Activite(nom, sport, fichier);
+                     Fichier.enregistrer(this.getApplicationContext(),importation);
                    // Fichier.enregistrer(this.getApplicationContext(), adapter.getItem(adapter.getCount()-1));
                     Fichier.rafraichir(this.getApplicationContext());
                     adapter.notifyDataSetChanged();

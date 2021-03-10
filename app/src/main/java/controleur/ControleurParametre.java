@@ -69,30 +69,30 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
             imperial_pour_vitesse.setEnabled(!imperial_pour_tout.isChecked());
             imperial_pour_altitude.setEnabled(!imperial_pour_tout.isChecked());
             imperial_pour_denivele.setEnabled(!imperial_pour_tout.isChecked());
-            editor.putBoolean("impérial pour tout", imperial_pour_tout.isChecked());
+            editor.putBoolean("impérial pour tout", imperial_pour_tout.isChecked()).apply();
 
         });
 
         imperial_pour_distance=(Switch)findViewById(R.id.imperial_pour_distance);
         imperial_pour_distance.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour distance", imperial_pour_distance.isSelected());
+            editor.putBoolean("impérial pour distance", imperial_pour_distance.isSelected()).apply();
         });
 
         imperial_pour_vitesse=(Switch)findViewById(R.id.imperial_pour_vitesse);
         imperial_pour_vitesse.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour vitesse", imperial_pour_distance.isSelected());
+            editor.putBoolean("impérial pour vitesse", imperial_pour_distance.isSelected()).apply();
 
         });
 
         imperial_pour_altitude=(Switch)findViewById(R.id.imperial_pour_altitude);
         imperial_pour_altitude.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour altitude", imperial_pour_distance.isSelected());
+            editor.putBoolean("impérial pour altitude", imperial_pour_distance.isSelected()).apply();
 
         });
 
         imperial_pour_denivele=(Switch)findViewById(R.id.imperial_pour_denivele);
         imperial_pour_denivele.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour denivele", imperial_pour_distance.isSelected());
+            editor.putBoolean("impérial pour denivele", imperial_pour_distance.isSelected()).apply();
 
         });
 
@@ -111,10 +111,10 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     switch(parent.getId()){
         case R.id.choix_nom_defaut:{
-            editor.putString("nom_défaut", parent.getItemAtPosition(position).toString());
+            editor.putString("nom_défaut", parent.getItemAtPosition(position).toString()).apply();
         }
         case R.id.choix_type_defaut:{
-            editor.putString("type_défaut", parent.getItemAtPosition(position).toString());
+            editor.putString("type_défaut", parent.getItemAtPosition(position).toString()).apply();
         }
     }
     }

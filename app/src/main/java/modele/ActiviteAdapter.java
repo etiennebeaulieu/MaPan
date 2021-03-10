@@ -1,6 +1,7 @@
 package modele;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
     private Context mContext;
     private int mResource;
+    private SharedPreferences sharedPreferences;
     private boolean isDistanceMetrique = true;
 
     public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
@@ -52,7 +54,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
         txtNom.setText(getItem(position).getNom());
         txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
-        if (isDistanceMetrique)
+        if (sharedPreferences.getBoolean("impérial pour distance", false))
             txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique()/1000) + "km");
         else
             txtDistance.setText(formatter.format(getItem(position).getDistanceImperiale()) + "mi");

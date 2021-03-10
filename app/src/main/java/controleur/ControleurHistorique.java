@@ -55,10 +55,10 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private Button modifier_DeleteActivity;
     private ActiviteAdapter adapter;
 
-    private Activite ajouterActivite = null;
-    private String ajouterNom = null;
-    private Instant ajouterDate = null;
-    private Sport ajouterSport = null;
+    private Activite ajouterActivite;
+    private String ajouterNom = "";
+    private Instant ajouterDate = Instant.ofEpochMilli(0);
+    private Sport ajouterSport = Sport.COURSE;
     private int ajouterDuree = 0;
     private double ajouterDistance = 0.0;
 
@@ -142,7 +142,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     }
 
-    public void ajouterActivite(View view) {
+    /*public void ajouterActivite(View view) {
         AlertDialog.Builder builderSport = new AlertDialog.Builder(this);
         AlertDialog.Builder builderNom = new AlertDialog.Builder(this);
         AlertDialog.Builder builderDistance = new AlertDialog.Builder(this);
@@ -251,6 +251,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
         if(!(ajouterNom.equals(null)) && !(ajouterDate.equals(null)) && !(ajouterSport.equals(null))
                 && !(ajouterDuree == 0) && !(ajouterDistance == 0.0)){
+
             ajouterActivite = new Activite(ajouterNom, ajouterDate, ajouterSport, ajouterDuree, ajouterDistance);
 
             Fichier.enregistrer(this.getApplicationContext(), ajouterActivite);
@@ -263,8 +264,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
             ajouterDuree = 0;
             ajouterDistance = 0.0;
         }
-
-    }
+    }*/
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

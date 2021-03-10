@@ -62,10 +62,10 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         imperial_pour_tout.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour tout",false));
         imperial_pour_tout.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-            imperial_pour_distance.setChecked(true);
-            imperial_pour_vitesse.setChecked(true);
-            imperial_pour_altitude.setChecked(true);
-            imperial_pour_denivele.setChecked(true);
+            imperial_pour_distance.setChecked(imperial_pour_tout.isChecked());
+            imperial_pour_vitesse.setChecked(imperial_pour_tout.isChecked());
+            imperial_pour_altitude.setChecked(imperial_pour_tout.isChecked());
+            imperial_pour_denivele.setChecked(imperial_pour_tout.isChecked());
 
             imperial_pour_distance.setEnabled(!imperial_pour_tout.isChecked());
             imperial_pour_vitesse.setEnabled(!imperial_pour_tout.isChecked());

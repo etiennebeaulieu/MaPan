@@ -26,7 +26,6 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
     private Context mContext;
     private int mResource;
-    private SharedPreferences sharedPreferences;
     private boolean isDistanceMetrique = true;
 
     public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
@@ -50,16 +49,19 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
         TextView txtDuree = convertView.findViewById(R.id.textViewDuree);
         TextView txtDistance = convertView.findViewById(R.id.textViewDistance);
 
-        iconSport.setImageResource(getItem(position).getSport().getImage());
-        txtNom.setText(getItem(position).getNom());
-        txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
-        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
-        if (sharedPreferences.getBoolean("impérial pour distance", false))
-            txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique()/1000) + "km");
-        else
-            txtDistance.setText(formatter.format(getItem(position).getDistanceImperiale()) + "mi");
 
+            iconSport.setImageResource(getItem(position).getSport().getImage());
+            txtNom.setText(getItem(position).getNom());
+            txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
+            txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
+            if (mContext.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+            {
+                txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique() / 1000) + "km");
+            } else
+            {
+                txtDistance.setText(formatter.format(getItem(position).getDistanceImperiale()) + "mi");
 
+        }
         return convertView;
     }
 }

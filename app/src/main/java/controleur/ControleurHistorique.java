@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.text.InputType;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -55,8 +56,10 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private ActiviteAdapter adapter;
 
     private Activite ajouterActivite = null;
-    private Sport ajouterSport = null;
     private String ajouterNom = null;
+    private Instant ajouterDate = null;
+    private Sport ajouterSport = null;
+    private int ajouterDuree = 0;
     private double ajouterDistance = 0.0;
 
 
@@ -144,7 +147,9 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         AlertDialog.Builder builderNom = new AlertDialog.Builder(this);
         AlertDialog.Builder builderDistance = new AlertDialog.Builder(this);
 
-        View viewAjouter = new View(this);
+        //View viewAjouter = getLayoutInflater().inflate(, null);
+
+        ajouterSport = null;
 
         Spinner spinner = new Spinner(this);
         ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
@@ -157,44 +162,107 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         EditText inputDistance = new EditText(this);
         inputDistance.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        builderSport.setTitle("Créez une nouvelle activité").setMessage("Choisir le type d'activité")
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface Dialog, int which) {
-                        ajouterSport = Sport.valueOf(spinner.getSelectedItem().toString());
-                    }
-                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-            }
-        }).setView(spinner).show();
+        EditText inputDate = new EditText(this);
+        inputDate.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        builderNom.setTitle("Nommez l'activité").setMessage("Insérer un nom d'activité")
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ajouterNom = inputNom.getText().toString();
-                    }
-                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setView(inputNom).show();
+        EditText inputDuree = new EditText(this);
+        inputDuree.setInputType(InputType.TYPE_CLASS_TEXT);
 
-        builderDistance.setTitle("Énoncez la distance").setMessage("Insérez la distance parcourue lors de l'activité")
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ajouterDistance = Double.valueOf(inputDistance.getText().toString());
-                    }
-                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        }).setView(inputDistance).show();
+        if(ajouterNom == null)
+        {
+            builderNom.setTitle("Nommez l'activité").setMessage("Insérer un nom d'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ajouterNom = inputNom.getText().toString();
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(inputNom).show();
+
+        }
+
+        if(ajouterDate == null)
+        {
+            builderNom.setTitle("Énoncer la date").setMessage("Insérer la date de l'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ajouterDate = Instant.ofEpochMilli(Long.valueOf(inputDate.getText().toString()));
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(inputDate).show();
+        }
+
+       if(ajouterSport == null)
+        {
+            builderSport.setTitle("Créez une nouvelle activité").setMessage("Choisir le type d'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface Dialog, int which) {
+                            ajouterSport = Sport.valueOf(spinner.getSelectedItem().toString());
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(spinner).show();
+        }
+
+        if(ajouterDuree == 0.0)
+        {
+            builderDistance.setTitle("Énoncez la durée").setMessage("Insérez la durée de l'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ajouterDuree = Integer.valueOf(inputDuree.getText().toString());
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(inputDuree).show();
+        }
+
+        if(ajouterDistance == 0.0)
+        {
+            builderDistance.setTitle("Énoncez la distance").setMessage("Insérez la distance parcourue lors de l'activité")
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ajouterDistance = Double.valueOf(inputDistance.getText().toString());
+                        }
+                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).setView(inputDistance).show();
+        }
+
+        if(!(ajouterNom.equals(null)) && !(ajouterDate.equals(null)) && !(ajouterSport.equals(null))
+                && !(ajouterDuree == 0) && !(ajouterDistance == 0.0)){
+            ajouterActivite = new Activite(ajouterNom, ajouterDate, ajouterSport, ajouterDuree, ajouterDistance);
+
+            Fichier.enregistrer(this.getApplicationContext(), ajouterActivite);
+            Fichier.rafraichir(this.getApplicationContext());
+            adapter.notifyDataSetChanged();
+
+            ajouterNom = null;
+            ajouterDate = null;
+            ajouterSport = null;
+            ajouterDuree = 0;
+            ajouterDistance = 0.0;
+        }
 
     }
 

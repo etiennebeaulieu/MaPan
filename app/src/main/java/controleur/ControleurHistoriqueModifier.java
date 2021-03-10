@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import controleur.ControleurHistorique;
@@ -55,6 +56,8 @@ import androidx.core.content.FileProvider;
 
 import com.example.application.Application;
 import com.example.mapan.R;
+import com.hbisoft.pickit.PickiT;
+import com.hbisoft.pickit.PickiTCallbacks;
 
 import modele.Activite;
 import modele.ActiviteAdapter;
@@ -63,7 +66,7 @@ import modele.Sport;
 
 import static com.example.mapan.R.id.modifier_exporter;
 
-public class ControleurHistoriqueModifier extends AppCompatActivity {
+public class ControleurHistoriqueModifier extends AppCompatActivity implements PickiTCallbacks {
 
     private ListView modifier_list;
     private ImageButton modifier_exporter;
@@ -71,6 +74,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     private ActiviteAdapter adapter;
     private Activite activiteSelect;
     private static final int CHOISIR_GPX = 2;
+    PickiT pickiT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
         modifier_list = findViewById(R.id.modifier_list);
         modifier_exporter = findViewById(R.id.modifier_exporter);
         activiteSelect = null;
+        pickiT = new PickiT(this, this, this);
 
         adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         modifier_list.setAdapter(adapter);
@@ -172,11 +177,13 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
             if (data != null) {
                 uri = data.getData();
 
-                File fichier = new File(uri.getPath());
+                pickiT.getPath(uri, Build.VERSION.SDK_INT);
+                /*File fichier = new File(uri.getPath());
+                String decoder = Uri.decode(uri.toString());
                 final String[] split = fichier.getPath().split(":");
-                File fichier2 = new File(split[1]);
+                File fichier2 = new File(split[1]);*/
 
-                if(fichier2.exists()) {
+                /*if(fichier2.exists()) {
                     String nom = "Test Import";
                     Sport sport = Sport.VELO;
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -207,7 +214,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     }).show();
-                }
+                }*/
 
             }
         }
@@ -309,4 +316,56 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     }
 
 
+    @Override
+    public void PickiTonUriReturned() {
+
+    }
+
+    @Override
+    public void PickiTonStartListener() {
+
+    }
+
+    @Override
+    public void PickiTonProgressUpdate(int progress) {
+
+    }
+
+    @Override
+    public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
+      Context context= this.getApplicationContext();
+        File fichier2 = new File(path);
+        if(fichier2.exists()) {
+            String nom = "Test Import";
+            Sport sport = Sport.VELO;
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            Spinner spinner = new Spinner(this);
+            ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+            aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(aa2);
+            LinearLayout vBox = new LinearLayout(this);
+            vBox.setOrientation(LinearLayout.VERTICAL);
+            vBox.setDividerPadding(15);
+            vBox.addView(input);
+            vBox.addView(spinner);
+            builder.setView(vBox);
+            builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier2);
+                    Fichier.enregistrer(context,importation);
+                    Fichier.rafraichir(context);
+                    adapter.notifyDataSetChanged();
+                }
+            }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }
+    }
 }

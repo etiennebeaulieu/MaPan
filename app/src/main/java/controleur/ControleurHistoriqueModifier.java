@@ -111,7 +111,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
 
     public void exporterGPX(View view) {
 
-        if(!activiteSelect.equals(null)) {
+        if(activiteSelect != null) {
             if(activiteSelect.getTabLatitude() != null) {
 
                 File fichier = Fichier.partager(this.getApplicationContext(), activiteSelect);
@@ -129,40 +129,19 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             else{
                 Toast.makeText(this, "Le fichier doit avoir des données de localisation", Toast.LENGTH_SHORT).show();
             }
-
-
-
             modifier_list.clearChoices();
             adapter.notifyDataSetChanged();
         }
-
-
-
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     public void importerGPX(View view) {
-
-        if (Environment.isExternalStorageManager()) {
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
 
             Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            //loadIntent.addCategory(Intent.CATEGORY_OPENABLE);
             loadIntent.setType("application/*");
             startActivityForResult(loadIntent, CHOISIR_GPX);
-
-
-            //Faire choisir le fichier par l'utilisateur + popup pour choisir nom et sport
-/*            String nom = "Test Import";
-            Sport sport = Sport.VELO;
-            File fichier = new File(Environment.getExternalStorageDirectory(), "Download/run.gpx");
-
-            Activite importation = new Activite(nom, sport, fichier);
-            Fichier.enregistrer(this.getApplicationContext(), importation);
-            Fichier.rafraichir(this.getApplicationContext());
-            adapter.notifyDataSetChanged();*/
         } else {
             requestStoragePermission();
         }
@@ -176,46 +155,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             Uri uri = null;
             if (data != null) {
                 uri = data.getData();
-
                 pickiT.getPath(uri, Build.VERSION.SDK_INT);
-                /*File fichier = new File(uri.getPath());
-                String decoder = Uri.decode(uri.toString());
-                final String[] split = fichier.getPath().split(":");
-                File fichier2 = new File(split[1]);*/
-
-                /*if(fichier2.exists()) {
-                    String nom = "Test Import";
-                    Sport sport = Sport.VELO;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    EditText input = new EditText(this);
-                    input.setInputType(InputType.TYPE_CLASS_TEXT);
-                    builder.setView(input);
-                    Spinner spinner = new Spinner(this);
-                    ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
-                    aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(aa2);
-                    LinearLayout vBox = new LinearLayout(this);
-                    vBox.setOrientation(LinearLayout.VERTICAL);
-                    vBox.setDividerPadding(15);
-                    vBox.addView(input);
-                    vBox.addView(spinner);
-                    builder.setView(vBox);
-                    builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier2);
-                            Fichier.enregistrer(context,importation);
-                            Fichier.rafraichir(context);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).show();
-                }*/
-
             }
         }
     }
@@ -255,7 +195,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
 
 
     public void deleteActivity(View view) {
-        if (!activiteSelect.equals(null)) {
+        if (activiteSelect != null) {
             Fichier.supprimer(this.getApplicationContext(), activiteSelect);
             Fichier.rafraichir(this.getApplicationContext());
             modifier_list.clearChoices();
@@ -264,7 +204,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     }
 
     public void renommer(View view){
-        if(!activiteSelect.equals(null)) {
+        if(activiteSelect != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -289,7 +229,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     }
 
     public void changerSport(View view){
-        if(!activiteSelect.equals(null)){
+        if(activiteSelect != null){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Spinner spinner = new Spinner(this);
             ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
@@ -334,10 +274,8 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     @Override
     public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
       Context context= this.getApplicationContext();
-        File fichier2 = new File(path);
-        if(fichier2.exists()) {
-            String nom = "Test Import";
-            Sport sport = Sport.VELO;
+        File fichier = new File(path);
+        if(fichier.exists()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -355,7 +293,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier2);
+                    Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
                     Fichier.enregistrer(context,importation);
                     Fichier.rafraichir(context);
                     adapter.notifyDataSetChanged();

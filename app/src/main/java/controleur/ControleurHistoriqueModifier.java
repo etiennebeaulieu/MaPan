@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -165,19 +166,19 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+            Context context = this.getApplicationContext();
         if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK) {
             Uri uri = null;
             if (data != null) {
                 uri = data.getData();
 
                 File fichier = new File(uri.getPath());
-                //final String[] split = fichier.getPath().split(":");
-                //File fichier2 = new File(split[1]);
+                final String[] split = fichier.getPath().split(":");
+                File fichier2 = new File(split[1]);
 
-                if(fichier.exists()) {
+                if(fichier2.exists()) {
                     String nom = "Test Import";
                     Sport sport = Sport.VELO;
-/*
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     EditText input = new EditText(this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -186,11 +187,19 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                     ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
                     aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(aa2);
+                    LinearLayout vBox = new LinearLayout(this);
+                    vBox.setOrientation(LinearLayout.VERTICAL);
+                    vBox.setDividerPadding(15);
+                    vBox.addView(input);
+                    vBox.addView(spinner);
+                    builder.setView(vBox);
                     builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
-                            adapter.add(importation);
+                            Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier2);
+                            Fichier.enregistrer(context,importation);
+                            Fichier.rafraichir(context);
+                            adapter.notifyDataSetChanged();
                         }
                     }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                         @Override
@@ -198,13 +207,6 @@ public class ControleurHistoriqueModifier extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     }).show();
-                    */
-                    Activite importation = new Activite(nom, sport, fichier);
-                     Fichier.enregistrer(this.getApplicationContext(),importation);
-                   // Fichier.enregistrer(this.getApplicationContext(), adapter.getItem(adapter.getCount()-1));
-                    Fichier.rafraichir(this.getApplicationContext());
-                    adapter.notifyDataSetChanged();
-                  //  adapter.remove(adapter.getItem(adapter.getCount()-1));
                 }
 
             }

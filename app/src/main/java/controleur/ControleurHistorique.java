@@ -1,8 +1,11 @@
 package controleur;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,14 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.application.Application;
@@ -46,6 +53,13 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private boolean isDistanceMetrique = true;
     private Button modifier_DeleteActivity;
     private ActiviteAdapter adapter;
+
+    private Activite ajouterActivite = null;
+    private Sport ajouterSport = null;
+    private String ajouterNom = null;
+    private double ajouterDistance = 0.0;
+
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +136,65 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         inflater.inflate(R.menu.menu_tri, menuTri.getMenu());
 
         menuTri.show();
+
+    }
+
+    public void ajouterActivite(View view) {
+        AlertDialog.Builder builderSport = new AlertDialog.Builder(this);
+        AlertDialog.Builder builderNom = new AlertDialog.Builder(this);
+        AlertDialog.Builder builderDistance = new AlertDialog.Builder(this);
+
+        View viewAjouter = new View(this);
+
+        Spinner spinner = new Spinner(this);
+        ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
+        aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(aa2);
+
+        EditText inputNom = new EditText(this);
+        inputNom.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        EditText inputDistance = new EditText(this);
+        inputDistance.setInputType(InputType.TYPE_CLASS_TEXT);
+
+        builderSport.setTitle("Créez une nouvelle activité").setMessage("Choisir le type d'activité")
+                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface Dialog, int which) {
+                        ajouterSport = Sport.valueOf(spinner.getSelectedItem().toString());
+                    }
+                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+            }
+        }).setView(spinner).show();
+
+        builderNom.setTitle("Nommez l'activité").setMessage("Insérer un nom d'activité")
+                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ajouterNom = inputNom.getText().toString();
+                    }
+                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setView(inputNom).show();
+
+        builderDistance.setTitle("Énoncez la distance").setMessage("Insérez la distance parcourue lors de l'activité")
+                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ajouterDistance = Double.valueOf(inputDistance.getText().toString());
+                    }
+                }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setView(inputDistance).show();
 
     }
 

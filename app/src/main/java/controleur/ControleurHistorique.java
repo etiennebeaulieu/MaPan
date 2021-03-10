@@ -144,6 +144,8 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         AlertDialog.Builder builderNom = new AlertDialog.Builder(this);
         AlertDialog.Builder builderDistance = new AlertDialog.Builder(this);
 
+        View viewAjouter = new View(this);
+
         Spinner spinner = new Spinner(this);
         ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

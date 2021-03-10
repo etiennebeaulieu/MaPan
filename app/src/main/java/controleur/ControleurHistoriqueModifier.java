@@ -293,10 +293,15 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
-                    Fichier.enregistrer(context,importation);
-                    Fichier.rafraichir(context);
-                    adapter.notifyDataSetChanged();
+                    if(!input.getText().toString().isEmpty()) {
+                        Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
+                        Fichier.enregistrer(context, importation);
+                        Fichier.rafraichir(context);
+                        adapter.notifyDataSetChanged();
+                    }
+                    else{
+                        Toast.makeText(context, "L'activité doit avoir un nom", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }).setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                 @Override

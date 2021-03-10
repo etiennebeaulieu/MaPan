@@ -64,6 +64,7 @@ public class Activite implements Serializable {
                 setNom(pNom);
                 setDate(pDate);
                 setSport(pSport);
+                //Durée en minute
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance*1000);
                 setDistanceImperiale(pDistance*0.621371);

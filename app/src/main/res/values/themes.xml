@@ -17,7 +17,6 @@
         <item name="colorControlActivated">#FFFF0000</item>
         <item name="colorSwitchThumbNormal">#FFF44336</item>
         <item name="colorControlNormal">#FFFFFF</item>
-        <item name="colorControlHighlight">#03A9F4</item>
 
     </style>
 </resources>

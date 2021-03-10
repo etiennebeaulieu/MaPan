@@ -14,18 +14,10 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="Theme.MyTheme" parent="Theme.AppCompat.Light">
-        <!-- colorPrimary is used for the default action bar background -->
         <item name="colorControlActivated">#FFFF0000</item>
-
-        <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorSwitchThumbNormal">#FFF44336</item>
-
-        <!-- colorAccent is used as the default value for colorControlActivated,
-             which is used to tint widgets -->
         <item name="colorControlNormal">#FFFFFF</item>
-
-        <!-- You can also set colorControlNormal, colorControlActivated
-             colorControlHighlight, and colorSwitchThumbNormal. -->
+        <item name="colorControlHighlight">#03A9F4</item>
 
     </style>
 </resources>

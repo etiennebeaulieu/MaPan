@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -74,6 +75,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     private ActiviteAdapter adapter;
     private Activite activiteSelect;
     private static final int CHOISIR_GPX = 2;
+    private static final int   PARTAGER_GPX = 3;
     PickiT pickiT;
 
     @Override
@@ -98,6 +100,30 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
 
         Fichier.rafraichir(this.getApplicationContext());
         adapter.notifyDataSetChanged();
+
+
+        Intent intent = getIntent();
+        if(intent != null){
+            String action = intent.getAction();
+            String type = intent.getType();
+
+            if((Intent.ACTION_SEND.equals(action)|| Intent.ACTION_VIEW.equals(action))&& type != null){
+                if(type.equalsIgnoreCase("application/gpx+xml")){
+                    Uri fichierGPX = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    if(fichierGPX != null){
+                        pickiT.getPath(fichierGPX, Build.VERSION.SDK_INT);
+                    }
+                }
+            }
+            else if(Intent.ACTION_SEND_MULTIPLE.equals(action)&&type!=null){
+                if(type.equalsIgnoreCase("application/gpx+xml")){
+                    ArrayList<Uri> listGPX = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    if(listGPX.get(0) != null){
+                        pickiT.getPath(listGPX.get(0), Build.VERSION.SDK_INT);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -122,9 +148,8 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, path);
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                shareIntent.setType("application/gpx");
-                startActivity(Intent.createChooser(shareIntent, "Partager..."));
-                fichier.delete();
+                shareIntent.setType("application/gpx+xml");
+                startActivityForResult(Intent.createChooser(shareIntent, "Partager..."), PARTAGER_GPX);
             }
             else{
                 Toast.makeText(this, "Le fichier doit avoir des données de localisation", Toast.LENGTH_SHORT).show();
@@ -157,6 +182,9 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
                 uri = data.getData();
                 pickiT.getPath(uri, Build.VERSION.SDK_INT);
             }
+        }
+        if(requestCode == PARTAGER_GPX){
+            new File(this.getFilesDir(), activiteSelect.getNom()+".gpx").delete();
         }
     }
 

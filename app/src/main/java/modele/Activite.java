@@ -14,9 +14,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Double.NaN;
 
 public class Activite implements Serializable {
 
@@ -105,6 +109,7 @@ public class Activite implements Serializable {
                 construireTabDistance();
                 //construireTabVitesse();
 
+                //double distance = calculerDistance(0, tabTemps.size() - 1);
                 setDistanceMetrique(calculerDistance(0, tabTemps.size() - 1));
                 setDistanceImperiale(getDistanceMetrique() * METRE_MILES);
                 calculerDenivele();
@@ -359,7 +364,11 @@ public class Activite implements Serializable {
             //Prend en compte le dénivelé dans la distance calculée
             dx = Math.sqrt(Math.pow(dx, 2) + Math.pow(ele2 - ele1, 2));
 
-            distance += dx;
+            if(!((Double) dx).equals(NaN)){
+                distance += dx;
+            }
+
+
         }
         return distance;
     }
@@ -511,8 +520,9 @@ public class Activite implements Serializable {
                     Double ele = Double.parseDouble(node.getChildText("ele", node.getNamespace()));
                     this.tabElevationMetrique.add(ele);
 
-                    Instant time = Instant.parse(node.getChildText("time", node.getNamespace()));
-                    this.tabTemps.add(time);
+                    Instant time2 = Instant.from((OffsetDateTime) OffsetDateTime.parse(node.getChildText("time", node.getNamespace())).withOffsetSameInstant(ZoneOffset.UTC));
+                    //Instant time = Instant.parse(node.getChildText("time", node.getNamespace()));
+                    this.tabTemps.add(time2);
 
                 }
 

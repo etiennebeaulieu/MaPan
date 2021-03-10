@@ -78,27 +78,27 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         imperial_pour_distance=(SwitchCompat)findViewById(R.id.imperial_pour_distance);
         imperial_pour_distance.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour distance",false));
         imperial_pour_distance.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour distance", imperial_pour_distance.isSelected()).apply();
+            editor.putBoolean("impérial pour distance", imperial_pour_distance.isChecked()).apply();
         });
 
         imperial_pour_vitesse=(SwitchCompat)findViewById(R.id.imperial_pour_vitesse);
         imperial_pour_vitesse.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour vitesse",false));
         imperial_pour_vitesse.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour vitesse", imperial_pour_distance.isSelected()).apply();
+            editor.putBoolean("impérial pour vitesse", imperial_pour_vitesse.isChecked()).apply();
 
         });
 
         imperial_pour_altitude=(SwitchCompat)findViewById(R.id.imperial_pour_altitude);
         imperial_pour_altitude.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour altitude",false));
         imperial_pour_altitude.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour altitude", imperial_pour_distance.isSelected()).apply();
+            editor.putBoolean("impérial pour altitude", imperial_pour_altitude.isChecked()).apply();
 
         });
 
         imperial_pour_denivele=(SwitchCompat)findViewById(R.id.imperial_pour_denivele);
         imperial_pour_denivele.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour denivele",false));
         imperial_pour_denivele.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("impérial pour denivele", imperial_pour_distance.isSelected()).apply();
+            editor.putBoolean("impérial pour denivele", imperial_pour_denivele.isChecked()).apply();
 
         });
 

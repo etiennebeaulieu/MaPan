@@ -122,7 +122,8 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour tout"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:theme="@style/ThemeOverlay.MySwitch" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,7 +142,8 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour la distance"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:theme="@style/ThemeOverlay.MySwitch"/>
 
                 </LinearLayout>
 
@@ -161,7 +163,8 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour la vitesse"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:theme="@style/ThemeOverlay.MySwitch"/>
 
                 </LinearLayout>
 
@@ -181,7 +184,8 @@
                         android:layout_weight="1"
                         android:text="Utiliser impériale pour l'altitude"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:theme="@style/ThemeOverlay.MySwitch"/>
 
                 </LinearLayout>
 
@@ -201,7 +205,8 @@
                         android:layout_weight="1"
                         android:text="Utiliser impérial pour le dénivelé"
                         android:textColor="#FFFFFF"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:theme="@style/ThemeOverlay.MySwitch"/>
 
                 </LinearLayout>
             </LinearLayout>

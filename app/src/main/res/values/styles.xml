@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.MySwitch" parent="">
+        <item name="android:colorControlActivated">#FFFF0000</item>
+        <item name="android:colorSwitchThumbNormal">#FFF44336</item>
+        <item name="android:colorForeground">#FFFFFF</item>
+    </style>
+</resources>

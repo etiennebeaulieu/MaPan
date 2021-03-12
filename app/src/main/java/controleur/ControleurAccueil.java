@@ -10,6 +10,7 @@ import com.example.mapan.R;
 public class ControleurAccueil extends AppCompatActivity {
 
     private MapboxMap mapboxMap;
+    private MapView mapView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

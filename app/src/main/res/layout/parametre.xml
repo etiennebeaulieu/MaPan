@@ -247,6 +247,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:clickable="false"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/setting" />
 

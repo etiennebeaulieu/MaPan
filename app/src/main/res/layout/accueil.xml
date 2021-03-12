@@ -8,7 +8,7 @@
 
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/ajouterActivitePane"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#316c19"

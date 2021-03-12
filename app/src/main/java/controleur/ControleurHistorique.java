@@ -142,8 +142,10 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     }
 
-    /*public void ajouterActivite(View view) {
-        AlertDialog.Builder builderSport = new AlertDialog.Builder(this);
+    public void ajouterActivite(View view) {
+        startActivity(new Intent(ControleurHistorique.this, ControleurAjouterActivite.class));
+
+        /*AlertDialog.Builder builderSport = new AlertDialog.Builder(this);
         AlertDialog.Builder builderNom = new AlertDialog.Builder(this);
         AlertDialog.Builder builderDistance = new AlertDialog.Builder(this);
 
@@ -263,8 +265,8 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
             ajouterSport = null;
             ajouterDuree = 0;
             ajouterDistance = 0.0;
-        }
-    }*/
+        }*/
+    }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {

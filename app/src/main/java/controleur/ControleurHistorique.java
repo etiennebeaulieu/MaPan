@@ -121,7 +121,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     }
 
     public void ouvrirAccueil(View view) {
-        startActivity(new Intent(ControleurHistorique.this, Application.class));
+        startActivity(new Intent(ControleurHistorique.this, ControleurAccueil.class));
     }
 
     public void ouvrirModifier(View view) {

@@ -128,7 +128,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
 
 
     public void ouvrirAccueil(View view) {
-        startActivity(new Intent(ControleurHistoriqueModifier.this, Application.class));
+        startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurAccueil.class));
     }
 
     public void ouvrirHistorique(View view) {

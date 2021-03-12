@@ -131,7 +131,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     }
 
     public void ouvrirAccueil(View view){
-        startActivity(new Intent(ControleurParametre.this, Application.class));
+        startActivity(new Intent(ControleurParametre.this, ControleurAccueil.class));
     }
 
     public void ouvrirHistorique(View view){

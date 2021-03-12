@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:backgroundTint="#00FFFFFF">
+
+    <ImageView
+        android:id="@+id/iconSportNouvelle"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/course" />
+
+    <TextView
+        android:id="@+id/textFieldNomActivite"
+        android:layout_width="300dp"
+        android:layout_height="36dp"
+        android:layout_alignTop="@+id/iconSportNouvelle"
+        android:layout_alignBottom="@+id/iconSportNouvelle"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="17dp"
+        android:layout_toEndOf="@id/iconSportNouvelle"
+        android:gravity="center_vertical"
+        android:text="Nom"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>

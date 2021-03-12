@@ -67,7 +67,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="Veuillez entrer un nom"
+            android:textColor="#FFFFFF" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -78,25 +79,24 @@
                 android:id="@+id/nouvelle_activitesList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF"
+                android:background="#00FFFFFF"
                 android:choiceMode="singleChoice"
-                android:listSelector="@android:color/darker_gray">
+                android:listSelector="#429122">
 
             </ListView>
         </FrameLayout>
 
         <ImageButton
             android:id="@+id/nouvelle_annulerButton2"
-            android:layout_width="match_parent"
+            android:layout_width="115dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
             android:contentDescription="@string/importer_l_activit_choisie"
             android:onClick="importerGPX"
             android:scaleType="fitCenter"
-            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+            app:srcCompat="@drawable/commencer" />
 
         <LinearLayout
             android:layout_width="match_parent"

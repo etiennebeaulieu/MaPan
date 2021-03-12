@@ -65,14 +65,6 @@
                 <data android:mimeType="application/gpx+xml"/>
             </intent-filter>
         </activity>
-        <activity android:name="controleur.ControleurAjouterActivite">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-
         <provider
             android:authorities="controleur"
             android:name="androidx.core.content.FileProvider"

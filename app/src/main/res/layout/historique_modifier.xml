@@ -131,7 +131,7 @@
                 app:srcCompat="@drawable/edit" />
 
             <ImageButton
-                android:id="@+id/modifier_deleteActivity"
+                android:id="@+id/parametre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -48,16 +48,16 @@
                 tools:paddingLeft="10dp" />
 
             <ImageButton
-                android:id="@+id/nouvelle_annulerButton"
+                android:id="@+id/nouvelle_annuler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/importer_l_activit_choisie"
-                android:onClick="importerGPX"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+                tools:onClick="retourAcceuil" />
 
         </LinearLayout>
 
@@ -87,16 +87,16 @@
         </FrameLayout>
 
         <ImageButton
-            android:id="@+id/nouvelle_annulerButton2"
+            android:id="@+id/commencer"
             android:layout_width="115dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
             android:contentDescription="@string/importer_l_activit_choisie"
-            android:onClick="importerGPX"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/commencer" />
+            app:srcCompat="@drawable/commencer"
+            tools:onClick="creerNouvelleActivite" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,7 +105,6 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/modifier_renameActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -117,14 +116,13 @@
                 app:srcCompat="@android:drawable/ic_media_play" />
 
             <ImageButton
-                android:id="@+id/modifier_deleteActivity"
+                android:id="@+id/parametre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/deletes_selected_activity"
-                android:onClick="deleteActivity"
                 android:scaleType="fitCenter"
                 android:tint="#FFFFFF"
                 app:srcCompat="@drawable/setting"

@@ -3,8 +3,10 @@ package controleur;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,8 +15,13 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.example.mapan.R;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import modele.Activite;
+import modele.ActiviteAdapter;
+import modele.Fichier;
+import modele.NouvelleActiviteAdapter;
 import modele.Sport;
 
 public class ControleurNouvelleActivite extends AppCompatActivity
@@ -24,6 +31,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
     private ImageButton nouvelle_annuler;
     private ImageButton commencer;
     private ImageButton parametre;
+    private NouvelleActiviteAdapter adapter;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,10 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         nouvelle_annuler = (ImageButton)findViewById(R.id.nouvelle_annuler);
         commencer = (ImageButton)findViewById(R.id.commencer);
         parametre = (ImageButton)findViewById(R.id.parametre);
+
+
+        adapter = new NouvelleActiviteAdapter(this, R.layout.list_activite_row, (ArrayList<Sport>) Arrays.asList(Sport.values()));
+        nouvelle_activitesList.setAdapter(adapter);
 
 
     }

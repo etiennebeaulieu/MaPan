@@ -61,6 +61,14 @@
 
         </LinearLayout>
 
+        <EditText
+            android:id="@+id/nouveau_nom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -119,7 +127,8 @@
                 android:onClick="deleteActivity"
                 android:scaleType="fitCenter"
                 android:tint="#FFFFFF"
-                app:srcCompat="@drawable/setting" />
+                app:srcCompat="@drawable/setting"
+                tools:onClick="ouvrirParametre" />
         </LinearLayout>
 
     </LinearLayout>

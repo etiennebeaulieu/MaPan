@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.mapan.R;
-import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
+
 
 import java.io.File;
 import java.time.Instant;

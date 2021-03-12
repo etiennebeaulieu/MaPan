@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.mapan.R;
+import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +41,19 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         nouvelle_activitesList = (ListView)findViewById(R.id.nouvelle_activitesList);
 
 
-        adapter = new NouvelleActiviteAdapter(this, R.layout.list_activite_row, (ArrayList<Sport>) Arrays.asList(Sport.values()));
+        ArrayList<Sport> listSport = new ArrayList<>();
+
+        listSport.add(Sport.COURSE);
+        listSport.add(Sport.RANDONNEE);
+        listSport.add(Sport.RAQUETTE);
+        listSport.add(Sport.PATIN);
+        listSport.add(Sport.SKI_RANDONNEE);
+        listSport.add(Sport.SKI);
+        listSport.add(Sport.SKI_FOND);
+        listSport.add(Sport.VELO);
+        listSport.add(Sport.AUTRE);
+
+        adapter = new NouvelleActiviteAdapter(this, R.layout.list_activite_row, listSport);
         nouvelle_activitesList.setAdapter(adapter);
 
 

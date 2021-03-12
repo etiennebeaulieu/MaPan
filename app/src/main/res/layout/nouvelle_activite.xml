@@ -55,9 +55,9 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/importer_l_activit_choisie"
+                android:onClick="ouvrirAccueil"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-                tools:onClick="retourAcceuil" />
+                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
         </LinearLayout>
 
@@ -94,9 +94,9 @@
             android:adjustViewBounds="true"
             android:backgroundTint="#00FFFFFF"
             android:contentDescription="@string/importer_l_activit_choisie"
+            android:onClick="creerNouvelleActivite"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/commencer"
-            tools:onClick="creerNouvelleActivite" />
+            app:srcCompat="@drawable/commencer" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -123,10 +123,10 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/deletes_selected_activity"
+                android:onClick="ouvrirParametre"
                 android:scaleType="fitCenter"
                 android:tint="#FFFFFF"
-                app:srcCompat="@drawable/setting"
-                tools:onClick="ouvrirParametre" />
+                app:srcCompat="@drawable/setting" />
         </LinearLayout>
 
     </LinearLayout>

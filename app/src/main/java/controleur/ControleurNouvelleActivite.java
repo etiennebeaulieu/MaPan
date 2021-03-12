@@ -28,9 +28,6 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 {
     private EditText nouveau_nom;
     private ListView nouvelle_activitesList;
-    private ImageButton nouvelle_annuler;
-    private ImageButton commencer;
-    private ImageButton parametre;
     private NouvelleActiviteAdapter adapter;
 
 
@@ -41,9 +38,6 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
         nouveau_nom = (EditText)findViewById(R.id.nouveau_nom);
         nouvelle_activitesList = (ListView)findViewById(R.id.nouvelle_activitesList);
-        nouvelle_annuler = (ImageButton)findViewById(R.id.nouvelle_annuler);
-        commencer = (ImageButton)findViewById(R.id.commencer);
-        parametre = (ImageButton)findViewById(R.id.parametre);
 
 
         adapter = new NouvelleActiviteAdapter(this, R.layout.list_activite_row, (ArrayList<Sport>) Arrays.asList(Sport.values()));
@@ -57,17 +51,19 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             String nom = nouveau_nom.getText().toString();
             Sport sp = (Sport) nouvelle_activitesList.getSelectedItem();
 
-        if(nom != null && sp!= null)
-        {
-          Activite act = new Activite(nom, sp);
-        }
+            if(nom != null && sp!= null)
+            {
+             Activite act = new Activite(nom, sp);
+            }
         }
 
-    public void ouvrirParametre(View view) {
+    public void ouvrirParametre(View view)
+    {
         startActivity(new Intent(ControleurNouvelleActivite.this, ControleurParametre.class));
     }
 
-    public void retourAcceuil(View view) {
-        startActivity(new Intent(ControleurNouvelleActivite.this, ControleurAcceuil.class));
+    public void ouvrirAccueil(View view) {
+
+        startActivity(new Intent(ControleurNouvelleActivite.this, ControleurAccueil.class));
     }
 }

@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.example.mapan.R;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class NouvelleActiviteAdapter extends ArrayAdapter<Sport> {
 

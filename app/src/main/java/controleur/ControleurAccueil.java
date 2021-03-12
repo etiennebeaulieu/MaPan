@@ -2,7 +2,6 @@ package controleur;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Camera;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -12,16 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.application.Application;
 import com.example.mapan.R;
-import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.OnCameraTrackingChangedListener;
-import com.mapbox.mapboxsdk.location.OnLocationClickListener;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -91,17 +86,15 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
-        mapboxMap.setStyle(style, new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                locationComponent = mapboxMap.getLocationComponent();
-                locationComponent.activateLocationComponent(
-                        LocationComponentActivationOptions
-                                .builder(ControleurAccueil.this, style).build());
-                locationComponent.setLocationComponentEnabled(true);
-                locationComponent.setCameraMode(cameraMode);
-                locationComponent.setRenderMode(renderMode);
-            }
+        mapboxMap.setStyle(style, style1 ->
+        {
+            locationComponent = mapboxMap.getLocationComponent();
+            locationComponent.activateLocationComponent(
+                    LocationComponentActivationOptions
+                            .builder(ControleurAccueil.this, style1).build());
+            locationComponent.setLocationComponentEnabled(true);
+            locationComponent.setCameraMode(cameraMode);
+            locationComponent.setRenderMode(renderMode);
         });
     }
 

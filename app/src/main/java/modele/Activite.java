@@ -116,10 +116,6 @@ public class Activite implements Serializable {
                 setVitesseActuelleMetrique(getVitesseActuelleMetrique());
                 setVitesseActuelleImperiale(getVitesseActuelleMetrique() * 1000 * METRE_MILES);
 
-                long t2 = tabTemps.get(tabTemps.size() - 1).getEpochSecond() - Instant.EPOCH.getEpochSecond();
-                long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
-                long dt = t2 - t1;
-
                 setVitesseMetrique(calculerVitesseMoyenne());
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
                 setAltitudeMaxMetrique(getAltitudeMaxMetrique());
@@ -412,7 +408,7 @@ public class Activite implements Serializable {
     }
 
     public double calculerVitesseMoyenne() {
-        double vitesseMoyenne = 0;
+        double vitesseMoyenne;
         if(tabTemps != null){
             double total = 0;
             for(int i = 0; i<tabVitesseMetrique.size(); i++){

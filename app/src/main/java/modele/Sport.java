@@ -1,11 +1,6 @@
 package modele;
 
 
-import android.media.Image;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
-
 import com.example.mapan.R;
 
 public enum Sport {

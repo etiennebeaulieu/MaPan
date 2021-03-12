@@ -142,8 +142,19 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     }
 
+    public ListView getHistorique_list(){
+        return historique_list;
+    }
+
     public void ajouterActivite(View view) {
         startActivity(new Intent(ControleurHistorique.this, ControleurAjouterActivite.class));
+
+        /*Activite activiteAjoutee = new ControleurAjouterActivite().getActiviteAjoutee();
+        if(!activiteAjoutee.equals(null)) {
+            Fichier.enregistrer(ControleurHistorique.this, activiteAjoutee);
+            Fichier.rafraichir(ControleurHistorique.this);
+            adapter.notifyDataSetChanged();
+        }*/
 
         /*AlertDialog.Builder builderSport = new AlertDialog.Builder(this);
         AlertDialog.Builder builderNom = new AlertDialog.Builder(this);

@@ -72,7 +72,7 @@ public class Activite implements Serializable {
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance*1000);
                 setDistanceImperiale(pDistance*0.621371);
-                setVitesseMetrique(calculerVitesseMoyenne(getDuree().toMillis() / 1000) * 3600);
+                setVitesseMetrique(calculerVitesseMoyenne());
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }
 
@@ -107,9 +107,8 @@ public class Activite implements Serializable {
                 duree = Duration.between(heureDebut, heureFin);
 
                 construireTabDistance();
-                //construireTabVitesse();
+                construireTabVitesse();
 
-                //double distance = calculerDistance(0, tabTemps.size() - 1);
                 setDistanceMetrique(calculerDistance(0, tabTemps.size() - 1));
                 setDistanceImperiale(getDistanceMetrique() * METRE_MILES);
                 calculerDenivele();
@@ -121,7 +120,7 @@ public class Activite implements Serializable {
                 long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
                 long dt = t2 - t1;
 
-                setVitesseMetrique(calculerVitesseMoyenne(dt));
+                setVitesseMetrique(calculerVitesseMoyenne());
                 setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
                 setAltitudeMaxMetrique(getAltitudeMaxMetrique());
                 setAltitudeMaxImperiale(getAltitudeMaxMetrique() * METRE_PIED);
@@ -135,6 +134,25 @@ public class Activite implements Serializable {
             System.out.println("Paramètre invalide");
         }
     }
+
+    public Activite(String pNom, Sport pSport){
+        //Valide les données et initialize les tableaux de données
+        if (validerNom(pNom) && validerSport(pSport)) {
+
+            tabLatitude = new ArrayList<>();
+            tabLongitude = new ArrayList<>();
+            tabTemps = new ArrayList<>();
+            tabElevationMetrique = new ArrayList<>();
+            tabDistanceMetrique = new ArrayList<>();
+            tabVitesseMetrique = new ArrayList<>();
+
+
+            setNom(pNom);
+            setSport(pSport);
+            setDate(Instant.now());
+        }
+    }
+
 
     public String getNom() {
         return nom;
@@ -393,9 +411,34 @@ public class Activite implements Serializable {
         setDeniveleNegatifImperiale(descente * METRE_PIED);
     }
 
-    public double calculerVitesseMoyenne(long temps) {
-        return getDistanceMetrique() / temps;
+    public double calculerVitesseMoyenne() {
+        double vitesseMoyenne = 0;
+        if(tabTemps != null){
+            double total = 0;
+            for(int i = 0; i<tabVitesseMetrique.size(); i++){
+                total += tabVitesseMetrique.get(i);
+            }
+            vitesseMoyenne = (total/tabVitesseMetrique.size()) *3.6;
+        }
+        else
+            vitesseMoyenne = (getDistanceMetrique() / getDuree().toMillis() / 1000) *3600;
+
+        return vitesseMoyenne;
     }
+
+    public double calculerVitesse(int i1, int i2){
+        double vitesse;
+
+        double d1 = tabDistanceMetrique.get(i1);
+        double d2 = tabDistanceMetrique.get(i2);
+        long t1 = tabTemps.get(i1).getEpochSecond();
+        long t2 = tabTemps.get(i2).getEpochSecond();
+
+        vitesse = (d2-d1)/(t2-t1);
+
+        return vitesse;
+    }
+
 
 
     public double getAltitudeMaxMetrique() {
@@ -470,17 +513,15 @@ public class Activite implements Serializable {
 
     }
 
-    /*
     private void construireTabVitesse()
         {
             tabVitesseMetrique.add(0.0);
             for (int i = 0;i<tabTemps.size()-1;i++)
             {
-                tabDistanceMetrique.add(getVitesseActuelleMetrique());
+                tabVitesseMetrique.add(calculerVitesse(i, i+1));
             }
             System.out.println(tabVitesseMetrique.size());
         }
-    */
 
 
     // Lis un fichier GPX pour inscrire ses données dans un objet de type activité

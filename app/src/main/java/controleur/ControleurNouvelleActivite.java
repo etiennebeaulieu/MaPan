@@ -1,9 +1,12 @@
 package controleur;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -25,12 +28,27 @@ public class ControleurNouvelleActivite extends AppCompatActivity
     private EditText nouveau_nom;
     private ListView nouvelle_activitesList;
     private NouvelleActiviteAdapter adapter;
+    private View background;
 
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nouvelle_activite);
+        background = findViewById(R.id.background);
+        if(savedInstanceState == null){
+            background.setVisibility(View.INVISIBLE);
+            final ViewTreeObserver viewTreeObserver = background.getViewTreeObserver();
+            if(viewTreeObserver.isAlive()){
+                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        CircularReveal();
+                        background.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            }
+        }
 
         nouveau_nom = (EditText)findViewById(R.id.nouveau_nom);
         nouvelle_activitesList = (ListView)findViewById(R.id.nouvelle_activitesList);
@@ -52,6 +70,16 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         nouvelle_activitesList.setAdapter(adapter);
 
 
+    }
+
+    private void CircularReveal(){
+        int cx = (int) background.getRight();
+        int cy = (int) background.getBottom();
+        float rayonFinal = (float) Math.hypot(background.getWidth(), background.getHeight());
+        Animator animation = ViewAnimationUtils.createCircularReveal(background, cx,cy, 0, rayonFinal);
+        background.setVisibility(View.INVISIBLE);
+        animation.setDuration(3000);
+        animation.start();
     }
 
     public void creerNouvelleActivite(View view)

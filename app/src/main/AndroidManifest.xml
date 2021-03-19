@@ -14,37 +14,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <activity android:name="controleur.ControleurAccueil">
+            <activity android:name="controleur.ControleurAccueil"
+                android:screenOrientation = "sensorPortrait">
                 <intent-filter>
                     <action android:name="android.intent.action.MAIN"/>
                     <category android:name="android.intent.category.LAUNCHER"/>
                 </intent-filter>
             </activity>
-        <activity android:name="controleur.ControleurNouvelleActivite">
+        <activity android:name="controleur.ControleurNouvelleActivite"
+            android:screenOrientation = "sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name="controleur.ControleurAjouterActivite">
+        <activity android:name="controleur.ControleurAjouterActivite"
+            android:screenOrientation = "sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name="controleur.ControleurHistorique">
+        <activity android:name="controleur.ControleurHistorique"
+            android:screenOrientation = "sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="controleur.ControleurParametre">
+        <activity android:name="controleur.ControleurParametre"
+            android:screenOrientation = "sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name="controleur.ControleurHistoriqueModifier">
+        <activity android:name="controleur.ControleurHistoriqueModifier"
+            android:screenOrientation = "sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

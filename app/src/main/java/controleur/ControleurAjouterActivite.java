@@ -1,15 +1,19 @@
 package controleur;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mapan.R;
@@ -61,17 +65,30 @@ public class ControleurAjouterActivite extends AppCompatActivity
     }
 
     public void choisirDate(View view){
-        int selectedYear = Calendar.YEAR;
-        int selectedMonth = Calendar.MONTH;
-        int selectedDayOfMonth = Calendar.DAY_OF_MONTH;
+        Calendar c = Calendar.getInstance();
+        int selectedYear = c.get(Calendar.YEAR);
+        int selectedMonth = c.get(Calendar.MONTH);
+        int selectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> editTextDate.setText(year + "-" + month + "-" + dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> editTextDate.setText(year + "-" + month+1 + "-" + dayOfMonth);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,dateSetListener, selectedYear,selectedMonth,selectedDayOfMonth);
+        Calendar minDate = (Calendar) c.clone();
+        minDate.set(c.get(Calendar.YEAR -1), Calendar.JANUARY, 1);
+        //minDate.add(Calendar.YEAR, -1);
+        //minDate.add(Calendar.MONTH, 0);
+        //minDate.add(Calendar.DATE, 1);
+        datePickerDialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
+        Calendar maxDate = (Calendar) c.clone();
+        datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());
         datePickerDialog.show();
     }
 
     public void confirmer(View view){
+        if(((!editTextNom.getText().toString().isEmpty())&&(!editTextNom.getText().toString().equals(null)))
+                &&((!editTextDate.getText().toString().isEmpty()) &&(!editTextDate.getText().toString().equals(null)))
+                &&((!editTextDuree.getText().toString().isEmpty()) &&(!editTextDuree.getText().toString().equals(null)))
+                &&((!editTextDistance.getText().toString().isEmpty())&&(!editTextDistance.getText().toString().equals(null)))){
         activiteAjoutee = new Activite(editTextNom.getText().toString(), Date.valueOf(editTextDate.getText().toString()).toInstant(),
                 Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()),
                 Double.valueOf(editTextDistance.getText().toString()));
@@ -79,9 +96,43 @@ public class ControleurAjouterActivite extends AppCompatActivity
         Fichier.enregistrer(ControleurAjouterActivite.this, activiteAjoutee);
 
         startActivity(new Intent(ControleurAjouterActivite.this, ControleurHistorique.class));
+        }
+        else{
+            String message = "";
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            TextView input = new TextView(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            if((editTextNom.getText().toString().isEmpty()||editTextNom.getText().toString().equals(null))){
+                message = "L'activité que vous tentez de créer ne possède pas de nom. Veuillez insérer un nom.";
+                builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
+                    dialog.dismiss();
+                }).show();
+            }
+            else if((editTextDate.getText().toString().isEmpty())||((editTextDate.getText().toString().equals(null)))){
+                message = "L'activité que vous tentez de créer ne possède pas de date ou sa date est inscrite incorrectement. Veuillez inscrire une date.";
+                builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
+                    dialog.dismiss();
+                }).show();
+            }
+            else if(((editTextDuree.getText().toString().isEmpty())||(editTextDuree.getText().toString().equals(null))||(editTextDuree.getText().toString().contains(":")))){
+                message = "L'activité que vous tentez de créer ne possède pas de durée ou la durée est inscrite incorrectement. Veuillez inscrire une durée en minutes.(ex: 90)";
+                builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
+                    dialog.dismiss();
+                }).show();
+            }
+            else if(((editTextDistance.getText().toString().isEmpty())||(editTextDistance.getText().toString().equals(null))||(editTextDistance.getText().equals(".")))){
+                message = "L'activité que vous tentez de créer ne possède pas de distance parcourue ou la distance est inscrite incorrectement. Veuillez inscrire une distance en kilomètres(ex: 4.55)";
+                builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
+                    dialog.dismiss();
+                }).show();
+            }
+        }
     }
 
     public void annuler(View view){
-
+        startActivity(new Intent(ControleurAjouterActivite.this, ControleurHistorique.class));
     }
 }

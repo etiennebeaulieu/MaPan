@@ -74,10 +74,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar,dateSetListener, selectedYear,selectedMonth,selectedDayOfMonth);
         Calendar minDate = (Calendar) c.clone();
-        minDate.set(c.get(Calendar.YEAR -1), Calendar.JANUARY, 1);
-        //minDate.add(Calendar.YEAR, -1);
-        //minDate.add(Calendar.MONTH, 0);
-        //minDate.add(Calendar.DATE, 1);
+        minDate.add(Calendar.YEAR, -1);
         datePickerDialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
         Calendar maxDate = (Calendar) c.clone();
         datePickerDialog.getDatePicker().setMaxDate(maxDate.getTimeInMillis());

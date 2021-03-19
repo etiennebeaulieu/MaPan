@@ -102,35 +102,5 @@
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/commencer" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/renames_activity"
-                android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/ic_media_play" />
-
-            <ImageButton
-                android:id="@+id/parametre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/deletes_selected_activity"
-                android:onClick="ouvrirParametre"
-                android:scaleType="fitCenter"
-                android:tint="#FFFFFF"
-                app:srcCompat="@drawable/setting" />
-        </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,10 +35,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
     private Instant date;
     private EditText editTextDuree;
     private EditText editTextDistance;
-    private Button boutonDate;
     private Activite activiteAjoutee;
-    //private ListView listeHistorique;
-    //private ActiviteAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -53,15 +50,6 @@ public class ControleurAjouterActivite extends AppCompatActivity
         spinnerSport.setAdapter(aa1);
         editTextDuree = findViewById(R.id.editTextDuree);
         editTextDistance = findViewById(R.id.editTextDistance);
-        boutonDate = findViewById(R.id.boutonDate);
-
-        /*adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
-        listeHistorique = findViewById(R.id.modifier_list);
-        listeHistorique.setAdapter(adapter);*/
-    }
-
-    public Activite getActiviteAjoutee(){
-        return activiteAjoutee;
     }
 
     public void choisirDate(View view){

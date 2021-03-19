@@ -111,7 +111,6 @@
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/renames_activity"
-                android:onClick="renommer"
                 android:scaleType="fitCenter"
                 app:srcCompat="@android:drawable/ic_media_play" />
 

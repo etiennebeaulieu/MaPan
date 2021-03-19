@@ -84,9 +84,9 @@ public class ControleurAjouterActivite extends AppCompatActivity
     public void confirmer(View view){
         if(((!editTextNom.getText().toString().isEmpty())&&(!editTextNom.getText().toString().equals(null)))
                 &&((!editTextDate.getText().toString().isEmpty()) &&(!editTextDate.getText().toString().equals(null)))
-                &&((!editTextDuree.getText().toString().isEmpty()) &&(!editTextDuree.getText().toString().equals(null))&&(!editTextDuree.getText().toString().contains(":")))
-                &&((!editTextDistance.getText().toString().isEmpty())&&(!editTextDistance.getText().toString().equals(null))&&(!editTextDistance.getText().equals(".")))){
-        activiteAjoutee = new Activite(editTextNom.getText().toString(), Date.valueOf(editTextDate.getText().toString()).toInstant(),
+                &&((!editTextDuree.getText().toString().isEmpty()) &&(!editTextDuree.getText().toString().equals(null))&&(!editTextDuree.getText().toString().contains(":"))&&(!editTextDuree.getText().toString().equals("0")))
+                &&((!editTextDistance.getText().toString().isEmpty())&&(!editTextDistance.getText().toString().equals(null))&&(!editTextDistance.getText().toString().equals(".")))){
+        activiteAjoutee = new Activite(editTextNom.getText().toString(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200),
                 Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()),
                 Double.valueOf(editTextDistance.getText().toString()));
 
@@ -114,13 +114,13 @@ public class ControleurAjouterActivite extends AppCompatActivity
                     dialog.dismiss();
                 }).show();
             }
-            else if(((editTextDuree.getText().toString().contains(":"))||(editTextDuree.getText().toString().isEmpty())||(editTextDuree.getText().toString().equals(null)))){
+            else if(((editTextDuree.getText().toString().contains(":"))||(editTextDuree.getText().toString().equals("0"))||(editTextDuree.getText().toString().isEmpty())||(editTextDuree.getText().toString().equals(null)))){
                 message = "L'activité que vous tentez de créer ne possède pas de durée ou la durée est inscrite incorrectement. Veuillez inscrire une durée en minutes.(ex: 90)";
                 builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
                     dialog.dismiss();
                 }).show();
             }
-            else if(((editTextDistance.getText().equals("."))||(editTextDistance.getText().toString().isEmpty())||(editTextDistance.getText().toString().equals(null)))){
+            else if(((editTextDistance.getText().toString().equals("."))||(editTextDistance.getText().toString().isEmpty())||(editTextDistance.getText().toString().equals(null)))){
                 message = "L'activité que vous tentez de créer ne possède pas de distance parcourue ou la distance est inscrite incorrectement. Veuillez inscrire une distance en kilomètres(ex: 4.55)";
                 builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
                     dialog.dismiss();

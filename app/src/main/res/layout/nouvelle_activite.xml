@@ -61,14 +61,18 @@
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/nouveau_nom"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Veuillez entrer un nom"
-            android:textColor="#FFFFFF" />
+            android:layout_height="50dp"
+            android:textColorHint="#C6C6C6">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nouveau_nom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Veuillez entrer un nom pour l'activité"
+                android:textColor="#FFFFFF" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <FrameLayout
             android:layout_width="match_parent"

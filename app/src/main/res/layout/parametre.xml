@@ -240,17 +240,6 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/maison" />
 
-            <ImageButton
-                android:id="@+id/historique_settingButton"
-                android:layout_width="225dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:backgroundTint="#00FFFFFF"
-                android:clickable="false"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/setting" />
-
         </LinearLayout>
     </LinearLayout>
 

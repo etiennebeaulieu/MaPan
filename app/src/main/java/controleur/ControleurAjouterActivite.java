@@ -86,7 +86,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
                 &&((!editTextDate.getText().toString().isEmpty()) &&(!editTextDate.getText().toString().equals(null)))
                 &&((!editTextDuree.getText().toString().isEmpty()) &&(!editTextDuree.getText().toString().equals(null))&&(!editTextDuree.getText().toString().contains(":"))&&(!editTextDuree.getText().toString().equals("0")))
                 &&((!editTextDistance.getText().toString().isEmpty())&&(!editTextDistance.getText().toString().equals(null))&&(!editTextDistance.getText().toString().equals(".")))){
-        activiteAjoutee = new Activite(editTextNom.getText().toString(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200),
+        activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200),
                 Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()),
                 Double.valueOf(editTextDistance.getText().toString()));
 

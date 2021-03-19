@@ -48,6 +48,7 @@
                 android:layout_margin="10dp"
                 android:backgroundTint="#316c19"
                 android:clickable="true"
+                android:onClick="centrer"
                 mapbox:srcCompat="@android:drawable/ic_menu_mylocation" />
 
         </FrameLayout>

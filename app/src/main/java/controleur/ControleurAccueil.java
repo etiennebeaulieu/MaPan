@@ -169,7 +169,7 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 12), 1000);
+                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 15), 1000);
     }
 
 

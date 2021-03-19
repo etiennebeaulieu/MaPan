@@ -1,9 +1,12 @@
 package controleur;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
@@ -73,13 +76,37 @@ public class ControleurNouvelleActivite extends AppCompatActivity
     }
 
     private void CircularReveal(){
-        int cx = (int) background.getRight();
-        int cy = (int) background.getBottom();
+        int cx = (int) background.getLeft() + getDips(44);
+        int cy = (int) background.getBottom() - getDips(44)- 80;
         float rayonFinal = (float) Math.hypot(background.getWidth(), background.getHeight());
         Animator animation = ViewAnimationUtils.createCircularReveal(background, cx,cy, 0, rayonFinal);
-        background.setVisibility(View.INVISIBLE);
-        animation.setDuration(3000);
+        background.setVisibility(View.VISIBLE);
+        animation.setDuration(300);
         animation.start();
+    }
+
+    private int getDips(int i){
+        Resources resources = getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, i, resources.getDisplayMetrics());
+    }
+
+    @Override
+    public void onBackPressed() {
+        int cx = (int) getDips(44);
+        int cy = (int) background.getHeight() - getDips(44)- 80;
+        float rayonInitial = (float) Math.hypot(background.getWidth(), background.getHeight());
+        Animator animation = ViewAnimationUtils.createCircularReveal(background, cx,cy, rayonInitial, 0);
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                background.setVisibility(View.INVISIBLE);
+                finish();
+            }
+        });
+        animation.setDuration(300);
+        animation.start();
+
     }
 
     public void creerNouvelleActivite(View view)
@@ -152,8 +179,23 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         startActivity(new Intent(ControleurNouvelleActivite.this, ControleurParametre.class));
     }
 
-    public void ouvrirAccueil(View view) {
+    public void ouvrirAccueil(View view) throws InterruptedException {
 
-        startActivity(new Intent(ControleurNouvelleActivite.this, ControleurAccueil.class));
+        int cx = (int) getDips(44);
+        int cy = (int) background.getHeight() - getDips(44)- 80;
+        float rayonInitial = (float) Math.hypot(background.getWidth(), background.getHeight());
+        Animator animation = ViewAnimationUtils.createCircularReveal(background, cx,cy, rayonInitial, 0);
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                background.setVisibility(View.INVISIBLE);
+                finish();
+            }
+        });
+        animation.setDuration(300);
+        animation.start();
+        while (!animation.isRunning())
+            startActivity(new Intent(ControleurNouvelleActivite.this, ControleurAccueil.class));
     }
 }

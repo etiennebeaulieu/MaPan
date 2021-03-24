@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -38,6 +39,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
     //Élément pour pouvoir faire un animation
     private View background;
+    private Sport sportSelect;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,8 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
         adapter = new NouvelleActiviteAdapter(this, R.layout.list_activite_row, listSport);
         nouvelle_activitesList.setAdapter(adapter);
+
+        nouvelle_activitesList.setOnItemClickListener((parent, view, position, id) -> sportSelect = (Sport) nouvelle_activitesList.getItemAtPosition(position));
 
 
     }
@@ -129,11 +133,15 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             /*Vérifie si l'utilisateur a sélectionné un type et inscrit un nom ou si l'un ou l'autre
             * doit être réglé selon la valeur par défaut inscrite dans les paramètres
             * */
-            if(nouveau_nom.getText() != null && nouvelle_activitesList.getSelectedItem() !=null) {
+            Editable textNom = nouveau_nom.getText();
+            Object activite = sportSelect;
+
+
+            if(!nouveau_nom.getText().toString().equals("") && sportSelect !=null) {
                 nom = nouveau_nom.getText().toString();
-                sp = (Sport) nouvelle_activitesList.getSelectedItem();
+                sp = (Sport) sportSelect;
                 Activite act = new Activite(nom, sp);
-            }else if(nouveau_nom.getText() == null && nouvelle_activitesList.getSelectedItem() !=null){
+            }else if(nouveau_nom.getText().toString().equals("") && sportSelect !=null){
                 //Vérifie le format de nom par défaut puis crée un nom de ce format pour donner à l'activité
                 String formatNom = this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getString("nom_défaut", "Activité");
                 nom = formatNom;
@@ -141,7 +149,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
                 if(!formatNom.equals("Activité")){
                     switch (formatNom){
                         case "Sport - Date":
-                            nom = ((Sport) nouvelle_activitesList.getSelectedItem()).getNom();
+                            nom = sportSelect.getNom();
                             nom += " - " + DateTimeFormatter.ofPattern("dd-MM-yyyy").withZone(ZoneId.of("EST")).format(Instant.now());
                             break;
                         case "Date":
@@ -149,11 +157,11 @@ public class ControleurNouvelleActivite extends AppCompatActivity
                             break;
 
                     }
-                    sp = (Sport) nouvelle_activitesList.getSelectedItem();
+                    sp = sportSelect;
 
                 }
 
-            }else if(nouveau_nom.getText() != null && nouvelle_activitesList.getSelectedItem() ==null){
+            }else if(!nouveau_nom.getText().toString().equals("") && sportSelect ==null){
                     nom = nouveau_nom.getText().toString();
                     //Vérifie le sport par défaut et met ce sport pour l'activité
                     String nomSport = this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getString("type_défaut", "Randonnée pédestre");
@@ -192,7 +200,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             Activite act = new Activite(nom, sp);
 
             Intent intent = new Intent(ControleurNouvelleActivite.this, ControleurEnCours.class);
-            //intent.putExtra("Activité", act);
+            intent.putExtra("Activité", act);
             startActivity(intent);
         }
 

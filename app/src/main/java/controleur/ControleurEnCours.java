@@ -19,11 +19,11 @@ public class ControleurEnCours extends AppCompatActivity {
 
         setContentView(R.layout.activite_en_cours);
 
-        /*activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
+        activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
 
         TextView info = findViewById(R.id.infoActivite);
 
-        info.setText(activiteEnCours.getNom() + "\n" + activiteEnCours.getSport().getNom());*/
+        info.setText(activiteEnCours.getNom() + "\n" + activiteEnCours.getSport().getNom());
 
 
 

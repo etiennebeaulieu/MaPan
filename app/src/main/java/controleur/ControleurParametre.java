@@ -17,7 +17,7 @@ import modele.Sport;
 
 public class ControleurParametre extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private String[] nom = { "Sport - Date", "Date", "Date - Durée", "Date - Distance"};
+    private String[] nom = { "Sport - Date", "Date"};
     private String[] type = { "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
     private SharedPreferences.Editor editor;
     private Spinner spin_nom;
@@ -47,6 +47,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         aa1 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,nom);
         aa1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_nom.setAdapter(aa1);
+        spin_nom.setSelection(aa1.getPosition(pref.getString("nom_défaut", "Date")));
 
 
         spin_type = (Spinner) findViewById(R.id.choix_type_defaut);
@@ -55,6 +56,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,type);
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin_type.setAdapter(aa2);
+        spin_type.setSelection(aa2.getPosition(pref.getString("type_défaut", "Randonnée pédestre")));
 
         imperial_pour_tout=(SwitchCompat)findViewById(R.id.imperial_pour_tout);
         imperial_pour_tout.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour tout",false));
@@ -88,27 +90,18 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         imperial_pour_denivele=(SwitchCompat)findViewById(R.id.imperial_pour_denivele);
         imperial_pour_denivele.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour denivele",false));
         imperial_pour_denivele.setOnCheckedChangeListener((buttonView, isChecked) -> editor.putBoolean("impérial pour denivele", imperial_pour_denivele.isChecked()).apply());
-
-        /*if(spin_type.isSelected()){
-            choisirTypeDefaut();
-            aa2.notifyDataSetChanged();
-        }
-
-        if(spin_nom.isSelected()){
-            choisirNomDefaut();
-            aa1.notifyDataSetChanged();
-        }*/
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     switch(parent.getId()){
-        case R.id.choix_nom_defaut:{
+        case R.id.choix_nom_defaut:
             editor.putString("nom_défaut", parent.getItemAtPosition(position).toString()).apply();
-        }
-        case R.id.choix_type_defaut:{
+            break;
+
+        case R.id.choix_type_defaut:
             editor.putString("type_défaut", parent.getItemAtPosition(position).toString()).apply();
-        }
+            break;
     }
     }
 

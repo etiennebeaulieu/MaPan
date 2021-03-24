@@ -1,7 +1,10 @@
 package controleur;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.mapan.R;
 import com.mapbox.android.core.location.LocationEngine;
@@ -63,43 +68,47 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
-        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+        //Vérifie si l'application a accès à la localisation ou doit la demander
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mapView.getMapAsync(this);
         } else {
-            permissionsManager = new PermissionsManager(new PermissionsListener() {
-                @Override
-                public void onExplanationNeeded(List<String> permissionsToExplain) {
-                    Toast.makeText(ControleurAccueil.this, "La localisation est nécessaire au fonctionnement de l'application", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onPermissionResult(boolean granted) {
-                    if (granted) {
-                        mapView.getMapAsync(ControleurAccueil.this);
-                    } else {
-                        finish();
-                    }
-                }
-            });
-            permissionsManager.requestLocationPermissions(this);
+            demanderPermissionLocation();
         }
+    }
 
-
+    private void demanderPermissionLocation() {
+        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
+                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurAccueil.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1))
+                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
+        //Importe notre style de map
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
         mapboxMap.setStyle(style, style1 ->
         {
+            //Paramètre la camera par rapport à la map
             locationComponent = mapboxMap.getLocationComponent();
             locationComponent.activateLocationComponent(
                     LocationComponentActivationOptions
@@ -165,6 +174,7 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    //Centre la caméra sur la position de l'utilisateur
     public void centrer(View view){
         Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 

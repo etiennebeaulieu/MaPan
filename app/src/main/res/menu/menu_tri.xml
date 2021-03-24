@@ -3,6 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/triDate"
+        android:title="Trier par date" />
+    <item
         android:id="@+id/triNom"
         android:title="Trier par nom" />
     <item

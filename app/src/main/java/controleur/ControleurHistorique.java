@@ -24,20 +24,11 @@ import modele.Sport;
 
 public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
-    private ArrayList<Activite> listeActivites = new ArrayList<>();
+    //Affichage liste des activités
     private ListView historique_list;
-    private boolean isDistanceMetrique = true;
-    private Button modifier_DeleteActivity;
+
+    //Affichage personalisé
     private ActiviteAdapter adapter;
-
-    private Activite ajouterActivite;
-    private String ajouterNom = "";
-    private Instant ajouterDate = Instant.ofEpochMilli(0);
-    private Sport ajouterSport = Sport.COURSE;
-    private int ajouterDuree = 0;
-    private double ajouterDistance = 0.0;
-
-
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,29 +36,12 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique);
         historique_list = findViewById(R.id.modifier_list);
-        //adapter = new ActiviteAdapter(this, R.layout.list_row, listeActivites);
         adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         historique_list.setAdapter(adapter);
 
 
-        //enregistrerActivitesTest();
         Fichier.rafraichir(this.getApplicationContext());
         adapter.notifyDataSetChanged();
-
-    }
-
-    public void enregistrerActivitesTest() {
-        Activite a1 = new Activite("Activité 1", Instant.ofEpochMilli(1700000), Sport.SKI_RANDONNEE, 75, 19.5);
-        Activite a2 = new Activite("Activité 2", Instant.ofEpochMilli(170000000), Sport.COURSE, 75, 20.5);
-        Activite a3 = new Activite("Activité 3", Instant.ofEpochMilli(170000000), Sport.RANDONNEE, 75, 21.5);
-        Activite a4 = new Activite("Activité 4", Instant.ofEpochMilli(170000000), Sport.RAQUETTE, 75, 90.5);
-        Activite a5 = new Activite("Activité 5", Instant.ofEpochMilli(170000000), Sport.VELO, 75, 50.5);
-
-        Fichier.enregistrer(this.getApplicationContext(), a1);
-        Fichier.enregistrer(this.getApplicationContext(), a2);
-        Fichier.enregistrer(this.getApplicationContext(), a3);
-        Fichier.enregistrer(this.getApplicationContext(), a4);
-        Fichier.enregistrer(this.getApplicationContext(), a5);
     }
 
     public void trierListeDate() {
@@ -117,10 +91,6 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     }
 
-    public ListView getHistorique_list(){
-        return historique_list;
-    }
-
     public void ajouterActivite(View view) {
         startActivity(new Intent(ControleurHistorique.this, ControleurAjouterActivite.class));
     }
@@ -146,6 +116,11 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
             case R.id.triDuree:
                 trierListeDuree();
+                retour = true;
+                break;
+
+            case R.id.triDate:
+                trierListeDate();
                 retour = true;
                 break;
 

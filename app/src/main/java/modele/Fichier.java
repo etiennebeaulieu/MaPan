@@ -39,7 +39,6 @@ public class Fichier {
             oos.writeObject(activite);
             oos.close();
             fos.close();
-            Toast.makeText(context, activite.getNom() + " enregistré", Toast.LENGTH_SHORT).show();
         }catch (IOException io){
             io.printStackTrace();
         }
@@ -81,9 +80,6 @@ public class Fichier {
         File dossierActivite = new File(directory, "activites");
         if(!dossierActivite.exists())
             dossierActivite.mkdir();
-        if(new File(dossierActivite, nom + ".mp").delete()){
-            Toast.makeText(context, nom +" supprimée", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public static File partager(Context context, Activite activite){

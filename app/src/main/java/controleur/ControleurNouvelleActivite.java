@@ -29,8 +29,14 @@ import modele.Sport;
 public class ControleurNouvelleActivite extends AppCompatActivity
 {
     private EditText nouveau_nom;
+
+    //Liste des types d'activité
     private ListView nouvelle_activitesList;
+
+    //Affichage personalisé pour ListView
     private NouvelleActiviteAdapter adapter;
+
+    //Élément pour pouvoir faire un animation
     private View background;
 
 
@@ -38,6 +44,8 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nouvelle_activite);
+
+        //Vérifie si l'animation doit être déclenché et la lance
         background = findViewById(R.id.background);
         if(savedInstanceState == null){
             background.setVisibility(View.INVISIBLE);
@@ -56,9 +64,8 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         nouveau_nom = (EditText)findViewById(R.id.nouveau_nom);
         nouvelle_activitesList = (ListView)findViewById(R.id.nouvelle_activitesList);
 
-
+        //Création d'une liste des type de sport à partir de l'enum pour l'affichage
         ArrayList<Sport> listSport = new ArrayList<>();
-
         listSport.add(Sport.COURSE);
         listSport.add(Sport.RANDONNEE);
         listSport.add(Sport.RAQUETTE);
@@ -75,10 +82,14 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
     }
 
+    //Méthode gérant l'animation de l'ouverture du menu
     private void CircularReveal(){
+        //Indique d'où doit commencer l'animation
         int cx = (int) background.getLeft() + getDips(44);
         int cy = (int) background.getBottom() - getDips(44)- 80;
         float rayonFinal = (float) Math.hypot(background.getWidth(), background.getHeight());
+
+        //L'animation intégré dans un classe Android
         Animator animation = ViewAnimationUtils.createCircularReveal(background, cx,cy, 0, rayonFinal);
         background.setVisibility(View.VISIBLE);
         animation.setDuration(300);
@@ -90,6 +101,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, i, resources.getDisplayMetrics());
     }
 
+    //Lance l'animation de fermeture si l'utilisateur appui sur retour
     @Override
     public void onBackPressed() {
         int cx = (int) getDips(44);
@@ -109,17 +121,22 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
     }
 
+    //Méthode pour créer une nouvelle activité à partir des données rentrées par l'utilisateur
     public void creerNouvelleActivite(View view)
         {
             String nom;
             Sport sp = Sport.RANDONNEE;
+            /*Vérifie si l'utilisateur a sélectionné un type et inscrit un nom ou si l'un ou l'autre
+            * doit être réglé selon la valeur par défaut inscrite dans les paramètres
+            * */
             if(nouveau_nom.getText() != null && nouvelle_activitesList.getSelectedItem() !=null) {
                 nom = nouveau_nom.getText().toString();
                 sp = (Sport) nouvelle_activitesList.getSelectedItem();
                 Activite act = new Activite(nom, sp);
             }else if(nouveau_nom.getText() == null && nouvelle_activitesList.getSelectedItem() !=null){
+                //Vérifie le format de nom par défaut puis crée un nom de ce format pour donner à l'activité
                 String formatNom = this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getString("nom_défaut", "Activité");
-                nom = "Activité";
+                nom = formatNom;
 
                 if(!formatNom.equals("Activité")){
                     switch (formatNom){
@@ -138,6 +155,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
             }else if(nouveau_nom.getText() != null && nouvelle_activitesList.getSelectedItem() ==null){
                     nom = nouveau_nom.getText().toString();
+                    //Vérifie le sport par défaut et met ce sport pour l'activité
                     String nomSport = this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getString("type_défaut", "Randonnée pédestre");
                     for(Sport sport: Sport.values()){
                         if(nomSport.equals(sport.getNom()))
@@ -149,7 +167,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             }
             else{
                 String formatNom = this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getString("nom_défaut", "Activité");
-                nom = "Activité";
+                nom = formatNom;
 
                 if(!formatNom.equals("Activité")){
                     switch (formatNom){
@@ -180,7 +198,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
     }
 
     public void ouvrirAccueil(View view) throws InterruptedException {
-
+        //Lance l'animation si l'utilisateur retourne à l'accueil
         int cx = (int) getDips(44);
         int cy = (int) background.getHeight() - getDips(44)- 80;
         float rayonInitial = (float) Math.hypot(background.getWidth(), background.getHeight());

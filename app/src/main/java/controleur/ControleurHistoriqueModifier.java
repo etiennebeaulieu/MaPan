@@ -42,10 +42,13 @@ import modele.Sport;
 
 public class ControleurHistoriqueModifier extends AppCompatActivity implements PickiTCallbacks {
 
+    //Affichage des activité
     private ListView modifier_list;
-    private ImageButton modifier_exporter;
-    private boolean isDistanceMetrique = true;
+
+    //Affichage personalisé pour ListView
     private ActiviteAdapter adapter;
+
+    //L'activité qui est sélectionné dans la liste
     private Activite activiteSelect;
     private static final int CHOISIR_GPX = 2;
     private static final int   PARTAGER_GPX = 3;
@@ -57,7 +60,6 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         setContentView(R.layout.historique_modifier);
 
         modifier_list = findViewById(R.id.modifier_list);
-        modifier_exporter = findViewById(R.id.modifier_exporter);
         activiteSelect = null;
         pickiT = new PickiT(this, this, this);
 
@@ -70,6 +72,8 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         adapter.notifyDataSetChanged();
 
 
+
+        //Action a faire si une autre application envoie un fichier GPX à MaPan
         Intent intent = getIntent();
         if(intent != null){
             String action = intent.getAction();
@@ -103,9 +107,15 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
+    }
+
     public void exporterGPX(View view) {
 
         if(activiteSelect != null) {
+            //Vérifie si l'activité a des données GPS
             if(activiteSelect.getTabLatitude() != null) {
 
                 File fichier = Fichier.partager(this.getApplicationContext(), activiteSelect);
@@ -130,13 +140,12 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     @RequiresApi(api = Build.VERSION_CODES.R)
     public void importerGPX(View view) {
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(ControleurHistoriqueModifier.this, "Déjà autorisé", Toast.LENGTH_SHORT).show();
 
             Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             loadIntent.setType("application/*");
             startActivityForResult(loadIntent, CHOISIR_GPX);
         } else {
-            requestStoragePermission();
+            demanderPermissionStockage();
         }
     }
 
@@ -156,7 +165,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         }
     }
 
-    private void requestStoragePermission() {
+    private void demanderPermissionStockage() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La permission est nécessaire pour avoir accès aux fichiers")
                     .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurHistoriqueModifier.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1))

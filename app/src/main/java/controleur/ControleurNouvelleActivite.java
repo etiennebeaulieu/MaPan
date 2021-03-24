@@ -190,6 +190,10 @@ public class ControleurNouvelleActivite extends AppCompatActivity
                 }
             }
             Activite act = new Activite(nom, sp);
+
+            Intent intent = new Intent(ControleurNouvelleActivite.this, ControleurEnCours.class);
+            //intent.putExtra("Activité", act);
+            startActivity(intent);
         }
 
     public void ouvrirParametre(View view)

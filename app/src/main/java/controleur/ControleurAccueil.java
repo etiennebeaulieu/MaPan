@@ -188,6 +188,8 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void afficherHistorique(View view) {
+        //startActivity(new Intent(this, ControleurActiviteEnCours.class));
+
         startActivity(new Intent(this, ControleurHistorique.class));
 
     }

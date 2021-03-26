@@ -60,14 +60,45 @@
 
             <com.mapbox.mapboxsdk.maps.MapView
                 android:id="@+id/mapView"
-                mapbox:mapbox_cameraZoom="14"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                mapbox:mapbox_cameraZoom="14">
 
             </com.mapbox.mapboxsdk.maps.MapView>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton3"
+                android:id="@+id/fab_supprimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#316c19"
+                android:clickable="true"
+                android:onClick="supprimer"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
+                android:tint="#FF0000"
+                app:srcCompat="@drawable/ic_delete" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_enregistrer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#316c19"
+                android:clickable="true"
+                android:foregroundTint="@color/white"
+                android:onClick="enregistrer"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_save" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left"
@@ -76,10 +107,11 @@
                 android:backgroundTint="#316c19"
                 android:clickable="true"
                 android:onClick="pause"
-                app:srcCompat="@android:drawable/ic_media_pause" />
+                android:tint="@color/white"
+                app:srcCompat="@drawable/ic_pause" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton4"
+                android:id="@+id/fab_centrer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
@@ -88,7 +120,7 @@
                 android:backgroundTint="#316c19"
                 android:clickable="true"
                 android:onClick="centrer"
-                app:srcCompat="@android:drawable/ic_menu_mylocation" />
+                app:srcCompat="@drawable/ic_my_location" />
 
         </FrameLayout>
 

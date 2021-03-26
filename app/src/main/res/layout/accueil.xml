@@ -49,7 +49,7 @@
                 android:backgroundTint="#316c19"
                 android:clickable="true"
                 android:onClick="centrer"
-                mapbox:srcCompat="@android:drawable/ic_menu_mylocation" />
+                app:srcCompat="@drawable/ic_my_location" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/floatingActionButton2"
@@ -61,7 +61,7 @@
                 android:backgroundTint="#316c19"
                 android:clickable="true"
                 android:onClick="afficherNouvelleActivite"
-                mapbox:srcCompat="@android:drawable/ic_media_play" />
+                app:srcCompat="@drawable/ic_play" />
 
         </FrameLayout>
 

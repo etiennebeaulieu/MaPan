@@ -21,6 +21,7 @@ package controleur;
         import androidx.core.content.ContextCompat;
 
         import com.example.mapan.R;
+        import com.google.android.material.floatingactionbutton.FloatingActionButton;
         import com.mapbox.android.core.location.LocationEngine;
         import com.mapbox.android.core.location.LocationEngineCallback;
         import com.mapbox.android.core.location.LocationEngineProvider;
@@ -57,6 +58,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private LocationEngine locationEngine;
     private long INTERVAL_DEFAUT_MILLIS = 1000;
     private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS*5;
+    private  FloatingActionButton fabPause;
+    private  FloatingActionButton fabEnregistrer;
+    private  FloatingActionButton fabSupprimer;
+    private boolean fabOuvert;
 
     @CameraMode.Mode
     private int cameraMode = CameraMode.TRACKING;
@@ -79,6 +84,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         nomActivite.setText(activiteEnCours.getNom());
         imageSport.setImageResource(activiteEnCours.getSport().getImage());
+
+        fabPause = findViewById(R.id.fab_pause);
+        fabEnregistrer = findViewById(R.id.fab_enregistrer);
+        fabSupprimer = findViewById(R.id.fab_supprimer);
+        fabOuvert = false;
 
 
         mapView = (MapView) findViewById(R.id.mapView);
@@ -205,8 +215,38 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
     public void pause(View view){
-        locationEngine.removeLocationUpdates(callback);
-        System.out.println(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
+
+
+        if(!fabOuvert){
+            locationEngine.removeLocationUpdates(callback);
+            fabOuvert = true;
+
+            fabPause.animate().rotation(360);
+            fabPause.setImageDrawable(getDrawable(R.drawable.ic_play));
+            fabEnregistrer.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+            fabSupprimer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+
+            System.out.println(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
+        }
+        else{
+            initLocationEngine();
+            fabOuvert = false;
+
+            fabPause.animate().rotation(-360);
+            fabPause.setImageDrawable(getDrawable(R.drawable.ic_pause));
+            fabSupprimer.animate().translationY(0);
+            fabEnregistrer.animate().translationY(0);
+
+        }
+
+    }
+
+    public void enregistrer(View view){
+
+    }
+
+    public void supprimer(View view){
+
     }
 
     @Override

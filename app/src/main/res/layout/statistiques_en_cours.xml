@@ -4,7 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="625dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    >
 
 
     <LinearLayout

@@ -287,6 +287,12 @@
             android:layout_height="280dp"
             android:layout_weight="1">
 
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp" />
+
         </FrameLayout>
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

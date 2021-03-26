@@ -39,6 +39,7 @@
                 android:layout_height="56dp"
                 android:layout_marginLeft="5dp"
                 android:backgroundTint="#00FFFFFF"
+                android:padding="5dp"
                 app:srcCompat="@drawable/autre" />
 
             <TextView

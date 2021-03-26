@@ -183,6 +183,10 @@ public class Activite implements Serializable {
         return duree;
     }
 
+    public void setDuree(Duration duree){
+        this.duree = duree;
+    }
+
     private void setDuree(int duree) {
         if (validerDuree(duree)) {
             this.duree = Duration.ofMinutes(duree);
@@ -209,7 +213,7 @@ public class Activite implements Serializable {
         return this.distanceMetrique;
     }
 
-    private void setDistanceMetrique(double distanceMetrique) {
+    public void setDistanceMetrique(double distanceMetrique) {
         if (validerDistance(distanceMetrique)) {
 
             this.distanceMetrique = distanceMetrique;
@@ -220,7 +224,7 @@ public class Activite implements Serializable {
         return this.distanceImperiale;
     }
 
-    private void setDistanceImperiale(double distance) {
+    public void setDistanceImperiale(double distance) {
         if (validerDistance(distance)) {
             this.distanceImperiale = distance;
         }

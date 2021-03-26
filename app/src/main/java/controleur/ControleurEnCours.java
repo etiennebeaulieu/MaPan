@@ -8,8 +8,10 @@ package controleur;
         import android.content.pm.PackageManager;
         import android.location.Location;
         import android.os.Bundle;
+        import android.text.InputType;
         import android.util.Log;
         import android.view.View;
+        import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.TextView;
         import android.widget.Toast;
@@ -42,11 +44,13 @@ package controleur;
         import com.mapbox.mapboxsdk.maps.Style;
 
         import java.lang.ref.WeakReference;
+        import java.time.Duration;
         import java.time.Instant;
         import java.util.ArrayList;
         import java.util.List;
 
         import modele.Activite;
+        import modele.Fichier;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -242,11 +246,27 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void enregistrer(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
+        {
+            activiteEnCours.setDistanceMetrique(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
+            activiteEnCours.setDistanceImperiale(activiteEnCours.getDistanceMetrique()*0.621371);
+
+            activiteEnCours.setDuree(Duration.between(activiteEnCours.getTabTemps().get(0), activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1)));
+
+            Fichier.enregistrer(this, activiteEnCours);
+            startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
+        }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
 
     public void supprimer(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setTitle("Supprimer").setMessage("Voulez-vous vraiment supprimer l'activité pour toujours?").setPositiveButton("Supprimer", (dialog, which) ->
+        {
+            startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
+        }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
 
     @Override

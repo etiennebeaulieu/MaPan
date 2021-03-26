@@ -74,8 +74,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
 
-        TextView nomActivite = findViewById(R.id.nomActivite);
-        ImageView imageSport = findViewById(R.id.iconActivite);
+        TextView nomActivite = findViewById(R.id.nom_activite);
+        ImageView imageSport = findViewById(R.id.icon_activite);
 
         nomActivite.setText(activiteEnCours.getNom());
         imageSport.setImageResource(activiteEnCours.getSport().getImage());

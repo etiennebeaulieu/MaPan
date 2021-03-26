@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.github.HBiSoft:PickiT:0.1.14'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.6.1'
     implementation 'com.google.android.material:material:1.4.0-alpha01'
+    implementation 'com.jjoe64:graphview:4.2.2'
 }

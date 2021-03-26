@@ -8,12 +8,13 @@
     android:gravity="bottom"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="150dp"
+    app:behavior_peekHeight="auto"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     app:layout_constraintHeight_max="625dp">
 
 
     <LinearLayout
+        android:id="@+id/interieur"
         android:layout_width="match_parent"
         android:layout_height="625dp"
         android:background="#316c19"

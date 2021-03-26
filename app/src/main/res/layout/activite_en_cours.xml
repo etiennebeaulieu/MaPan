@@ -128,5 +128,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/statistiques_en_cours" />
+    <include
+        android:id="@+id/bottomSheet"
+        layout="@layout/statistiques_en_cours" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,8 +11,10 @@ package controleur;
         import android.text.InputType;
         import android.util.Log;
         import android.view.View;
+        import android.view.ViewTreeObserver;
         import android.widget.EditText;
         import android.widget.ImageView;
+        import android.widget.LinearLayout;
         import android.widget.TextView;
         import android.widget.Toast;
 
@@ -23,6 +25,7 @@ package controleur;
         import androidx.core.content.ContextCompat;
 
         import com.example.mapan.R;
+        import com.google.android.material.bottomsheet.BottomSheetBehavior;
         import com.google.android.material.floatingactionbutton.FloatingActionButton;
         import com.mapbox.android.core.location.LocationEngine;
         import com.mapbox.android.core.location.LocationEngineCallback;
@@ -54,7 +57,7 @@ package controleur;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static Activite activiteEnCours;
+    protected static Activite activiteEnCours;
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
@@ -66,6 +69,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private  FloatingActionButton fabEnregistrer;
     private  FloatingActionButton fabSupprimer;
     private boolean fabOuvert;
+    private BottomSheetBehavior<View> behavior;
 
     @CameraMode.Mode
     private int cameraMode = CameraMode.TRACKING;
@@ -85,9 +89,25 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
-
         nomActivite.setText(activiteEnCours.getNom());
         imageSport.setImageResource(activiteEnCours.getSport().getImage());
+
+        View bottomSheet = findViewById(R.id.bottomSheet);
+        behavior = BottomSheetBehavior.from(bottomSheet);
+        LinearLayout interieur = findViewById(R.id.interieur);
+
+        interieur.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                interieur.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                View cache = interieur.getChildAt(6);
+                behavior.setPeekHeight(cache.getTop());
+                behavior.setGestureInsetBottomIgnored(false);
+            }
+        });
+
+
+
 
         fabPause = findViewById(R.id.fab_pause);
         fabEnregistrer = findViewById(R.id.fab_enregistrer);

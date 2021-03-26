@@ -3,6 +3,7 @@ package controleur;
         import android.Manifest;
         import android.annotation.SuppressLint;
         import android.app.AlertDialog;
+        import android.app.PendingIntent;
         import android.content.Intent;
         import android.content.pm.PackageManager;
         import android.location.Location;
@@ -52,7 +53,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
-    private Location lastLocation;
     private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
     private long INTERVAL_DEFAUT_MILLIS = 1000;
@@ -148,11 +148,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
     }
-
-    public Location getLastLocation(){
-        return lastLocation;
-    }
-
     private static class AccueilLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
 
@@ -209,17 +204,9 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
 
-    public void afficherParametre(View view) {
-        startActivity(new Intent(this, ControleurParametre.class));
-    }
-
-    public void afficherHistorique(View view) {
-        startActivity(new Intent(this, ControleurHistorique.class));
-
-    }
-
-    public void afficherNouvelleActivite(View view) {
-        startActivity(new Intent(this, ControleurNouvelleActivite.class));
+    public void pause(View view){
+        locationEngine.removeLocationUpdates(callback);
+        System.out.println(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
     }
 
     @Override

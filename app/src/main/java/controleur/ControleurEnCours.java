@@ -6,12 +6,15 @@ package controleur;
         import android.app.PendingIntent;
         import android.content.Intent;
         import android.content.pm.PackageManager;
+        import android.graphics.Point;
         import android.location.Location;
+        import android.os.Build;
         import android.os.Bundle;
         import android.text.InputType;
         import android.util.Log;
         import android.view.View;
         import android.view.ViewTreeObserver;
+        import android.view.WindowMetrics;
         import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.LinearLayout;
@@ -20,6 +23,7 @@ package controleur;
 
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
+        import androidx.annotation.RequiresApi;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.core.app.ActivityCompat;
         import androidx.core.content.ContextCompat;
@@ -100,9 +104,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onGlobalLayout() {
                 interieur.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                View cache = interieur.getChildAt(6);
+                View cache = interieur.getChildAt(1);
                 behavior.setPeekHeight(cache.getTop());
                 behavior.setGestureInsetBottomIgnored(false);
+                behavior.setFitToContents(false);
+                behavior.setExpandedOffset(bottomSheet.getHeight()-interieur.getHeight());
+                behavior.setHalfExpandedRatio(0.4f);
             }
         });
 

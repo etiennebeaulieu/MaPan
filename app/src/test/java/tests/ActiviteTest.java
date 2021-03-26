@@ -460,28 +460,28 @@ Activite activite17, activite18;
     @Test
     public void calculerVitesseMoyenne()
     {
-        assertEquals(6,activite1.calculerVitesseMoyenne(activite1.getDuree().toMillis()/1000)*3600 , 0.0);
-       //assertEquals(4.8, activite2.calculerVitesseMoyenne(activite2.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(13.26, activite3.calculerVitesseMoyenne(activite3.getDuree().toMillis()/1000) *3600, 0.0);
-        assertEquals(9.2, activite4.calculerVitesseMoyenne(activite4.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(13.82, activite5.calculerVitesseMoyenne(activite5.getDuree().toMillis()/1000)*3600, 0.0);
+        assertEquals(6,activite1.calculerVitesseMoyenne() , 0.0);
+       //assertEquals(4.8, activite2.calculerVitesseMoyenne(), 0.0);
+        assertEquals(13.26, activite3.calculerVitesseMoyenne() , 0.0);
+        assertEquals(9.2, activite4.calculerVitesseMoyenne(), 0.0);
+        assertEquals(13.82, activite5.calculerVitesseMoyenne(), 0.0);
           //assertEquals(30.6, activite6.calculerVitesseMoyenne(activite6.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(5.7, activite7.calculerVitesseMoyenne(activite7.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(5.2, activite8.calculerVitesseMoyenne(activite8.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(6.15, activite9.calculerVitesseMoyenne(activite9.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(2.94, activite10.calculerVitesseMoyenne(activite10.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(6.08, activite11.calculerVitesseMoyenne(activite11.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(6.28, activite12.calculerVitesseMoyenne(activite12.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(9.8, activite13.calculerVitesseMoyenne(activite13.getDuree().toMillis()/1000)*3600, 0.0);
-         //assertEquals(8.16, activite14.calculerVitesseMoyenne(activite14.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(14.4, activite15.calculerVitesseMoyenne(activite15.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(9.5, activite16.calculerVitesseMoyenne(activite16.getDuree().toMillis()/1000)*3600, 0.0);
+        assertEquals(5.7, activite7.calculerVitesseMoyenne(), 0.0);
+        assertEquals(5.2, activite8.calculerVitesseMoyenne(), 0.0);
+        assertEquals(6.15, activite9.calculerVitesseMoyenne(), 0.0);
+        assertEquals(2.94, activite10.calculerVitesseMoyenne(), 0.0);
+        assertEquals(6.08, activite11.calculerVitesseMoyenne(), 0.0);
+        assertEquals(6.28, activite12.calculerVitesseMoyenne(), 0.0);
+        assertEquals(9.8, activite13.calculerVitesseMoyenne(), 0.0);
+         //assertEquals(8.16, activite14.calculerVitesseMoyenne(), 0.0);
+        assertEquals(14.4, activite15.calculerVitesseMoyenne(), 0.0);
+        assertEquals(9.5, activite16.calculerVitesseMoyenne(), 0.0);
 
-        System.out.println("Vitesse fichier 1\n"+ activite17.calculerVitesseMoyenne(activite17.getDuree().toMillis()/1000)*3.6 + " km/h\n");
-        assertEquals(11.869753618425397, activite17.calculerVitesseMoyenne(activite17.getDuree().toMillis()/1000)*3.6, 0.0);
+        System.out.println("Vitesse fichier 1\n"+ activite17.calculerVitesseMoyenne() + " km/h\n");
+        assertEquals(11.869753618425397, activite17.calculerVitesseMoyenne(), 0.0);
 
-        System.out.println("Vitesse fichier 2\n"+ activite18.calculerVitesseMoyenne(activite18.getDuree().toMillis()/1000)*3.6 + " km/h\n");
-        assertEquals(0.4447089596989582,activite18.calculerVitesseMoyenne(activite18.getDuree().toMillis()/1000)*3.6, 0.0);
+        System.out.println("Vitesse fichier 2\n"+ activite18.calculerVitesseMoyenne() + " km/h\n");
+        assertEquals(0.4447089596989582,activite18.calculerVitesseMoyenne(), 0.0);
     }
 
 

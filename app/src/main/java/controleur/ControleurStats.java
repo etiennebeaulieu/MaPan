@@ -37,10 +37,12 @@ public class ControleurStats extends AppCompatActivity
 
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
+        NumberFormat formatterCoord = new DecimalFormat("#0.0000'°'");
 
 
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(ControleurEnCours.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
-
+        txtLatitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLatitude().get(ControleurEnCours.activiteEnCours.getTabLatitude().size()-1)));
+        txtLongitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLongitude().get(ControleurEnCours.activiteEnCours.getTabLongitude().size()-1)));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceImperiale()) + "mi");

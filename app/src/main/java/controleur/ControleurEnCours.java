@@ -8,16 +8,12 @@ package controleur;
         import android.content.Context;
         import android.content.Intent;
         import android.content.pm.PackageManager;
-        import android.graphics.Point;
         import android.location.Location;
         import android.os.Build;
         import android.os.Bundle;
-        import android.text.InputType;
         import android.util.Log;
         import android.view.View;
         import android.view.ViewTreeObserver;
-        import android.view.WindowMetrics;
-        import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.LinearLayout;
         import android.widget.TextView;
@@ -25,7 +21,6 @@ package controleur;
 
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
-        import androidx.annotation.RequiresApi;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.core.app.ActivityCompat;
         import androidx.core.content.ContextCompat;
@@ -38,9 +33,7 @@ package controleur;
         import com.mapbox.android.core.location.LocationEngineProvider;
         import com.mapbox.android.core.location.LocationEngineRequest;
         import com.mapbox.android.core.location.LocationEngineResult;
-        import com.mapbox.android.core.permissions.PermissionsListener;
         import com.mapbox.android.core.permissions.PermissionsManager;
-        import com.mapbox.android.telemetry.location.LocationCollectionClient;
         import com.mapbox.mapboxsdk.Mapbox;
         import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
         import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -56,11 +49,10 @@ package controleur;
         import java.lang.ref.WeakReference;
         import java.time.Duration;
         import java.time.Instant;
-        import java.util.ArrayList;
-        import java.util.List;
 
         import modele.Activite;
         import modele.Fichier;
+        import service.ServiceLocation;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -77,6 +69,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private  FloatingActionButton fabSupprimer;
     private boolean fabOuvert;
     private BottomSheetBehavior<View> behavior;
+    private PendingIntent locationIntent;
+
 
     @CameraMode.Mode
     private int cameraMode = CameraMode.TRACKING;
@@ -138,6 +132,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             else
                 demanderPermissionLocation29();
         }
+
+        ContextCompat.startForegroundService(this, new Intent(this, ServiceLocation.class));
+
+
+
     }
 
     private void demanderPermissionLocation() {
@@ -214,10 +213,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 .setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
 
         Intent intent = new Intent(this, LocationReceiver.class);
-        PendingIntent locationIntent = PendingIntent.getBroadcast(getApplicationContext(), 14872, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        locationIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
-        //locationEngine.requestLocationUpdates(request, locationIntent);
+        //locationEngine.requestLocationUpdates(request, callback, getMainLooper());
+        locationEngine.requestLocationUpdates(request, locationIntent);
         locationEngine.getLastLocation(callback);
     }
     private static class AccueilLocationCallback
@@ -242,7 +241,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                    ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
+                    //ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
+                    ControleurEnCours.setTabGPS(location);
 
 
                 }
@@ -269,8 +269,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             if (result != null) {
                 Location location = result.getLastLocation();
 
+
                 if (location != null) {
                     ControleurEnCours.setTabGPS(location);
+                    System.out.println(location);
                 }
             }
         }
@@ -300,7 +302,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
         if(!fabOuvert){
-            locationEngine.removeLocationUpdates(callback);
+            //locationEngine.removeLocationUpdates(callback);
+            locationEngine.removeLocationUpdates(locationIntent);
             fabOuvert = true;
 
             fabPause.animate().rotation(360);

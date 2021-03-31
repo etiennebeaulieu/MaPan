@@ -271,7 +271,7 @@ public class Activite implements Serializable {
         return (tabDistanceMetrique.get(tabDistanceMetrique.size() - 1) / dt) * 3.6;
     }
 
-    private void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
+    public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
         this.vitesseActuelleMetrique = vitesseActuelleMetrique;
     }
 
@@ -289,7 +289,7 @@ public class Activite implements Serializable {
         return vitesseMetrique;
     }
 
-    private void setVitesseMetrique(double vitesseMetrique) {
+    public void setVitesseMetrique(double vitesseMetrique) {
         this.vitesseMetrique = vitesseMetrique;
     }
 
@@ -392,7 +392,7 @@ public class Activite implements Serializable {
     }
 
     ///calcul en mètre et converti en impériale via setters
-    private void calculerDenivele() {
+    public void calculerDenivele() {
 
         double montee = 0;
         double descente = 0;

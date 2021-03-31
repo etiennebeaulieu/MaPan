@@ -2,28 +2,33 @@ package controleur;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import controleur.ControleurEnCours;
 
 import com.example.mapan.R;
 
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.NumberFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 
 
 public class ControleurStats extends AppCompatActivity
 {
+    private Handler mHandler;
+    Runnable refresh;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statistiques_en_cours);
+        this.mHandler = new Handler();
+        m_Runnable.run();
 
+        this.mHandler.postDelayed(m_Runnable,1000);
 
         TextView txtDuree = (TextView)findViewById(R.id.duree_en_cours);
         TextView txtDistance = (TextView)findViewById(R.id.distance_en_cours);
@@ -57,7 +62,7 @@ public class ControleurStats extends AppCompatActivity
             txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseImperiale()) + "mi/h");
         } else
         {
-            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() *3.6) + "km/h");
+            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() *3.6) + "km/h");
             txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique()) + "km/h");
         }
 
@@ -79,5 +84,33 @@ public class ControleurStats extends AppCompatActivity
             txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()) + "m");
             txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()) + "m");
         }
+    }
+
+    private final Runnable m_Runnable = new Runnable()
+
+    {
+        public void run()
+
+        {
+            //Toast.makeText(refresh.this,"in runnable",Toast.LENGTH_SHORT).show();
+            ControleurEnCours.activiteEnCours.setDistanceMetrique(ControleurEnCours.activiteEnCours.calculerDistance(0,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+            ControleurEnCours.activiteEnCours.setVitesseMetrique( ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
+            ControleurEnCours.activiteEnCours.setVitesseActuelleMetrique(  ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size()-2,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+            ControleurEnCours.activiteEnCours.setDuree(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size()-1),
+                    ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
+            ControleurEnCours.activiteEnCours.calculerDenivele();
+            
+            ControleurStats.this.mHandler.postDelayed(m_Runnable,1000);
+        }
+
+    };//runnable
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(m_Runnable);
+        finish();
+
     }
 }

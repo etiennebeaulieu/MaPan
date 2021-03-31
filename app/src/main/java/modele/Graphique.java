@@ -20,6 +20,7 @@ public class Graphique {
         series.appendData(new DataPoint(xValue, yValue), true, 500);
     }
 
+    //afficher la donnée du graphique (ses coordonnées x et y)
     public static void onClickPoint(LineGraphSeries<DataPoint> series, ControleurStats controleur){
         if(!series.equals(null) && !series.isEmpty()) {
             series.setOnDataPointTapListener(new OnDataPointTapListener() {
@@ -31,6 +32,7 @@ public class Graphique {
         }
     }
 
+    //update les informations du graphique dont le titre, les titres des axes, la couleur de la série.
     public static void setGraphInfo(String titreGraph, String titreX, String titreY, int colorSeries, LineGraphSeries<DataPoint> series, GraphView graphique){
         //couleur de la serie
         series.setColor(colorSeries);

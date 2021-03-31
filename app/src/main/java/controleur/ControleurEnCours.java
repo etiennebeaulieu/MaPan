@@ -4,6 +4,8 @@ package controleur;
         import android.annotation.SuppressLint;
         import android.app.AlertDialog;
         import android.app.PendingIntent;
+        import android.content.BroadcastReceiver;
+        import android.content.Context;
         import android.content.Intent;
         import android.content.pm.PackageManager;
         import android.graphics.Point;
@@ -38,6 +40,7 @@ package controleur;
         import com.mapbox.android.core.location.LocationEngineResult;
         import com.mapbox.android.core.permissions.PermissionsListener;
         import com.mapbox.android.core.permissions.PermissionsManager;
+        import com.mapbox.android.telemetry.location.LocationCollectionClient;
         import com.mapbox.mapboxsdk.Mapbox;
         import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
         import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -81,6 +84,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     @RenderMode.Mode
     private int renderMode = RenderMode.COMPASS;
     private AccueilLocationCallback callback = new AccueilLocationCallback(this);
+    public LocationReceiver locationReceiver = new LocationReceiver(this);
 
 
     @Override
@@ -210,7 +214,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
 
-        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
+        Intent intent = new Intent(this, LocationReceiver.class);
+        PendingIntent locationIntent = PendingIntent.getBroadcast(getApplicationContext(), 14872, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        //locationEngine.requestLocationUpdates(request, callback, getMainLooper());
+        locationEngine.requestLocationUpdates(request, locationIntent);
         locationEngine.getLastLocation(callback);
     }
     private static class AccueilLocationCallback
@@ -253,11 +261,31 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    public class LocationReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LocationEngineResult result = LocationEngineResult.extractResult(intent);
+
+            if (result != null) {
+                Location location = result.getLastLocation();
+
+                if (location != null) {
+                    ControleurEnCours.setTabGPS(location);
+                }
+            }
+        }
+    }
+
     private static void setTabGPS(Location location) {
         activiteEnCours.getTabLatitude().add(location.getLatitude());
         activiteEnCours.getTabLongitude().add(location.getLongitude());
         activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
+    }
+
+    public static  MapboxMap getMap(ControleurEnCours controleur){
+        return controleur.mapboxMap;
     }
 
     //Centre la caméra sur la position de l'utilisateur

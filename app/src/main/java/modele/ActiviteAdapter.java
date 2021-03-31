@@ -55,7 +55,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
             txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
             if (mContext.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
             {
-                txtDistance.setText(formatter.format(getItem(position).getDistanceImperiale()) + "mi");
+                txtDistance.setText(formatter.format((getItem(position).getDistanceMetrique()/1000) *0.621371) + "mi");
             } else
             {
                 txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique() / 1000) + "km");

@@ -117,7 +117,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
                 }).show();
             }
             else if((editTextDate.getText().toString().isEmpty())||((editTextDate.getText().toString().equals(null)))){
-                message = "L'activité que vous tentez de créer ne possède pas de date ou sa date est inscrite incorrectement. Veuillez inscrire une date. (ex: 2020-09-6)";
+                message = "L'activité que vous tentez de créer ne possède pas de date ou sa date est inscrite incorrectement. Veuillez inscrire une date. (ex: 2020-9-6)";
                 builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->{
                     dialog.dismiss();
                 }).show();

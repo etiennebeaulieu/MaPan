@@ -286,13 +286,13 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:padding="10dp">
 
             <com.jjoe64.graphview.GraphView
                 android:id="@+id/graph"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp" />
+                android:layout_height="match_parent" />
 
         </FrameLayout>
     </LinearLayout>

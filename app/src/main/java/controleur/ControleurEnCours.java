@@ -84,7 +84,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     @RenderMode.Mode
     private int renderMode = RenderMode.COMPASS;
     private AccueilLocationCallback callback = new AccueilLocationCallback(this);
-    public LocationReceiver locationReceiver = new LocationReceiver(this);
 
 
     @Override
@@ -217,8 +216,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         Intent intent = new Intent(this, LocationReceiver.class);
         PendingIntent locationIntent = PendingIntent.getBroadcast(getApplicationContext(), 14872, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        //locationEngine.requestLocationUpdates(request, callback, getMainLooper());
-        locationEngine.requestLocationUpdates(request, locationIntent);
+        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
+        //locationEngine.requestLocationUpdates(request, locationIntent);
         locationEngine.getLastLocation(callback);
     }
     private static class AccueilLocationCallback

@@ -80,6 +80,10 @@
             </intent-filter>
 
         </activity>
+        
+        <service android:name="service.ServiceLocation">
+            
+        </service>
         <provider
             android:authorities="controleur"
             android:name="androidx.core.content.FileProvider"

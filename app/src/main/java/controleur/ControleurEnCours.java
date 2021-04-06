@@ -133,9 +133,17 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 demanderPermissionLocation29();
         }
 
+
+        lancerServiceLocation("ACTION_COMMENCER_SERVICE");
         ContextCompat.startForegroundService(this, new Intent(this, ServiceLocation.class));
 
 
+
+    }
+
+    private void lancerServiceLocation(String action) {
+        Intent intent = new Intent(this, ServiceLocation.class);
+        intent.setAction(action);
 
     }
 

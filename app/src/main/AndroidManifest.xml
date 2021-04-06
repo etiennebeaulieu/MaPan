@@ -81,8 +81,9 @@
 
         </activity>
         
-        <service android:name="service.ServiceLocation">
-            
+        <service android:name="service.ServiceLocation"
+            android:foregroundServiceType="location">
+
         </service>
         <provider
             android:authorities="controleur"

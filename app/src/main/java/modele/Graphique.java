@@ -5,8 +5,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.mapan.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -160,5 +162,52 @@ public class Graphique{
         graphique.getViewport().setYAxisBoundsManual(true);
         graphique.getViewport().setMinY(3.5);
         graphique.getViewport().setMaxY(8);
+    }*/
+
+    // *** méthodes pour controleur stats ***
+
+    /*private LineChart chart = null;
+    private LineDataSet set = null;
+    private LineData data = null;*/
+
+    /*protected void onCreate(Bundle savedInstanceState){
+        chart = findViewById(R.id.chart);
+        initierGraphique();
+    }*/
+
+    /*public void initierGraphique(){
+
+        double random = (Math.random() *75);
+
+        data = new LineData();
+
+        onResume(random, data);
+    }*/
+
+    /*protected void onResume(double nbr, LineData data){
+        super.onResume();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                for(int i = 0; i < 20; i++){
+                    int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Graphique.ajouterDonnee((float) finalI, (float) nbr + 60f, set, chart, data);
+                        }
+                    });
+
+                    try{
+                        Thread.sleep(600);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }*/
 }

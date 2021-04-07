@@ -289,8 +289,8 @@
             android:layout_weight="1"
             android:padding="10dp">
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

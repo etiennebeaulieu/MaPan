@@ -22,6 +22,16 @@ public class ControleurStats extends AppCompatActivity
     private Handler mHandler;
     Runnable refresh;
 
+    TextView txtDuree = findViewById(R.id.duree_en_cours);
+    TextView txtDistance = findViewById(R.id.distance_en_cours);
+    TextView txtVitesse = findViewById(R.id.vitesse_en_cours);
+    TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne);
+    TextView txtAltitude = findViewById(R.id.altitude_en_cours);
+    TextView txtDenivelePos = findViewById(R.id.denivele_positif);
+    TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif);
+    TextView txtLatitude = findViewById(R.id.latitude);
+    TextView txtLongitude = findViewById(R.id.longitude);
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statistiques_en_cours);
@@ -61,16 +71,6 @@ public class ControleurStats extends AppCompatActivity
 
     public void formatterDonnees()
     {
-        TextView txtDuree = (TextView)findViewById(R.id.duree_en_cours);
-        TextView txtDistance = (TextView)findViewById(R.id.distance_en_cours);
-        TextView txtVitesse = (TextView)findViewById(R.id.vitesse_en_cours);
-        TextView txtVitesseMoyenne = (TextView)findViewById(R.id.vitesse_moyenne);
-        TextView txtAltitude = (TextView)findViewById(R.id.altitude_en_cours);
-        TextView txtDenivelePos = (TextView)findViewById(R.id.denivele_positif);
-        TextView txtDeniveleNeg = (TextView)findViewById(R.id.denivele_negatif);
-        TextView txtLatitude = (TextView)findViewById(R.id.latitude);
-        TextView txtLongitude = (TextView)findViewById(R.id.longitude);
-
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
         NumberFormat formatterCoord = new DecimalFormat("#0.0000'°'");

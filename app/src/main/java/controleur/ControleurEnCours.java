@@ -135,7 +135,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
-        ContextCompat.startForegroundService(this, new Intent(this, ServiceLocation.class));
 
 
 
@@ -144,6 +143,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private void lancerServiceLocation(String action) {
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.setAction(action);
+
+        startService(intent);
 
     }
 
@@ -220,11 +221,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
 
-        Intent intent = new Intent(this, LocationReceiver.class);
-        locationIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-        //locationEngine.requestLocationUpdates(request, callback, getMainLooper());
-        locationEngine.requestLocationUpdates(request, locationIntent);
+        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
     }
     private static class AccueilLocationCallback
@@ -249,8 +247,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                    //ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
-                    ControleurEnCours.setTabGPS(location);
+                    ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
 
 
                 }
@@ -268,23 +265,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-    public class LocationReceiver extends BroadcastReceiver{
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            LocationEngineResult result = LocationEngineResult.extractResult(intent);
-
-            if (result != null) {
-                Location location = result.getLastLocation();
-
-
-                if (location != null) {
-                    ControleurEnCours.setTabGPS(location);
-                    System.out.println(location);
-                }
-            }
-        }
-    }
 
     private static void setTabGPS(Location location) {
         activiteEnCours.getTabLatitude().add(location.getLatitude());
@@ -340,7 +320,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
         {
             activiteEnCours.setDistanceMetrique(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
-            activiteEnCours.setDistanceImperiale(activiteEnCours.getDistanceMetrique()*0.621371);
 
             activiteEnCours.setDuree(Duration.between(activiteEnCours.getTabTemps().get(0), activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1)));
 

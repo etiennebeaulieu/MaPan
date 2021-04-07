@@ -285,28 +285,6 @@ Activite activite17, activite18;
         assertEquals(9248.34046827275, activite18.getDistanceMetrique(), 0.0);
     }
 
-    @Test
-    public void getDistanceImperiale()
-    {
-        assertEquals(6, activite1.getDistanceImperiale(), 0.0);
-        assertEquals(6.4, activite2.getDistanceImperiale(), 0.0);
-        assertEquals(2.21, activite3.getDistanceImperiale(), 0.0);
-        assertEquals(4.6, activite4.getDistanceImperiale(), 0.0);
-        assertEquals(20.73, activite5.getDistanceImperiale(), 0.0);
-        assertEquals(10.20, activite6.getDistanceImperiale(), 0.0);
-        assertEquals(4.75, activite7.getDistanceImperiale(), 0.0);
-        assertEquals(5.2, activite8.getDistanceImperiale(), 0.0);
-        assertEquals(12.3, activite9.getDistanceImperiale(), 0.0);
-        assertEquals(4.9, activite10.getDistanceImperiale(), 0.0);
-        assertEquals(7.6, activite11.getDistanceImperiale(), 0.0);
-        assertEquals(9.42, activite12.getDistanceImperiale(), 0.0);
-        assertEquals(7.35, activite13.getDistanceImperiale(), 0.0);
-        assertEquals(3.4, activite14.getDistanceImperiale(), 0.0);
-        assertEquals(8.4, activite15.getDistanceImperiale(), 0.0);
-        assertEquals(1.9, activite16.getDistanceImperiale(), 0.0);
-        assertEquals(3125.701786185354*0.000621371, activite17.getDistanceImperiale(), 0.0);
-        assertEquals(9248.34046827275*0.000621371, activite18.getDistanceImperiale(), 0.0);
-    }
 
     @Test
     public void getDenivelePositifMetrique()
@@ -321,30 +299,10 @@ Activite activite17, activite18;
     }
 
     @Test
-    public void getDenivelePositifImperiale()
-    {
-        assertEquals(519.6850610061646, activite17.getDenivelePositifImperiale(), 0.0);
-    }
-
-    @Test
-    public void getDeniveleNegatifImperiale()
-    {
-        assertEquals(444.22574726387023, activite17.getDeniveleNegatifImperiale(), 0.0);
-    }
-
-    @Test
     public void getVitesseActuelleMetrique()
     {
         System.out.println("Vitesse actuelle fin fichier 1\n"+ activite17.getVitesseActuelleMetrique() + " km/h\n");
         System.out.println("Vitesse actuelle fin fichier 2\n"+ activite18.getVitesseActuelleMetrique() + " km/h\n");
-    }
-
-    @Test
-    public void getVitesseActuelleImperiale()
-    {
-       assertTrue(activite17.getVitesseActuelleImperiale()==activite17.getVitesseActuelleMetrique()*1000*Activite.METRE_MILES);
-        assertTrue(activite18.getVitesseActuelleImperiale()==activite18.getVitesseActuelleMetrique()*1000*Activite.METRE_MILES);
-
     }
 
     @Test
@@ -368,26 +326,6 @@ Activite activite17, activite18;
         assertEquals(9.5, activite16.getVitesseMetrique(), 0.0);
     }
 
-    @Test
-    public void getVitesseImperiale()
-    {
-        assertEquals(activite1.getVitesseImperiale(), activite1.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite2.getVitesseImperiale(), activite2.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite3.getVitesseImperiale(), activite3.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite4.getVitesseImperiale(), activite4.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite5.getVitesseImperiale(), activite5.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite6.getVitesseImperiale(), activite6.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite7.getVitesseImperiale(), activite7.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite8.getVitesseImperiale(), activite8.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite9.getVitesseImperiale(), activite9.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite10.getVitesseImperiale(), activite10.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite11.getVitesseImperiale(), activite11.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite12.getVitesseImperiale(), activite12.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite13.getVitesseImperiale(), activite13.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite14.getVitesseImperiale(), activite14.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite15.getVitesseImperiale(), activite15.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-        assertEquals(activite16.getVitesseImperiale(), activite16.getVitesseMetrique() * 1000 * Activite.METRE_MILES,0);
-    }
 
     @Test
     public void getTabLatitude()
@@ -494,25 +432,10 @@ Activite activite17, activite18;
     }
 
     @Test
-    public void getAltitudeMaxImperiale()
-    {
-        assertEquals(activite17.getAltitudeMaxImperiale(), 271.6535620123291,0);
-        assertEquals(activite18.getAltitudeMaxImperiale(), 596.1286279999999,0);
-    }
-
-    @Test
     public void getAltitudeMinMetrique()
     {
         assertEquals(activite17.getAltitudeMinMetrique(), 25.600000381469727,0);
         assertEquals(activite18.getAltitudeMinMetrique(), 73.1,0);
-    }
-
-
-    @Test
-    public void getAltitudeMinImperiale()
-    {
-        assertEquals(activite17.getAltitudeMinImperiale(), 83.98950525154113,0);
-        assertEquals(activite18.getAltitudeMinImperiale(), 239.82940399999998,0);
     }
 
     @Test
@@ -523,12 +446,6 @@ Activite activite17, activite18;
 
     }
 
-    @Test
-    public void getAltitudeActuelleImperiale()
-    {
-        assertEquals(48.599998474121094*3.28084, activite17.getAltitudeActuelleImperiale(), 0.0);
-        assertEquals(166*3.28084, activite18.getAltitudeActuelleImperiale(), 0.0);
-    }
 
     @Test
     public void ecrireFichier()

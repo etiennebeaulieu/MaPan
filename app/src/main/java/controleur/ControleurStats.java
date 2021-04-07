@@ -16,61 +16,46 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import service.ServiceStats;
+
 
 public class ControleurStats extends AppCompatActivity
 {
-    private Handler mHandler;
-    Runnable refresh;
+ServiceStats service = null;
 
-    TextView txtDuree = findViewById(R.id.duree_en_cours);
-    TextView txtDistance = findViewById(R.id.distance_en_cours);
-    TextView txtVitesse = findViewById(R.id.vitesse_en_cours);
-    TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne);
-    TextView txtAltitude = findViewById(R.id.altitude_en_cours);
-    TextView txtDenivelePos = findViewById(R.id.denivele_positif);
-    TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif);
-    TextView txtLatitude = findViewById(R.id.latitude);
-    TextView txtLongitude = findViewById(R.id.longitude);
+    public static final double METRE_PIED = 3.28084;
+    public static final double METRE_MILES = 0.000621371;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statistiques_en_cours);
-        this.mHandler = new Handler();
-        m_Runnable.run();
-
-        this.mHandler.postDelayed(m_Runnable,1000);
-
-    }
-
-    private final Runnable m_Runnable = new Runnable()
-
-    {
-        public void run()
-
-        {
-            //Toast.makeText(refresh.this,"in runnable",Toast.LENGTH_SHORT).show();
-            ControleurEnCours.activiteEnCours.setDistanceMetrique(ControleurEnCours.activiteEnCours.calculerDistance(0,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
-            ControleurEnCours.activiteEnCours.setVitesseMetrique( ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
-            ControleurEnCours.activiteEnCours.setVitesseActuelleMetrique(  ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size()-2,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
-            ControleurEnCours.activiteEnCours.setDuree(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size()-1), ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
-            ControleurEnCours.activiteEnCours.calculerDenivele();
-            formatterDonnees();
-            ControleurStats.this.mHandler.postDelayed(m_Runnable,1000);
-        }
-
-    };
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mHandler.removeCallbacks(m_Runnable);
-        finish();
+        //Toast.makeText(refresh.this,"in runnable",Toast.LENGTH_SHORT).show();
+        ControleurEnCours.activiteEnCours.setDistanceMetrique(ControleurEnCours.activiteEnCours.calculerDistance(0,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+        ControleurEnCours.activiteEnCours.setVitesseMetrique( ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
+        ControleurEnCours.activiteEnCours.setVitesseActuelleMetrique(  ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size()-2,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+        ControleurEnCours.activiteEnCours.setDuree(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size()-1), ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
+        ControleurEnCours.activiteEnCours.calculerDenivele();
+        formatterDonnees();
 
     }
 
-    public void formatterDonnees()
+
+
+    public  void formatterDonnees()
     {
+
+        TextView txtDuree = findViewById(R.id.duree_en_cours);
+        TextView txtDistance = findViewById(R.id.distance_en_cours);
+        TextView txtVitesse = findViewById(R.id.vitesse_en_cours);
+        TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne);
+        TextView txtAltitude = findViewById(R.id.altitude_en_cours);
+        TextView txtDenivelePos = findViewById(R.id.denivele_positif);
+        TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif);
+        TextView txtLatitude = findViewById(R.id.latitude);
+        TextView txtLongitude = findViewById(R.id.longitude);
+
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
         NumberFormat formatterCoord = new DecimalFormat("#0.0000'°'");
@@ -80,7 +65,7 @@ public class ControleurStats extends AppCompatActivity
         txtLongitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLongitude().get(ControleurEnCours.activiteEnCours.getTabLongitude().size()-1)));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
-            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceImperiale()) + "mi");
+            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000*METRE_MILES) + "mi");
         } else
         {
             txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000) + "km");
@@ -88,8 +73,8 @@ public class ControleurStats extends AppCompatActivity
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
-            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleImperiale()) + "mi/h");
-            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseImperiale()) + "mi/h");
+            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique()*1000 * METRE_MILES) + "mi/h");
+            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique()*1000 * METRE_MILES) + "mi/h");
         } else
         {
             txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() *3.6) + "km/h");
@@ -98,21 +83,21 @@ public class ControleurStats extends AppCompatActivity
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleImperiale()) + "'");
+            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique()*METRE_PIED) + "'");
         } else
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique() / 1000) + "m");
+            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifImperiale()) + "'");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifImperiale()) + "'");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()) + "'");
 
         } else
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()) + "m");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()) + "m");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()*METRE_PIED) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()*METRE_PIED) + "m");
         }
     }
 }

@@ -34,21 +34,13 @@ public class Activite implements Serializable {
     private Instant heureDebut = null;
     private Instant heureFin = null;
     private double distanceMetrique = 0;
-    private double distanceImperiale = 0;
     private double denivelePositifMetrique = 0;
     private double deniveleNegatifMetrique = 0;
-    private double denivelePositifImperiale = 0;
-    private double deniveleNegatifImperiale = 0;
     private double vitesseActuelleMetrique = 0;
-    private double vitesseActuelleImperiale = 0;
     private double vitesseMetrique = 0;
-    private double vitesseImperiale = 0;
     private double altitudeMaxMetrique = 0;
-    private double altitudeMaxImperiale = 0;
     private double altitudeMinMetrique = 0;
-    private double altitudeMinImperiale = 0;
     private double altitudeActuelleMetrique = 0;
-    private double altitudeActuelleImperiale = 0;
     private Graphique graphique = null;
 
     public ArrayList<Double> tabLatitude = null;
@@ -71,9 +63,7 @@ public class Activite implements Serializable {
                 //Durée en minute
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance*1000);
-                setDistanceImperiale(pDistance*0.621371);
                 setVitesseMetrique(calculerVitesseMoyenne());
-                setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
             }
 
     }
@@ -110,20 +100,14 @@ public class Activite implements Serializable {
                 construireTabVitesse();
 
                 setDistanceMetrique(calculerDistance(0, tabTemps.size() - 1));
-                setDistanceImperiale(getDistanceMetrique() * METRE_MILES);
                 calculerDenivele();
 
                 setVitesseActuelleMetrique(getVitesseActuelleMetrique());
-                setVitesseActuelleImperiale(getVitesseActuelleMetrique() * 1000 * METRE_MILES);
 
                 setVitesseMetrique(calculerVitesseMoyenne());
-                setVitesseImperiale(getVitesseMetrique() * 1000 * METRE_MILES);
                 setAltitudeMaxMetrique(getAltitudeMaxMetrique());
-                setAltitudeMaxImperiale(getAltitudeMaxMetrique() * METRE_PIED);
                 setAltitudeMinMetrique(getAltitudeMinMetrique());
-                setAltitudeMinImperiale(getAltitudeMinMetrique() * METRE_PIED);
                 setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
-                setAltitudeActuelleImperiale(getAltitudeActuelleImperiale());
 
             }
         } catch (Exception e) {
@@ -220,16 +204,6 @@ public class Activite implements Serializable {
         }
     }
 
-    public double getDistanceImperiale() {
-        return this.distanceImperiale;
-    }
-
-    public void setDistanceImperiale(double distance) {
-        if (validerDistance(distance)) {
-            this.distanceImperiale = distance;
-        }
-    }
-
     public double getDenivelePositifMetrique() {
         return denivelePositifMetrique;
     }
@@ -246,22 +220,6 @@ public class Activite implements Serializable {
         this.deniveleNegatifMetrique = deniveleNegatifMetrique;
     }
 
-    public double getDenivelePositifImperiale() {
-        return denivelePositifImperiale;
-    }
-
-    private void setDenivelePositifImperiale(double denivelePositifImperiale) {
-        this.denivelePositifImperiale = denivelePositifImperiale;
-    }
-
-    public double getDeniveleNegatifImperiale() {
-        return this.deniveleNegatifImperiale;
-    }
-
-    private void setDeniveleNegatifImperiale(double deniveleNegatifImperiale) {
-        this.deniveleNegatifImperiale = deniveleNegatifImperiale;
-    }
-
     //calculer en km/h
     public double getVitesseActuelleMetrique() {
 
@@ -275,15 +233,6 @@ public class Activite implements Serializable {
         this.vitesseActuelleMetrique = vitesseActuelleMetrique;
     }
 
-    //calculer en miles/h
-    public double getVitesseActuelleImperiale() {
-        return vitesseActuelleImperiale;
-    }
-
-    private void setVitesseActuelleImperiale(double vitesseActuelleImperiale) {
-        this.vitesseActuelleImperiale = vitesseActuelleImperiale;
-    }
-
     //calculer en km/h
     public double getVitesseMetrique() {
         return vitesseMetrique;
@@ -291,15 +240,6 @@ public class Activite implements Serializable {
 
     public void setVitesseMetrique(double vitesseMetrique) {
         this.vitesseMetrique = vitesseMetrique;
-    }
-
-    //calculer en miles/h
-    public double getVitesseImperiale() {
-        return this.vitesseImperiale;
-    }
-
-    private void setVitesseImperiale(double vitesseImperiale) {
-        this.vitesseImperiale = vitesseImperiale;
     }
 
     public ArrayList<Double> getTabLatitude() {
@@ -407,8 +347,6 @@ public class Activite implements Serializable {
         }
         setDenivelePositifMetrique(montee);
         setDeniveleNegatifMetrique(descente);
-        setDenivelePositifImperiale(montee * METRE_PIED);
-        setDeniveleNegatifImperiale(descente * METRE_PIED);
     }
 
     public double calculerVitesseMoyenne() {
@@ -457,14 +395,6 @@ public class Activite implements Serializable {
         this.altitudeMaxMetrique = altitudeMaxMetrique;
     }
 
-    public double getAltitudeMaxImperiale() {
-        return this.altitudeMaxImperiale;
-    }
-
-    private void setAltitudeMaxImperiale(double altitudeMaxImperiale) {
-        this.altitudeMaxImperiale = altitudeMaxImperiale;
-    }
-
     public double getAltitudeMinMetrique() {
         double minVal = Double.MAX_VALUE;
 
@@ -481,14 +411,6 @@ public class Activite implements Serializable {
         this.altitudeMinMetrique = altitudeMinMetrique;
     }
 
-    public double getAltitudeMinImperiale() {
-        return this.altitudeMinImperiale;
-    }
-
-    public void setAltitudeMinImperiale(double altitudeMinImperiale) {
-        this.altitudeMinImperiale = altitudeMinImperiale;
-    }
-
     public double getAltitudeActuelleMetrique() {
         return this.tabElevationMetrique.get(tabElevationMetrique.size() - 1);
     }
@@ -499,10 +421,6 @@ public class Activite implements Serializable {
 
     public double getAltitudeActuelleImperiale() {
         return METRE_PIED * getAltitudeActuelleMetrique();
-    }
-
-    public void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
-        this.altitudeActuelleImperiale = altitudeActuelleImperiale;
     }
 
     private void construireTabDistance() {

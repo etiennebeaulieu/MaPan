@@ -1,19 +1,123 @@
 package modele;
 
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.widget.Toast;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.Series;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.List;
 
 import controleur.ControleurStats;
 
-public class Graphique {
+public class Graphique{
+
+    // crée les bases du lineChart: les paramètres nécessaires à l'ajout de données en temps réel, définit les axes x et y
+    public static void modifierGaphique(String titre, LineChart chart){
+        // enable value highlighting
+        chart.setDefaultFocusHighlightEnabled(true);
+
+        // enable touch gesture
+        chart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+        chart.setDrawGridBackground(false);
+
+        // enable pinch zoom to avoid scaling x and y axis separately
+        chart.setPinchZoom(true);
+
+        // background color
+        chart.setBackgroundColor(Color.LTGRAY);
+
+        // get legend object
+        Legend l = chart.getLegend();
+
+        // customize legend
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTextColor(Color.BLACK);
+
+        XAxis x1 = chart.getXAxis();
+        x1.setTextColor(Color.BLACK);
+        x1.setDrawGridLines(false);
+        x1.setAvoidFirstLastClipping(true);
+
+        YAxis y1 = chart.getAxisLeft();
+        y1.setTextColor(Color.BLACK);
+        y1.setDrawGridLines(false);
+
+        YAxis y12 = chart.getAxisRight();
+        y12.setEnabled(false);
+    }
+
+    // crée un point avec les coordonnées reçues et l'ajoute dans le lineChart
+    public static void ajouterDonnee(double xValue, double yValue, LineDataSet set, LineChart chart, LineData data){
+        data = chart.getData();
+
+        if(data != null){
+            set = (LineDataSet) data.getDataSetByIndex(0);
+
+            if(set == null){
+                //creation if null
+                set = createSet();
+                data.addDataSet(set);
+            }
+
+            data.addEntry(new Entry((float) xValue, (float) yValue), 0);
+
+            chart.notifyDataSetChanged();
+
+            chart.setVisibleXRangeMaximum(10f);
+        }
+    }
+
+    // crée un lineDataSet pour la méthode ajouterDonnee si le LineData n'en possède pas
+    private static LineDataSet createSet(){
+        LineDataSet set = new LineDataSet(null, "texte");
+        set.setCubicIntensity(0.2f);
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(ColorTemplate.getHoloBlue());
+        set.setLineWidth(2f);
+        set.setCircleSize(4f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setValueTextColor(Color.BLACK);
+        set.setValueTextSize(10f);
+
+        return set;
+    }
+
+    /*public static void creerData(List<Entry> entries, LineDataSet dataSet, String titre, Color color){
+        dataSet = new LineDataSet(entries, titre);
+        dataSet.setColor(color.toArgb());
+    }*/
+
+
+    /*public static void ajouterDataInChart(LineDataSet dataSet, LineData lineData, LineChart chart){
+        lineData = new LineData(dataSet);
+        chart.setData(lineData);
+        chart.invalidate(); //refresh
+        chart.notifyDataSetChanged();
+    }*/
+
+    /*private static LineGraphSeries<DataPoint> series = null;
+
+    public static void creerSerie(){
+        series = new LineGraphSeries<DataPoint>();
+    }
 
     //ajouter un point dans le graphique (gérer les exceptions avec des if{} else{} plus tard
     public static void ajouterDonnee(double xValue, double yValue, LineGraphSeries<DataPoint> series, GraphView graphique){
@@ -56,5 +160,5 @@ public class Graphique {
         graphique.getViewport().setYAxisBoundsManual(true);
         graphique.getViewport().setMinY(3.5);
         graphique.getViewport().setMaxY(8);
-    }
+    }*/
 }

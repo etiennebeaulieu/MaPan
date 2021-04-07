@@ -37,11 +37,17 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 
 import java.lang.ref.WeakReference;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import controleur.ControleurEnCours;
+import modele.Activite;
+
 
 public class ServiceLocation extends Service {
 
@@ -51,23 +57,31 @@ public class ServiceLocation extends Service {
     private boolean isPremiereExecution = true;
     private AccueilLocationCallback callback = new AccueilLocationCallback();
     private LocationEngine locationEngine;
+    private Instant tempsDebut;
+    private String duree;
+    private Activite activiteEnCours;
 
     public static MutableLiveData<Boolean> isEnCours;
     public static MutableLiveData<ArrayList<Location>> locations;
+    public static MutableLiveData<Instant> temps;
 
 
 
     private void postValeursInitiales(){
         isEnCours.postValue(new Boolean(false));
         locations.postValue(new ArrayList<Location>());
+        temps.postValue(Instant.now());
 
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        tempsDebut = Instant.now();
         isEnCours = new MutableLiveData<>();
         locations = new MutableLiveData<>();
+        temps = new MutableLiveData<>();
+        duree = "";
 
         postValeursInitiales();
         locationEngine = LocationEngineProvider.getBestLocationEngine(this);
@@ -85,10 +99,14 @@ public class ServiceLocation extends Service {
                     envoyerLocation(locations.get(locations.size()-1));
             }
         });
+
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        activiteEnCours = (Activite) intent.getSerializableExtra("Activité");
 
         if(intent != null){
            switch (intent.getAction()){
@@ -147,6 +165,7 @@ public class ServiceLocation extends Service {
                 Location location = result.getLastLocation();
                 if (location != null) {
                     locations.getValue().add(location);
+                    temps.postValue(Instant.now());
                     System.out.println(location);
                 }
             }
@@ -171,7 +190,8 @@ public class ServiceLocation extends Service {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ControleurEnCours.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        intent.putExtra("Activité", activiteEnCours);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             creerCanalNotification(notificationManager);
@@ -185,6 +205,16 @@ public class ServiceLocation extends Service {
                 .setContentIntent(pendingIntent);
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
+
+        temps.observeForever(new Observer<Instant>() {
+            @Override
+            public void onChanged(Instant instant) {
+                duree = (DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("UTC")).format(Duration.between(tempsDebut, instant).addTo(Instant.ofEpochSecond(0))));
+                notificationBuilder.setContentText(duree);
+
+                notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+            }
+        });
     }
 
     @Nullable

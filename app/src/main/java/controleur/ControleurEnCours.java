@@ -147,6 +147,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private void lancerServiceLocation(String action) {
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.setAction(action);
+        intent.putExtra("Activité", activiteEnCours);
 
         startService(intent);
 

@@ -51,12 +51,12 @@ public class Activite implements Serializable {
     private double altitudeActuelleImperiale = 0;
     private Graphique graphique = null;
 
-    private ArrayList<Double> tabLatitude = null;
-    private ArrayList<Double> tabLongitude = null;
-    private ArrayList<Double> tabElevationMetrique = null;
-    private ArrayList<Double> tabDistanceMetrique = null;
-    private ArrayList<Double> tabVitesseMetrique = null;
-    private ArrayList<Instant> tabTemps = null;
+    public ArrayList<Double> tabLatitude = null;
+    public ArrayList<Double> tabLongitude = null;
+    public ArrayList<Double> tabElevationMetrique = null;
+    public ArrayList<Double> tabDistanceMetrique = null;
+    public ArrayList<Double> tabVitesseMetrique = null;
+    public ArrayList<Instant> tabTemps = null;
 
 
     /*Constructeur sans fichier
@@ -453,7 +453,7 @@ public class Activite implements Serializable {
         return maxVal;
     }
 
-    private void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
+    public void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
         this.altitudeMaxMetrique = altitudeMaxMetrique;
     }
 
@@ -477,7 +477,7 @@ public class Activite implements Serializable {
         return minVal;
     }
 
-    private void setAltitudeMinMetrique(double altitudeMinMetrique) {
+    public void setAltitudeMinMetrique(double altitudeMinMetrique) {
         this.altitudeMinMetrique = altitudeMinMetrique;
     }
 
@@ -485,7 +485,7 @@ public class Activite implements Serializable {
         return this.altitudeMinImperiale;
     }
 
-    private void setAltitudeMinImperiale(double altitudeMinImperiale) {
+    public void setAltitudeMinImperiale(double altitudeMinImperiale) {
         this.altitudeMinImperiale = altitudeMinImperiale;
     }
 
@@ -493,7 +493,7 @@ public class Activite implements Serializable {
         return this.tabElevationMetrique.get(tabElevationMetrique.size() - 1);
     }
 
-    private void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
+    public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
         this.altitudeActuelleMetrique = altitudeActuelleMetrique;
     }
 
@@ -501,7 +501,7 @@ public class Activite implements Serializable {
         return METRE_PIED * getAltitudeActuelleMetrique();
     }
 
-    private void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
+    public void setAltitudeActuelleImperiale(double altitudeActuelleImperiale) {
         this.altitudeActuelleImperiale = altitudeActuelleImperiale;
     }
 

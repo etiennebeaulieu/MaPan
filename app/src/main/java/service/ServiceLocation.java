@@ -43,7 +43,7 @@ import java.util.Observable;
 
 import controleur.ControleurEnCours;
 
-public class ServiceLocation extends Service implements LifecycleOwner {
+public class ServiceLocation extends Service {
 
     private static final String CANAL_ID = "canal_tracking";
     private static final String CANAL_NOM = "Tracking";
@@ -78,11 +78,17 @@ public class ServiceLocation extends Service implements LifecycleOwner {
                 updateLocation(aBoolean);
             }
         });
+        locations.observeForever(new Observer<ArrayList<Location>>() {
+            @Override
+            public void onChanged(ArrayList<Location> locations) {
+                if(locations.size()>0)
+                    envoyerLocation(locations.get(locations.size()-1));
+            }
+        });
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       isEnCours.postValue(true);
 
         if(intent != null){
            switch (intent.getAction()){
@@ -92,14 +98,14 @@ public class ServiceLocation extends Service implements LifecycleOwner {
                        isPremiereExecution = false;
                    }
                    else{
-
+                        isEnCours.postValue(true);
                    }
                    break;
                case "ACTION_PAUSE_SERVICE":
                     isEnCours.postValue(false);
                    break;
                case "ACTION_STOP_SERVICE":
-                    
+                    stopSelf();
                    break;
            }
        }
@@ -124,10 +130,11 @@ public class ServiceLocation extends Service implements LifecycleOwner {
         }
     }
 
-    @NonNull
-    @Override
-    public Lifecycle getLifecycle() {
-        return null;
+    private void envoyerLocation(Location location){
+        Intent intent = new Intent();
+        intent.setAction("DERNIERE_LOCATION");
+        intent.putExtra("Location", location);
+        sendBroadcast(intent);
     }
 
 
@@ -159,6 +166,9 @@ public class ServiceLocation extends Service implements LifecycleOwner {
     }
 
     private void commencerService(){
+
+        isEnCours.postValue(true);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ControleurEnCours.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);

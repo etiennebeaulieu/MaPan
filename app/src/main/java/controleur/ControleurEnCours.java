@@ -7,6 +7,7 @@ package controleur;
         import android.content.BroadcastReceiver;
         import android.content.Context;
         import android.content.Intent;
+        import android.content.IntentFilter;
         import android.content.pm.PackageManager;
         import android.location.Location;
         import android.os.Build;
@@ -70,6 +71,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private boolean fabOuvert;
     private BottomSheetBehavior<View> behavior;
     private PendingIntent locationIntent;
+    private ReceveurLocation receveur;
 
 
     @CameraMode.Mode
@@ -87,6 +89,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         setContentView(R.layout.activite_en_cours);
 
         activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
+        receveur = new ReceveurLocation();
+        registerReceiver(receveur, new IntentFilter("DERNIERE_LOCATION"));
 
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
@@ -290,8 +294,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
         if(!fabOuvert){
-            //locationEngine.removeLocationUpdates(callback);
-            locationEngine.removeLocationUpdates(locationIntent);
+            lancerServiceLocation("ACTION_PAUSE_SERVICE");
+            locationEngine.removeLocationUpdates(callback);
             fabOuvert = true;
 
             fabPause.animate().rotation(360);
@@ -303,6 +307,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
         else{
             initLocationEngine();
+            lancerServiceLocation("ACTION_COMMENCER_SERVICE");
             fabOuvert = false;
 
             fabPause.animate().rotation(-360);
@@ -319,6 +324,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
         {
+            lancerServiceLocation("ACTION_STOP_SERVICE");
             activiteEnCours.setDistanceMetrique(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
 
             activiteEnCours.setDuree(Duration.between(activiteEnCours.getTabTemps().get(0), activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1)));
@@ -331,10 +337,21 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     public void supprimer(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Supprimer").setMessage("Voulez-vous vraiment supprimer l'activité pour toujours?").setPositiveButton("Supprimer", (dialog, which) ->
+        builder.setTitle("Supprimer").setMessage("Voulez-vous vraiment supprimer l'activité?").setPositiveButton("Supprimer", (dialog, which) ->
         {
-            startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
+            lancerServiceLocation("ACTION_STOP_SERVICE");
+            startActivity(new Intent(ControleurEnCours.this, ControleurAccueil.class));
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
+    }
+
+    class ReceveurLocation extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals("DERNIERE_LOCATION")){
+                setTabGPS((Location)intent.getExtras().get("Location"));
+            }
+        }
     }
 
     @Override

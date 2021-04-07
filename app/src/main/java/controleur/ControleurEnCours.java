@@ -53,11 +53,10 @@ package controleur;
         import modele.Activite;
         import modele.Fichier;
         import service.ServiceLocation;
-        import service.ThreadStats;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
-    protected static Activite activiteEnCours;
+    public static Activite activiteEnCours;
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
@@ -136,8 +135,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
-        ThreadStats s = new ThreadStats();
-        s.start();
         ContextCompat.startForegroundService(this, new Intent(this, ServiceLocation.class));
 
 

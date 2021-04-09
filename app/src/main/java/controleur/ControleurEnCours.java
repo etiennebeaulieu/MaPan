@@ -85,8 +85,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private BottomSheetBehavior<View> behavior;
     private PendingIntent locationIntent;
     private ReceveurLocation receveur;
-    private LineString lineString;
-    private GeoJsonSource geoJsonSource;
+    protected LineString lineString;
+    protected GeoJsonSource geoJsonSource;
 
 
     @CameraMode.Mode
@@ -157,12 +157,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
 
+
     }
 
     private void lancerServiceLocation(String action) {
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.setAction(action);
-        intent.putExtra("Activité", activiteEnCours);
 
         startService(intent);
 
@@ -231,10 +231,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
             //new LoadGeoJson(ControleurEnCours.this).execute();
 
-            lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+            /*lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
             Feature feature = Feature.fromGeometry(lineString);
             geoJsonSource = new GeoJsonSource("geojson-source", feature);
-            style1.addSource(geoJsonSource);
+            style1.addSource(geoJsonSource);*/
 
 
             initLocationEngine();
@@ -299,7 +299,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         activiteEnCours.getTabLongitude().add(location.getLongitude());
         activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
-        activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+        //activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+
+        System.out.println("ok set");
+
     }
 
     private void updateTracer(){
@@ -380,13 +383,16 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("DERNIERE_LOCATION")) {
                 setTabGPS((Location) intent.getExtras().get("Location"));
-                updateTracer();
+                System.out.println("ok" + activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1));
+
+               /* ControleurEnCours.lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+                ControleurEnCours.geoJsonSource.setGeoJson(lineString);*/
 
 
 
-                Intent intent2 = new Intent(ControleurEnCours.this, ServiceStats.class);
-                intent.setAction("ACTION_CALCULER_STATS");
-                startService(intent2);
+                Intent intent2 = new Intent(context, ServiceStats.class);
+                intent2.setAction("ACTION_CALCULER_STATS");
+                context.startService(intent2);
 
             }
         }

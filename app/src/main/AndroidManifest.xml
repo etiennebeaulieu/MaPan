@@ -86,6 +86,9 @@
             android:foregroundServiceType="location">
 
         </service>
+        <service android:name="service.ServiceStats">
+
+        </service>
         <provider
             android:authorities="controleur"
             android:name="androidx.core.content.FileProvider"

@@ -62,14 +62,15 @@ public class ServiceLocation extends Service {
     private Activite activiteEnCours;
 
     public static MutableLiveData<Boolean> isEnCours;
-    public static MutableLiveData<ArrayList<Location>> locations;
+    //public static MutableLiveData<ArrayList<Location>> locations;
     public static MutableLiveData<Instant> temps;
+    public static  MutableLiveData<Location> location;
 
 
 
     private void postValeursInitiales(){
         isEnCours.postValue(new Boolean(false));
-        locations.postValue(new ArrayList<Location>());
+        //locations.postValue(new ArrayList<Location>());
         temps.postValue(Instant.now());
 
     }
@@ -79,8 +80,9 @@ public class ServiceLocation extends Service {
         super.onCreate();
         tempsDebut = Instant.now();
         isEnCours = new MutableLiveData<>();
-        locations = new MutableLiveData<>();
+        //locations = new MutableLiveData<>();
         temps = new MutableLiveData<>();
+        location = new MutableLiveData<>();
         duree = "";
 
         postValeursInitiales();
@@ -92,11 +94,18 @@ public class ServiceLocation extends Service {
                 updateLocation(aBoolean);
             }
         });
-        locations.observeForever(new Observer<ArrayList<Location>>() {
+       /* locations.observeForever(new Observer<ArrayList<Location>>() {
             @Override
             public void onChanged(ArrayList<Location> locations) {
                 if(locations.size()>0)
                     envoyerLocation(locations.get(locations.size()-1));
+            }
+        });*/
+
+        location.observeForever(new Observer<Location>() {
+            @Override
+            public void onChanged(Location location) {
+                envoyerLocation(location);
             }
         });
 
@@ -105,8 +114,6 @@ public class ServiceLocation extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        activiteEnCours = (Activite) intent.getSerializableExtra("Activité");
 
         if(intent != null){
            switch (intent.getAction()){
@@ -148,11 +155,16 @@ public class ServiceLocation extends Service {
         }
     }
 
-    private void envoyerLocation(Location location){
+    public void envoyerLocation(Location location){
         Intent intent = new Intent();
         intent.setAction("DERNIERE_LOCATION");
         intent.putExtra("Location", location);
         sendBroadcast(intent);
+
+    }
+
+    public static void poster(Location location){
+        ServiceLocation.location.postValue(location);
     }
 
 
@@ -164,9 +176,13 @@ public class ServiceLocation extends Service {
             if(isEnCours.getValue()) {
                 Location location = result.getLastLocation();
                 if (location != null) {
-                    locations.getValue().add(location);
-                    temps.postValue(Instant.now());
+                    //locations.getValue().add(location);
+                    ServiceLocation.poster(location);
+                    /*ServiceLocation.location.postValue(location);
                     System.out.println(location);
+                    temps.postValue(Instant.now());
+                    */
+
                 }
             }
         }
@@ -205,6 +221,7 @@ public class ServiceLocation extends Service {
                 .setContentIntent(pendingIntent);
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build());
+
 
         temps.observeForever(new Observer<Instant>() {
             @Override

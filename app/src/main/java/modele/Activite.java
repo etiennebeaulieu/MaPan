@@ -228,7 +228,10 @@ public class Activite implements Serializable {
         long t2 = tabTemps.get(tabTemps.size() - 1).getEpochSecond() - Instant.EPOCH.getEpochSecond();
         long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
         long dt = t2 - t1;
-        return (tabDistanceMetrique.get(tabDistanceMetrique.size() - 1) / dt) * 3.6;
+        if(tabDistanceMetrique.size()>=1)
+            return (tabDistanceMetrique.get(tabDistanceMetrique.size() - 1) / dt) * 3.6;
+
+        return 0;
     }
 
     public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
@@ -374,7 +377,7 @@ public class Activite implements Serializable {
         long t1   = 0;
         long t2 =   0;
 
-        if (tabTemps!= null && tabTemps.size()>1) {
+        if (tabTemps!= null && tabTemps.size()>2 && tabDistanceMetrique.size()>2) {
             d1 = tabDistanceMetrique.get(i1);
             d2 = tabDistanceMetrique.get(i2);
             t1 = tabTemps.get(i1).getEpochSecond();

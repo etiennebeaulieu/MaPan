@@ -1,5 +1,7 @@
 package modele;
 
+import com.mapbox.geojson.Point;
+
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -49,6 +51,7 @@ public class Activite implements Serializable {
     public ArrayList<Double> tabDistanceMetrique = null;
     public ArrayList<Double> tabVitesseMetrique = null;
     public ArrayList<Instant> tabTemps = null;
+    public ArrayList<Point> listeCoordonnee = null;
 
 
     /*Constructeur sans fichier
@@ -84,6 +87,7 @@ public class Activite implements Serializable {
                 tabElevationMetrique = new ArrayList<>();
                 tabDistanceMetrique = new ArrayList<>();
                 tabVitesseMetrique = new ArrayList<>();
+                listeCoordonnee = new ArrayList<>();
 
 
                 setNom(pNom);
@@ -125,6 +129,7 @@ public class Activite implements Serializable {
             tabElevationMetrique = new ArrayList<>();
             tabDistanceMetrique = new ArrayList<>();
             tabVitesseMetrique = new ArrayList<>();
+            listeCoordonnee = new ArrayList<>();
 
 
             setNom(pNom);

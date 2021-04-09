@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +37,10 @@ import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -46,14 +52,21 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Scanner;
 
 import modele.Activite;
 import modele.Fichier;
 import service.ServiceLocation;
+import service.ServiceStats;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -72,6 +85,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private BottomSheetBehavior<View> behavior;
     private PendingIntent locationIntent;
     private ReceveurLocation receveur;
+    private LineString lineString;
+    private GeoJsonSource geoJsonSource;
 
 
     @CameraMode.Mode
@@ -214,6 +229,14 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             locationComponent.setCameraMode(cameraMode);
             locationComponent.setRenderMode(renderMode);
 
+            //new LoadGeoJson(ControleurEnCours.this).execute();
+
+            lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+            Feature feature = Feature.fromGeometry(lineString);
+            geoJsonSource = new GeoJsonSource("geojson-source", feature);
+            style1.addSource(geoJsonSource);
+
+
             initLocationEngine();
         });
     }
@@ -276,6 +299,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         activiteEnCours.getTabLongitude().add(location.getLongitude());
         activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
+        activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+    }
+
+    private void updateTracer(){
+        lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+        geoJsonSource.setGeoJson(lineString);
     }
 
     public static  MapboxMap getMap(ControleurEnCours controleur){
@@ -349,11 +378,79 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("DERNIERE_LOCATION")){
-                setTabGPS((Location)intent.getExtras().get("Location"));
+            if(intent.getAction().equals("DERNIERE_LOCATION")) {
+                setTabGPS((Location) intent.getExtras().get("Location"));
+                updateTracer();
+
+
+
+                Intent intent2 = new Intent(ControleurEnCours.this, ServiceStats.class);
+                intent.setAction("ACTION_CALCULER_STATS");
+                startService(intent2);
+
             }
         }
     }
+
+    private void drawLines(@NonNull FeatureCollection featureCollection) {
+        if (mapboxMap != null) {
+            mapboxMap.getStyle(style -> {
+                if (featureCollection.features() != null) {
+                    if (featureCollection.features().size() > 0) {
+                        style.addSource(new GeoJsonSource("line-source", featureCollection));
+
+// The layer properties for our line. This is where we make the line dotted, set the
+// color, etc.
+                        style.addLayer(new LineLayer("linelayer", "line-source")
+                                .withProperties(PropertyFactory.lineCap(Property.LINE_CAP_SQUARE),
+                                        PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
+                                        PropertyFactory.lineOpacity(.7f),
+                                        PropertyFactory.lineWidth(7f),
+                                        PropertyFactory.lineColor(Color.parseColor("#3bb2d0"))));
+                    }
+                }
+            });
+        }
+    }
+
+    private static class LoadGeoJson extends AsyncTask<Void, Void, FeatureCollection> {
+
+        private WeakReference<ControleurEnCours> weakReference;
+
+        LoadGeoJson(ControleurEnCours activity) {
+            this.weakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected FeatureCollection doInBackground(Void... voids) {
+            try {
+                ControleurEnCours activity = weakReference.get();
+                if (activity != null) {
+                    InputStream inputStream = activity.getAssets().open("example.geojson");
+                    return FeatureCollection.fromJson(convertStreamToString(inputStream));
+                }
+            } catch (Exception exception) {
+                System.out.println("Exception Loading GeoJSON: %s" + exception.toString());
+            }
+            return null;
+        }
+
+        static String convertStreamToString(InputStream is) {
+            Scanner scanner = new Scanner(is).useDelimiter("\\A");
+            return scanner.hasNext() ? scanner.next() : "";
+        }
+
+        @Override
+        protected void onPostExecute(@Nullable FeatureCollection featureCollection) {
+            super.onPostExecute(featureCollection);
+            ControleurEnCours activity = weakReference.get();
+            if (activity != null && featureCollection != null) {
+                activity.drawLines(featureCollection);
+            }
+        }
+    }
+
+
 
     @Override
     public void onBackPressed() {

@@ -49,8 +49,7 @@ public class ServiceStats extends Service {
         distance.setValue(d);
         vitesseMoyenne.setValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
         vitesseActuelle.setValue(ControleurEnCours.activiteEnCours.tabVitesseMetrique.get(ControleurEnCours.activiteEnCours.tabVitesseMetrique.size()-1));
-        duree.setValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1),
-                ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
+            duree.setValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(0), ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1)));
         calculerDenivele();
         denivele.setValue(deniveleList);
         altitude.setValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));

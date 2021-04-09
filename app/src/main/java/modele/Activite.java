@@ -26,9 +26,6 @@ import static java.lang.Double.NaN;
 
 public class Activite implements Serializable {
 
-    public static final double METRE_PIED = 3.28084;
-    public static final double METRE_MILES = 0.000621371;
-
     private String nom = null;
     private Instant date = null;
     private Sport sport = null;
@@ -374,19 +371,19 @@ public class Activite implements Serializable {
 
         double d1 = 0;
         double d2 = 0;
-        if (tabDistanceMetrique.size() > 2) {
+        long t1   = 0;
+        long t2 =   0;
+
+        if (tabTemps!= null && tabTemps.size()>1) {
             d1 = tabDistanceMetrique.get(i1);
             d2 = tabDistanceMetrique.get(i2);
+            t1 = tabTemps.get(i1).getEpochSecond();
+            t2 = tabTemps.get(i2).getEpochSecond();
         }
-        long t1 = tabTemps.get(i1).getEpochSecond();
-        long t2 = tabTemps.get(i2).getEpochSecond();
-
         vitesse = (d2 - d1) / (t2 - t1);
 
         return vitesse;
     }
-
-
 
     public double getAltitudeMaxMetrique() {
         double maxVal = Double.MIN_VALUE;
@@ -426,10 +423,6 @@ public class Activite implements Serializable {
 
     public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
         this.altitudeActuelleMetrique = altitudeActuelleMetrique;
-    }
-
-    public double getAltitudeActuelleImperiale() {
-        return METRE_PIED * getAltitudeActuelleMetrique();
     }
 
     private void construireTabDistance() {

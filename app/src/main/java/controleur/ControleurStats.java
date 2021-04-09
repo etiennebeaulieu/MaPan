@@ -111,7 +111,8 @@ public class ControleurStats extends AppCompatActivity
                 ControleurEnCours.activiteEnCours.setDuree((Duration) intent.getExtras().get("Durée"));
                 ControleurEnCours.activiteEnCours.setDenivelePositifMetrique(denivele.get(0));
                 ControleurEnCours.activiteEnCours.setDeniveleNegatifMetrique(denivele.get(1));
-                ControleurEnCours.activiteEnCours.setDuree((Duration) intent.getExtras().get("Durée"));
+                ControleurEnCours.activiteEnCours.setAltitudeActuelleMetrique((Double) intent.getExtras().get("Altitude"));
+                formatterDonnees();
             }
         }
     }

@@ -208,7 +208,7 @@ public class Activite implements Serializable {
         return denivelePositifMetrique;
     }
 
-    private void setDenivelePositifMetrique(double denivelePositifMetrique) {
+    public void setDenivelePositifMetrique(double denivelePositifMetrique) {
         this.denivelePositifMetrique = denivelePositifMetrique;
     }
 
@@ -216,7 +216,7 @@ public class Activite implements Serializable {
         return deniveleNegatifMetrique;
     }
 
-    private void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
+    public void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
         this.deniveleNegatifMetrique = deniveleNegatifMetrique;
     }
 

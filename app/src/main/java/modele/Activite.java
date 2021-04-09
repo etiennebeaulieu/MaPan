@@ -372,12 +372,16 @@ public class Activite implements Serializable {
     public double calculerVitesse(int i1, int i2){
         double vitesse;
 
-        double d1 = tabDistanceMetrique.get(i1);
-        double d2 = tabDistanceMetrique.get(i2);
+        double d1 = 0;
+        double d2 = 0;
+        if (tabDistanceMetrique.size() > 2) {
+            d1 = tabDistanceMetrique.get(i1);
+            d2 = tabDistanceMetrique.get(i2);
+        }
         long t1 = tabTemps.get(i1).getEpochSecond();
         long t2 = tabTemps.get(i2).getEpochSecond();
 
-        vitesse = (d2-d1)/(t2-t1);
+        vitesse = (d2 - d1) / (t2 - t1);
 
         return vitesse;
     }

@@ -231,10 +231,15 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
             //new LoadGeoJson(ControleurEnCours.this).execute();
 
-            /*lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+            lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
             Feature feature = Feature.fromGeometry(lineString);
             geoJsonSource = new GeoJsonSource("geojson-source", feature);
-            style1.addSource(geoJsonSource);*/
+            style1.addSource(geoJsonSource);
+
+            style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(
+                    PropertyFactory.lineWidth(5f),
+                    PropertyFactory.lineColor(Color.parseColor("#FFFFFF"))
+            ));
 
 
             initLocationEngine();
@@ -276,7 +281,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
                     ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
-
+                    activity.updateTracer();
 
                 }
             }
@@ -299,9 +304,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         activiteEnCours.getTabLongitude().add(location.getLongitude());
         activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
-        //activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+        activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
 
-        System.out.println("ok set");
 
     }
 
@@ -383,11 +387,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("DERNIERE_LOCATION")) {
                 setTabGPS((Location) intent.getExtras().get("Location"));
-                System.out.println("ok" + activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1));
-
-               /* ControleurEnCours.lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
-                ControleurEnCours.geoJsonSource.setGeoJson(lineString);*/
-
 
 
                 Intent intent2 = new Intent(context, ServiceStats.class);

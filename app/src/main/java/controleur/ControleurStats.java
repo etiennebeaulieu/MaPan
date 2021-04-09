@@ -3,6 +3,7 @@ package controleur;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,10 +30,14 @@ public class ControleurStats extends AppCompatActivity
 
     public static final double METRE_PIED = 3.28084;
     public static final double METRE_MILES = 0.000621371;
+    private ReceveurStats receveur;
 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        receveur = new ReceveurStats();
+        registerReceiver(receveur, new IntentFilter("DERNIERE_STATS"));
+
         setContentView(R.layout.statistiques_en_cours);
         formatterDonnees();
     }
@@ -96,7 +101,7 @@ public class ControleurStats extends AppCompatActivity
         }
     }
 
-    class ReceveurLocation extends BroadcastReceiver
+    class ReceveurStats extends BroadcastReceiver
     {
 
         @Override

@@ -32,8 +32,8 @@ public class ServiceStats extends Service {
         duree = new MutableLiveData<>();
         denivele = new MutableLiveData<>();
         altitude = new MutableLiveData<>();
+        deniveleList = new ArrayList<>();
         if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS")) {
-            distance.postValue(0.0);
             instancierValeur();
             envoyerStats();
         }
@@ -42,14 +42,14 @@ public class ServiceStats extends Service {
     }
 
     public void instancierValeur() {
-        distance.postValue(ControleurEnCours.activiteEnCours.calculerDistance(0, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
-        vitesseMoyenne.postValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.postValue(ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size() - 2, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
-        duree.postValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1),
+        distance.setValue(ControleurEnCours.activiteEnCours.calculerDistance(0, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        vitesseMoyenne.setValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
+        vitesseActuelle.setValue(ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size() - 2, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        duree.setValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1),
                 ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
         calculerDenivele();
-        denivele.postValue(deniveleList);
-        altitude.postValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        denivele.setValue(deniveleList);
+        altitude.setValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
     }
 
     public void calculerDenivele() {
@@ -77,6 +77,7 @@ public class ServiceStats extends Service {
         intent.putExtra("Durée", duree.getValue());
         intent.putExtra("Dénivelé", denivele.getValue());
         intent.putExtra("Altitude", altitude.getValue());
+        sendBroadcast(intent);
     }
 
     @Nullable

@@ -14,8 +14,7 @@ import java.util.Timer;
 import controleur.ControleurEnCours;
 import controleur.ControleurStats;
 
-public class ServiceStats extends Service
-{
+public class ServiceStats extends Service {
     public static MutableLiveData<Double> distance;
     public static MutableLiveData<Double> vitesseMoyenne;
     public static MutableLiveData<Double> vitesseActuelle;
@@ -25,21 +24,25 @@ public class ServiceStats extends Service
     ArrayList<Double> deniveleList;
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-        instancierValeur();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS")) {
+            instancierValeur();
+            envoyerStats();
+        }
         stopSelf();
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void instancierValeur(){
-        distance.postValue(ControleurEnCours.activiteEnCours.calculerDistance(0,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+    public void instancierValeur() {
+        distance.postValue(ControleurEnCours.activiteEnCours.calculerDistance(0, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
         vitesseMoyenne.postValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.postValue(ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size()-2,ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
-        duree.postValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size()-1),
+        vitesseActuelle.postValue(ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size() - 2, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        duree.postValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1),
                 ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
         calculerDenivele();
         denivele.postValue(deniveleList);
-        altitude.postValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size()-1));
+        altitude.postValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
     }
 
     public void calculerDenivele() {
@@ -54,10 +57,20 @@ public class ServiceStats extends Service
                 descente += ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i) - ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i + 1);
             }
         }
-        deniveleList.add(0,montee);
-        deniveleList.add(1,descente);
+        deniveleList.add(0, montee);
+        deniveleList.add(1, descente);
     }
 
+    private void envoyerStats(){
+        Intent intent = new Intent();
+        intent.setAction("DERNIERE_STATS");
+        intent.putExtra("Distance", distance.getValue());
+        intent.putExtra("Vitesse moyenne", vitesseMoyenne.getValue());
+        intent.putExtra("Vitesse actuelle", vitesseActuelle.getValue());
+        intent.putExtra("Durée", duree.getValue());
+        intent.putExtra("Dénivelé", denivele.getValue());
+        intent.putExtra("Altitude", altitude.getValue());
+    }
 
     @Nullable
     @Override

@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,7 +37,6 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -46,6 +44,7 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.LocationComponentOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -57,7 +56,6 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -66,7 +64,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import modele.Activite;
 import modele.Fichier;
@@ -77,7 +74,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     public static final double METRE_PIED = 3.28084;
     public static final double METRE_MILES = 0.000621371;
-    public static Activite activiteEnCours;
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
@@ -110,15 +106,14 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activite_en_cours);
 
-        activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
         receveur = new ReceveurLocation();
         registerReceiver(receveur, new IntentFilter("DERNIERE_LOCATION"));
         registerReceiver(receveur, new IntentFilter("DERNIERE_STATS"));
 
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
-        nomActivite.setText(activiteEnCours.getNom());
-        imageSport.setImageResource(activiteEnCours.getSport().getImage());
+        nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
+        imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
 
         View bottomSheet = findViewById(R.id.bottomSheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
@@ -150,14 +145,18 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         mapView.onCreate(savedInstanceState);
 
         //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mapView.getMapAsync(this);
-        } else {
-            if(Build.VERSION.SDK_INT< 29)
-                demanderPermissionLocation();
+        if (Build.VERSION.SDK_INT > 28) {
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mapView.getMapAsync(this);
+             else
+                 demanderPermissionLocation29();
+
+        }else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mapView.getMapAsync(this);
             else
-                demanderPermissionLocation29();
+                demanderPermissionLocation();
+
         }
 
 
@@ -228,30 +227,38 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
         mapboxMap.setStyle(style, style1 ->
         {
-            //Paramètre la camera par rapport à la map
-            locationComponent = mapboxMap.getLocationComponent();
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions
-                            .builder(ControleurEnCours.this, style1).useDefaultLocationEngine(false).build());
-            locationComponent.setLocationComponentEnabled(true);
-            locationComponent.setCameraMode(cameraMode);
-            locationComponent.setRenderMode(renderMode);
-
-
-            //new LoadGeoJson(ControleurEnCours.this).execute();
-
-            lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+            //Création du tracer GPS
+            lineString = LineString.fromLngLats(ControleurNouvelleActivite.activiteEnCours.listeCoordonnee);
             Feature feature = Feature.fromGeometry(lineString);
             geoJsonSource = new GeoJsonSource("geojson-source", feature);
             style1.addSource(geoJsonSource);
 
+            //Affichage du tracé GPS
             style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(
                     PropertyFactory.lineWidth(4f),
                     PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
                     PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
-                    PropertyFactory.lineSortKey(0f),
                     PropertyFactory.lineColor(Color.parseColor("#FFF44336"))
             ));
+
+
+            //Pointeur de localisation personnalisé
+            LocationComponentOptions customLocationComponentOptions = LocationComponentOptions.builder(this).
+                    layerAbove("linelayer").
+                    accuracyColor(Color.parseColor("#00FFFFFF")).
+                    accuracyAlpha(0.4f).
+                    foregroundTintColor(Color.parseColor("#FFF44336")).
+                    build();
+
+
+            //Paramètre la camera par rapport à la map
+            locationComponent = mapboxMap.getLocationComponent();
+            locationComponent.activateLocationComponent(
+                    LocationComponentActivationOptions
+                            .builder(ControleurEnCours.this, style1).locationComponentOptions(customLocationComponentOptions).build());
+            locationComponent.setLocationComponentEnabled(true);
+            locationComponent.setCameraMode(cameraMode);
+            locationComponent.setRenderMode(renderMode);
 
 
             initLocationEngine();
@@ -292,7 +299,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                    //ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
                     activity.updateTracer();
 
                 }
@@ -312,25 +318,22 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
     private static void setTabGPS(Location location) {
-        activiteEnCours.getTabLatitude().add(location.getLatitude());
-        activiteEnCours.getTabLongitude().add(location.getLongitude());
-        activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
-        activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
-        activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
-        if(activiteEnCours.getTabTemps().size()>1)
-            activiteEnCours.tabDistanceMetrique.add(activiteEnCours.calculerDistance(activiteEnCours.tabTemps.size()-2, activiteEnCours.tabTemps.size()-1));
-        activiteEnCours.tabVitesseMetrique.add((double)location.getSpeed());
+        ControleurNouvelleActivite.activiteEnCours.getTabLatitude().add(location.getLatitude());
+        ControleurNouvelleActivite.activiteEnCours.getTabLongitude().add(location.getLongitude());
+        ControleurNouvelleActivite.activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
+        ControleurNouvelleActivite.activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
+        ControleurNouvelleActivite.activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+        if(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()>1)
+            ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique.add(ControleurNouvelleActivite.activiteEnCours.calculerDistance(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-2, ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1));
+        ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.add((double)location.getSpeed());
 
 
     }
 
+    //Mettre à jour le tracer selon les nouveaux point GPS
     private void updateTracer(){
-        lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
+        lineString = LineString.fromLngLats(ControleurNouvelleActivite.activiteEnCours.listeCoordonnee);
         geoJsonSource.setGeoJson(lineString);
-    }
-
-    public static  MapboxMap getMap(ControleurEnCours controleur){
-        return controleur.mapboxMap;
     }
 
     //Centre la caméra sur la position de l'utilisateur
@@ -355,7 +358,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             fabEnregistrer.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
             fabSupprimer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
 
-            System.out.println(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
+            System.out.println(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
         }
         else{
             initLocationEngine();
@@ -377,11 +380,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
         {
             lancerServiceLocation("ACTION_STOP_SERVICE");
-            activiteEnCours.setDistanceMetrique(activiteEnCours.calculerDistance(0, activiteEnCours.getTabTemps().size()-1));
+            ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
 
-            activiteEnCours.setDuree(Duration.between(activiteEnCours.getTabTemps().get(0), activiteEnCours.getTabTemps().get(activiteEnCours.getTabTemps().size()-1)));
+            ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1)));
 
-            Fichier.enregistrer(this, activiteEnCours);
+            Fichier.enregistrer(this, ControleurNouvelleActivite.activiteEnCours);
             startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
@@ -410,14 +413,14 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
             }
              else if(intent.getAction().equals("DERNIERE_STATS")){
-                ControleurEnCours.activiteEnCours.setDistanceMetrique((Double) intent.getExtras().get("Distance"));
-                ControleurEnCours.activiteEnCours.setVitesseMetrique((Double) intent.getExtras().get("Vitesse moyenne"));
-                ControleurEnCours.activiteEnCours.setVitesseActuelleMetrique((Double) intent.getExtras().get("Vitesse actuelle"));
+                ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique((Double) intent.getExtras().get("Distance"));
+                ControleurNouvelleActivite.activiteEnCours.setVitesseMetrique((Double) intent.getExtras().get("Vitesse moyenne"));
+                ControleurNouvelleActivite.activiteEnCours.setVitesseActuelleMetrique((Double) intent.getExtras().get("Vitesse actuelle"));
                 ArrayList<Double> denivele = (ArrayList<Double>) intent.getExtras().get("Dénivelé");
-                ControleurEnCours.activiteEnCours.setDuree((Duration) intent.getExtras().get("Durée"));
-                ControleurEnCours.activiteEnCours.setDenivelePositifMetrique(denivele.get(0));
-                ControleurEnCours.activiteEnCours.setDeniveleNegatifMetrique(denivele.get(1));
-                ControleurEnCours.activiteEnCours.setAltitudeActuelleMetrique((Double) intent.getExtras().get("Altitude"));
+                ControleurNouvelleActivite.activiteEnCours.setDuree((Duration) intent.getExtras().get("Durée"));
+                ControleurNouvelleActivite.activiteEnCours.setDenivelePositifMetrique(denivele.get(0));
+                ControleurNouvelleActivite.activiteEnCours.setDeniveleNegatifMetrique(denivele.get(1));
+                ControleurNouvelleActivite.activiteEnCours.setAltitudeActuelleMetrique((Double) intent.getExtras().get("Altitude"));
                 formatterDonnees();
             }
         }
@@ -438,46 +441,46 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
-        NumberFormat formatterCoord = new DecimalFormat("#0.0000'°'");
+        NumberFormat formatterCoord = new DecimalFormat("#0.000000'°'");
 
-        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(ControleurEnCours.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
-        txtLatitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLatitude().get(ControleurEnCours.activiteEnCours.getTabLatitude().size() - 1)));
-        txtLongitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLongitude().get(ControleurEnCours.activiteEnCours.getTabLongitude().size() - 1)));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(ControleurNouvelleActivite.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtLatitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().size() - 1)));
+        txtLongitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().size() - 1)));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
-            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000 * METRE_MILES) + "mi");
+            txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000 * METRE_MILES) + "mi");
         } else
         {
-            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000) + "km");
+            txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000) + "km");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
-            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() * 1000 * METRE_MILES) + "mi/h");
-            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique() * 1000 * METRE_MILES) + "mi/h");
+            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 1000 * METRE_MILES) + "mi/h");
+            txtVitesseMoyenne.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique() * 1000 * METRE_MILES) + "mi/h");
         } else
         {
-            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
-            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique()) + "km/h");
+            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
+            txtVitesseMoyenne.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique()) + "km/h");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique() * METRE_PIED) + "'");
+            txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique() * METRE_PIED) + "'");
         } else
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
+            txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()) + "'");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()) + "'");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique()) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique()) + "'");
 
         } else
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique() * METRE_PIED) + "m");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique() * METRE_PIED) + "m");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique() * METRE_PIED) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique() * METRE_PIED) + "m");
         }
     }
 

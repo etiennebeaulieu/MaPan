@@ -30,6 +30,7 @@ import modele.Sport;
 public class ControleurNouvelleActivite extends AppCompatActivity
 {
     private EditText nouveau_nom;
+    public static Activite activiteEnCours;
 
     //Liste des types d'activité
     private ListView nouvelle_activitesList;
@@ -197,10 +198,9 @@ public class ControleurNouvelleActivite extends AppCompatActivity
 
                 }
             }
-            Activite act = new Activite(nom, sp);
+            activiteEnCours = new Activite(nom, sp);
 
             Intent intent = new Intent(ControleurNouvelleActivite.this, ControleurEnCours.class);
-            intent.putExtra("Activité", act);
             startActivity(intent);
         }
 

@@ -9,10 +9,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import controleur.ControleurEnCours;
-import controleur.ControleurStats;
+import controleur.ControleurNouvelleActivite;
 
 public class ServiceStats extends Service {
     public static MutableLiveData<Double> distance;
@@ -43,16 +42,16 @@ public class ServiceStats extends Service {
 
     public void instancierValeur() {
         double d = 0;
-        for(double dx: ControleurEnCours.activiteEnCours.tabDistanceMetrique){
+        for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique){
             d+=dx;
         }
         distance.setValue(d);
-        vitesseMoyenne.setValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.setValue(ControleurEnCours.activiteEnCours.tabVitesseMetrique.get(ControleurEnCours.activiteEnCours.tabVitesseMetrique.size()-1));
-            duree.setValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(0), ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1)));
+        vitesseMoyenne.setValue(ControleurNouvelleActivite.activiteEnCours.calculerVitesseMoyenne());
+        vitesseActuelle.setValue(ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.size()-1));
+            duree.setValue(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
         calculerDenivele();
         denivele.setValue(deniveleList);
-        altitude.setValue(ControleurEnCours.activiteEnCours.getTabElevationMetrique().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        altitude.setValue(ControleurNouvelleActivite.activiteEnCours.getTabElevationMetrique().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
     }
 
     public void calculerDenivele() {
@@ -60,11 +59,11 @@ public class ServiceStats extends Service {
         double montee = 0;
         double descente = 0;
 
-        for (int i = 0; i < ControleurEnCours.activiteEnCours.tabElevationMetrique.size() - 1; i++) {
-            if (ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i) < ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i + 1)) {
-                montee += ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i + 1) - ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i);
-            } else if (ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i) > ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i + 1)) {
-                descente += ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i) - ControleurEnCours.activiteEnCours.tabElevationMetrique.get(i + 1);
+        for (int i = 0; i < ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.size() - 1; i++) {
+            if (ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) < ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1)) {
+                montee += ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1) - ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i);
+            } else if (ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) > ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1)) {
+                descente += ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) - ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1);
             }
         }
         deniveleList.add(0, montee);

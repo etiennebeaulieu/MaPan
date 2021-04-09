@@ -5,8 +5,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -30,6 +35,7 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.LocationComponentOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -69,10 +75,29 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         mapView.onCreate(savedInstanceState);
 
         //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mapView.getMapAsync(this);
-        } else {
-            demanderPermissionLocation();
+        if (Build.VERSION.SDK_INT > 28) {
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mapView.getMapAsync(this);
+            else
+                demanderPermissionLocation29();
+
+        }else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                mapView.getMapAsync(this);
+            else
+                demanderPermissionLocation();
+
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent();
+            String packageName = getPackageName();
+            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+                startActivity(intent);
+            }
         }
     }
 
@@ -88,10 +113,29 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    private void demanderPermissionLocation29(){
+        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
+                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurAccueil.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2))
+                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == 2) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
             } else {
@@ -108,11 +152,18 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
         mapboxMap.setStyle(style, style1 ->
         {
+            //Pointeur de localisation personnalisé
+            LocationComponentOptions customLocationComponentOptions = LocationComponentOptions.builder(this).
+                    accuracyColor(Color.parseColor("#00FFFFFF")).
+                    accuracyAlpha(0.4f).
+                    foregroundTintColor(Color.parseColor("#FFF44336")).
+                    build();
+
             //Paramètre la camera par rapport à la map
             locationComponent = mapboxMap.getLocationComponent();
             locationComponent.activateLocationComponent(
                     LocationComponentActivationOptions
-                            .builder(ControleurAccueil.this, style1).useDefaultLocationEngine(false).build());
+                            .builder(ControleurAccueil.this, style1).locationComponentOptions(customLocationComponentOptions).build());
             locationComponent.setLocationComponentEnabled(true);
             locationComponent.setCameraMode(cameraMode);
             locationComponent.setRenderMode(renderMode);

@@ -177,7 +177,7 @@ public class ServiceLocation extends Service {
                 Location location = result.getLastLocation();
                 if (location != null) {
                     //locations.getValue().add(location);
-                    ServiceLocation.poster(location);
+                    ServiceLocation.location.postValue(location);
                     /*ServiceLocation.location.postValue(location);
                     System.out.println(location);
                     temps.postValue(Instant.now());

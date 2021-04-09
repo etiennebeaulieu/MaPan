@@ -86,6 +86,9 @@ public class Activite implements Serializable {
                 tabVitesseMetrique = new ArrayList<>();
                 listeCoordonnee = new ArrayList<>();
 
+                tabDistanceMetrique.add(0.0);
+                tabVitesseMetrique.add(0.0);
+
 
                 setNom(pNom);
                 setSport(pSport);
@@ -127,6 +130,9 @@ public class Activite implements Serializable {
             tabDistanceMetrique = new ArrayList<>();
             tabVitesseMetrique = new ArrayList<>();
             listeCoordonnee = new ArrayList<>();
+
+            tabDistanceMetrique.add(0.0);
+            tabVitesseMetrique.add(0.0);
 
 
             setNom(pNom);
@@ -225,13 +231,8 @@ public class Activite implements Serializable {
     //calculer en km/h
     public double getVitesseActuelleMetrique() {
 
-        long t2 = tabTemps.get(tabTemps.size() - 1).getEpochSecond() - Instant.EPOCH.getEpochSecond();
-        long t1 = tabTemps.get(tabTemps.size() - 2).getEpochSecond() - Instant.EPOCH.getEpochSecond();
-        long dt = t2 - t1;
-        if(tabDistanceMetrique.size()>=1)
-            return (tabDistanceMetrique.get(tabDistanceMetrique.size() - 1) / dt) * 3.6;
 
-        return 0;
+        return tabVitesseMetrique.get(tabVitesseMetrique.size()-1);
     }
 
     public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
@@ -377,7 +378,7 @@ public class Activite implements Serializable {
         long t1   = 0;
         long t2 =   0;
 
-        if (tabTemps!= null && tabTemps.size()>2 && tabDistanceMetrique.size()>2) {
+        if (tabTemps!= null && tabTemps.size()>1 && tabDistanceMetrique.size()>1) {
             d1 = tabDistanceMetrique.get(i1);
             d2 = tabDistanceMetrique.get(i2);
             t1 = tabTemps.get(i1).getEpochSecond();

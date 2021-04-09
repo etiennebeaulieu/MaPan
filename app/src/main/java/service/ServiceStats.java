@@ -42,9 +42,13 @@ public class ServiceStats extends Service {
     }
 
     public void instancierValeur() {
-        distance.setValue(ControleurEnCours.activiteEnCours.calculerDistance(0, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        double d = 0;
+        for(double dx: ControleurEnCours.activiteEnCours.tabDistanceMetrique){
+            d+=dx;
+        }
+        distance.setValue(d);
         vitesseMoyenne.setValue(ControleurEnCours.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.setValue(ControleurEnCours.activiteEnCours.calculerVitesse(ControleurEnCours.activiteEnCours.getTabTemps().size() - 2, ControleurEnCours.activiteEnCours.getTabTemps().size() - 1));
+        vitesseActuelle.setValue(ControleurEnCours.activiteEnCours.tabVitesseMetrique.get(ControleurEnCours.activiteEnCours.tabVitesseMetrique.size()-1));
         duree.setValue(Duration.between(ControleurEnCours.activiteEnCours.getTabTemps().get(ControleurEnCours.activiteEnCours.getTabTemps().size() - 1),
                 ControleurEnCours.activiteEnCours.getTabTemps().get(0)));
         calculerDenivele();

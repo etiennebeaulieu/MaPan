@@ -292,7 +292,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                    ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
+                    //ControleurEnCours.setTabGPS(activity.mapboxMap.getLocationComponent().getLastKnownLocation());
                     activity.updateTracer();
 
                 }
@@ -317,6 +317,9 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
         activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
+        if(activiteEnCours.getTabTemps().size()>1)
+            activiteEnCours.tabDistanceMetrique.add(activiteEnCours.calculerDistance(activiteEnCours.tabTemps.size()-2, activiteEnCours.tabTemps.size()-1));
+        activiteEnCours.tabVitesseMetrique.add((double)location.getSpeed());
 
 
     }

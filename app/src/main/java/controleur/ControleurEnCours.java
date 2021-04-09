@@ -59,8 +59,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import modele.Activite;
@@ -70,6 +75,8 @@ import service.ServiceStats;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
+    public static final double METRE_PIED = 3.28084;
+    public static final double METRE_MILES = 0.000621371;
     public static Activite activiteEnCours;
     private MapboxMap mapboxMap;
     private MapView mapView;
@@ -106,6 +113,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         activiteEnCours = (Activite) getIntent().getSerializableExtra("Activité");
         receveur = new ReceveurLocation();
         registerReceiver(receveur, new IntentFilter("DERNIERE_LOCATION"));
+        registerReceiver(receveur, new IntentFilter("DERNIERE_STATS"));
 
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
@@ -229,6 +237,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             locationComponent.setCameraMode(cameraMode);
             locationComponent.setRenderMode(renderMode);
 
+
             //new LoadGeoJson(ControleurEnCours.this).execute();
 
             lineString = LineString.fromLngLats(activiteEnCours.listeCoordonnee);
@@ -237,8 +246,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             style1.addSource(geoJsonSource);
 
             style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(
-                    PropertyFactory.lineWidth(5f),
-                    PropertyFactory.lineColor(Color.parseColor("#FFFFFF"))
+                    PropertyFactory.lineWidth(4f),
+                    PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
+                    PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+                    PropertyFactory.lineSortKey(0f),
+                    PropertyFactory.lineColor(Color.parseColor("#FFF44336"))
             ));
 
 
@@ -394,64 +406,75 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 context.startService(intent2);
 
             }
+             else if(intent.getAction().equals("DERNIERE_STATS")){
+                ControleurEnCours.activiteEnCours.setDistanceMetrique((Double) intent.getExtras().get("Distance"));
+                ControleurEnCours.activiteEnCours.setVitesseMetrique((Double) intent.getExtras().get("Vitesse moyenne"));
+                ControleurEnCours.activiteEnCours.setVitesseActuelleMetrique((Double) intent.getExtras().get("Vitesse actuelle"));
+                ArrayList<Double> denivele = (ArrayList<Double>) intent.getExtras().get("Dénivelé");
+                ControleurEnCours.activiteEnCours.setDuree((Duration) intent.getExtras().get("Durée"));
+                ControleurEnCours.activiteEnCours.setDenivelePositifMetrique(denivele.get(0));
+                ControleurEnCours.activiteEnCours.setDeniveleNegatifMetrique(denivele.get(1));
+                ControleurEnCours.activiteEnCours.setAltitudeActuelleMetrique((Double) intent.getExtras().get("Altitude"));
+                formatterDonnees();
+            }
         }
     }
 
-    private void drawLines(@NonNull FeatureCollection featureCollection) {
-        if (mapboxMap != null) {
-            mapboxMap.getStyle(style -> {
-                if (featureCollection.features() != null) {
-                    if (featureCollection.features().size() > 0) {
-                        style.addSource(new GeoJsonSource("line-source", featureCollection));
+    public void formatterDonnees()
+    {
 
-// The layer properties for our line. This is where we make the line dotted, set the
-// color, etc.
-                        style.addLayer(new LineLayer("linelayer", "line-source")
-                                .withProperties(PropertyFactory.lineCap(Property.LINE_CAP_SQUARE),
-                                        PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
-                                        PropertyFactory.lineOpacity(.7f),
-                                        PropertyFactory.lineWidth(7f),
-                                        PropertyFactory.lineColor(Color.parseColor("#3bb2d0"))));
-                    }
-                }
-            });
-        }
-    }
+        TextView txtDuree = findViewById(R.id.duree_en_cours);
+        TextView txtDistance = findViewById(R.id.distance_en_cours);
+        TextView txtVitesse = findViewById(R.id.vitesse_en_cours);
+        TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne);
+        TextView txtAltitude = findViewById(R.id.altitude_en_cours);
+        TextView txtDenivelePos = findViewById(R.id.denivele_positif);
+        TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif);
+        TextView txtLatitude = findViewById(R.id.latitude);
+        TextView txtLongitude = findViewById(R.id.longitude);
 
-    private static class LoadGeoJson extends AsyncTask<Void, Void, FeatureCollection> {
+        NumberFormat formatterDistance = new DecimalFormat("#0.00");
+        NumberFormat formatterHauteur = new DecimalFormat("#0");
+        NumberFormat formatterCoord = new DecimalFormat("#0.0000'°'");
 
-        private WeakReference<ControleurEnCours> weakReference;
-
-        LoadGeoJson(ControleurEnCours activity) {
-            this.weakReference = new WeakReference<>(activity);
-        }
-
-        @Override
-        protected FeatureCollection doInBackground(Void... voids) {
-            try {
-                ControleurEnCours activity = weakReference.get();
-                if (activity != null) {
-                    InputStream inputStream = activity.getAssets().open("example.geojson");
-                    return FeatureCollection.fromJson(convertStreamToString(inputStream));
-                }
-            } catch (Exception exception) {
-                System.out.println("Exception Loading GeoJSON: %s" + exception.toString());
-            }
-            return null;
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(ControleurEnCours.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtLatitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLatitude().get(ControleurEnCours.activiteEnCours.getTabLatitude().size() - 1)));
+        txtLongitude.setText(formatterCoord.format(ControleurEnCours.activiteEnCours.getTabLongitude().get(ControleurEnCours.activiteEnCours.getTabLongitude().size() - 1)));
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
+            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000 * METRE_MILES) + "mi");
+        } else
+        {
+            txtDistance.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getDistanceMetrique() / 1000) + "km");
         }
 
-        static String convertStreamToString(InputStream is) {
-            Scanner scanner = new Scanner(is).useDelimiter("\\A");
-            return scanner.hasNext() ? scanner.next() : "";
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+        {
+            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() * 1000 * METRE_MILES) + "mi/h");
+            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique() * 1000 * METRE_MILES) + "mi/h");
+        } else
+        {
+            txtVitesse.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
+            txtVitesseMoyenne.setText(formatterDistance.format(ControleurEnCours.activiteEnCours.getVitesseMetrique()) + "km/h");
         }
 
-        @Override
-        protected void onPostExecute(@Nullable FeatureCollection featureCollection) {
-            super.onPostExecute(featureCollection);
-            ControleurEnCours activity = weakReference.get();
-            if (activity != null && featureCollection != null) {
-                activity.drawLines(featureCollection);
-            }
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+        {
+            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique() * METRE_PIED) + "'");
+        } else
+        {
+            txtAltitude.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
+        }
+
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
+        {
+            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique()) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique()) + "'");
+
+        } else
+        {
+            txtDenivelePos.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDenivelePositifMetrique() * METRE_PIED) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurEnCours.activiteEnCours.getDeniveleNegatifMetrique() * METRE_PIED) + "m");
         }
     }
 

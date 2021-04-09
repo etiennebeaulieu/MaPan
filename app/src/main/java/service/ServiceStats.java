@@ -26,7 +26,9 @@ public class ServiceStats extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        distance = new MutableLiveData<>();
         if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS")) {
+            distance.postValue(0.0);
             instancierValeur();
             envoyerStats();
         }

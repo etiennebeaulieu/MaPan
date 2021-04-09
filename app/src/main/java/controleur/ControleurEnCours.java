@@ -1,59 +1,59 @@
 package controleur;
 
-        import android.Manifest;
-        import android.annotation.SuppressLint;
-        import android.app.AlertDialog;
-        import android.app.PendingIntent;
-        import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.IntentFilter;
-        import android.content.pm.PackageManager;
-        import android.location.Location;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.ViewTreeObserver;
-        import android.widget.ImageView;
-        import android.widget.LinearLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import androidx.annotation.NonNull;
-        import androidx.annotation.Nullable;
-        import androidx.appcompat.app.AppCompatActivity;
-        import androidx.core.app.ActivityCompat;
-        import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-        import com.example.mapan.R;
-        import com.google.android.material.bottomsheet.BottomSheetBehavior;
-        import com.google.android.material.floatingactionbutton.FloatingActionButton;
-        import com.mapbox.android.core.location.LocationEngine;
-        import com.mapbox.android.core.location.LocationEngineCallback;
-        import com.mapbox.android.core.location.LocationEngineProvider;
-        import com.mapbox.android.core.location.LocationEngineRequest;
-        import com.mapbox.android.core.location.LocationEngineResult;
-        import com.mapbox.android.core.permissions.PermissionsManager;
-        import com.mapbox.mapboxsdk.Mapbox;
-        import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-        import com.mapbox.mapboxsdk.geometry.LatLng;
-        import com.mapbox.mapboxsdk.location.LocationComponent;
-        import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-        import com.mapbox.mapboxsdk.location.modes.CameraMode;
-        import com.mapbox.mapboxsdk.location.modes.RenderMode;
-        import com.mapbox.mapboxsdk.maps.MapView;
-        import com.mapbox.mapboxsdk.maps.MapboxMap;
-        import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-        import com.mapbox.mapboxsdk.maps.Style;
+import com.example.mapan.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mapbox.android.core.location.LocationEngine;
+import com.mapbox.android.core.location.LocationEngineCallback;
+import com.mapbox.android.core.location.LocationEngineProvider;
+import com.mapbox.android.core.location.LocationEngineRequest;
+import com.mapbox.android.core.location.LocationEngineResult;
+import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 
-        import java.lang.ref.WeakReference;
-        import java.time.Duration;
-        import java.time.Instant;
+import java.lang.ref.WeakReference;
+import java.time.Duration;
+import java.time.Instant;
 
-        import modele.Activite;
-        import modele.Fichier;
-        import service.ServiceLocation;
+import modele.Activite;
+import modele.Fichier;
+import service.ServiceLocation;
 
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -353,6 +353,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 setTabGPS((Location)intent.getExtras().get("Location"));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     @Override

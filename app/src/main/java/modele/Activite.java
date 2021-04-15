@@ -40,8 +40,8 @@ public class Activite implements Serializable {
     private double altitudeMaxMetrique = 0;
     private double altitudeMinMetrique = 0;
     private double altitudeActuelleMetrique = 0;
-    private Graphique graphique = null;
 
+    private Graphique graphique = null;
     public ArrayList<Double> tabLatitude = null;
     public ArrayList<Double> tabLongitude = null;
     public ArrayList<Double> tabElevationMetrique = null;

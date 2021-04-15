@@ -3,7 +3,6 @@ package controleur;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +27,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.mapan.R;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.android.core.location.LocationEngine;
@@ -65,8 +67,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import modele.Activite;
 import modele.Fichier;
+import modele.Graphique;
 import service.ServiceLocation;
 import service.ServiceStats;
 
@@ -80,16 +82,24 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
     private long INTERVAL_DEFAUT_MILLIS = 1000;
-    private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS*5;
-    private  FloatingActionButton fabPause;
-    private  FloatingActionButton fabEnregistrer;
-    private  FloatingActionButton fabSupprimer;
+    private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS * 5;
+    private FloatingActionButton fabPause;
+    private FloatingActionButton fabEnregistrer;
+    private FloatingActionButton fabSupprimer;
     private boolean fabOuvert;
     private BottomSheetBehavior<View> behavior;
-    private PendingIntent locationIntent;
     private ReceveurLocation receveur;
     protected LineString lineString;
     protected GeoJsonSource geoJsonSource;
+    private LineChart chart = null;
+    private LineDataSet setAltitudeTemps = null;
+    private LineDataSet setAltitudeDistance = null;
+    private LineDataSet setVitesseTemps = null;
+    private LineDataSet setVitesseDistance = null;
+    private LineData data = null;
+
+    protected Boolean graphIsTemps = true;
+    protected int nbrPoint = 0;
 
 
     @CameraMode.Mode
@@ -115,6 +125,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
         imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
 
+
         View bottomSheet = findViewById(R.id.bottomSheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
         LinearLayout interieur = findViewById(R.id.interieur);
@@ -133,8 +144,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         });
 
 
-
-
         fabPause = findViewById(R.id.fab_pause);
         fabEnregistrer = findViewById(R.id.fab_enregistrer);
         fabSupprimer = findViewById(R.id.fab_supprimer);
@@ -151,7 +160,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
              else
                  demanderPermissionLocation29();
 
-        }else {
+        } else {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 mapView.getMapAsync(this);
             else
@@ -162,7 +171,26 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
 
+       //Créer le graphique et instancier tout ce qui doit être instancier
+        chart = findViewById(R.id.chart);
+        data = new LineData();
+        chart.setData(data);
+        Graphique.modifierGraphique("Graphique", chart);
+        chart.getLegend().setEnabled(false);
+        //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
+        setAltitudeTemps = Graphique.createSetAltitude(true);
+        setAltitudeDistance = Graphique.createSetAltitude(false);
+        setVitesseTemps = Graphique.createSetVitesse(true);
+        setVitesseDistance = Graphique.createSetVitesse(false);
 
+        //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
+        if (graphIsTemps) {
+            data.addDataSet(setAltitudeTemps);
+            data.addDataSet(setVitesseTemps);
+        } else {
+            data.addDataSet(setAltitudeDistance);
+            data.addDataSet(setVitesseDistance);
+        }
 
 
     }
@@ -406,6 +434,16 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             if(intent.getAction().equals("DERNIERE_LOCATION")) {
                 setTabGPS((Location) intent.getExtras().get("Location"));
 
+                nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
+                if (graphIsTemps) {
+                    long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
+                } else {
+
+                    //Même chose, mais en fonction de la distance parcouru plutôt que temps
+                }
+
 
                 Intent intent2 = new Intent(context, ServiceStats.class);
                 intent2.setAction("ACTION_CALCULER_STATS");
@@ -461,7 +499,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         } else
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
-            txtVitesseMoyenne.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique()) + "km/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique()) + "km/h");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
@@ -483,8 +521,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique() * METRE_PIED) + "m");
         }
     }
-
-
 
     @Override
     public void onBackPressed() {

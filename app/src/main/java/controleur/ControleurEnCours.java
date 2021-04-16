@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -87,6 +88,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private FloatingActionButton fabEnregistrer;
     private FloatingActionButton fabSupprimer;
     private boolean fabOuvert;
+    private CheckBox choixAxeX;
+    private TextView labelX;
     private BottomSheetBehavior<View> behavior;
     private ReceveurLocation receveur;
     protected LineString lineString;
@@ -124,7 +127,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
         imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
-
+        choixAxeX = findViewById(R.id.choixAxeX);
+        labelX = findViewById(R.id.TextViewX);
 
         View bottomSheet = findViewById(R.id.bottomSheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
@@ -184,7 +188,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         setVitesseDistance = Graphique.createSetVitesse(false);
 
         //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
-        if (graphIsTemps) {
+        if (!choixAxeX.isSelected()) {
             data.addDataSet(setAltitudeTemps);
             data.addDataSet(setVitesseTemps);
         } else {
@@ -435,14 +439,19 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 setTabGPS((Location) intent.getExtras().get("Location"));
 
                 nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
-                if (graphIsTemps) {
+                if (!choixAxeX.isSelected()) {
+                    labelX.setText("Temps");
                     long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
                 } else {
-
-                    //Même chose, mais en fonction de la distance parcouru plutôt que temps
-                }
+                    labelX.setText("Distance");
+                    double distance = 0;
+                    for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique){
+                        distance+=dx;
+                    }
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");                }
 
 
                 Intent intent2 = new Intent(context, ServiceStats.class);

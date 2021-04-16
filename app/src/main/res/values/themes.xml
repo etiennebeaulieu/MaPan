@@ -19,4 +19,8 @@
         <item name="colorControlNormal">#FFFFFF</item>
 
     </style>
+    <style name="Theme.CheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorAccent">#FFF44336</item>
+    </style>
 </resources>

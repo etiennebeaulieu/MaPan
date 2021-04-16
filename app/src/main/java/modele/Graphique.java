@@ -61,6 +61,9 @@ public class Graphique{
         YAxis y12 = chart.getAxisRight();
         y12.setEnabled(true);
         y12.setDrawGridLines(false);
+
+        //Enleve le Description Label en bas à droite du graphique.
+        chart.getDescription().setEnabled(false);
     }
 
     // crée un point avec les coordonnées reçues et l'ajoute dans le lineChart

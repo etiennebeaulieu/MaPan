@@ -295,6 +295,7 @@
                 android:text="Distance"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
+                android:theme="@style/Theme.CheckBox"
                 android:translationX="10dp"
                 android:translationY="255dp" />
 
@@ -324,7 +325,7 @@
                 android:rotation="90"
                 android:text="Vitesse"
                 android:textColor="#FFFFFF"
-                android:translationX="375dp"
+                android:translationX="355dp"
                 android:translationY="120dp" />
 
             <com.github.mikephil.charting.charts.LineChart

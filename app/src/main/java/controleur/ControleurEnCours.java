@@ -188,7 +188,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         setVitesseDistance = Graphique.createSetVitesse(false);
 
         //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
-        if (!choixAxeX.isSelected()) {
+        if (!choixAxeX.isChecked()) {
             data.addDataSet(setAltitudeTemps);
             data.addDataSet(setVitesseTemps);
         } else {
@@ -439,7 +439,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 setTabGPS((Location) intent.getExtras().get("Location"));
 
                 nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
-                if (!choixAxeX.isSelected()) {
+                if (!choixAxeX.isChecked()) {
                     labelX.setText("Temps");
                     long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");

@@ -286,13 +286,55 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="280dp"
-            android:layout_weight="1"
-            android:padding="10dp">
+            android:layout_weight="1">
+
+            <CheckBox
+                android:id="@+id/choixAxeX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:translationX="10dp"
+                android:translationY="255dp" />
+
+            <TextView
+                android:id="@+id/TextViewX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temps"
+                android:textColor="#FFFFFF"
+                android:translationX="184dp"
+                android:translationY="260dp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotation="-90"
+                android:text="Altitude"
+                android:textColor="#FFFFFF"
+                android:translationX="-13dp"
+                android:translationY="120dp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotation="90"
+                android:text="Vitesse"
+                android:textColor="#FFFFFF"
+                android:translationX="375dp"
+                android:translationY="120dp" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_margin="25dp"
+                android:translationY="-10dp">
+
+            </com.github.mikephil.charting.charts.LineChart>
 
         </FrameLayout>
     </LinearLayout>

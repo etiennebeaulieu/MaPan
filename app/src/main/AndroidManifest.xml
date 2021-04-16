@@ -90,7 +90,7 @@
         <service android:name="service.ServiceStats">
 
         </service>
-        <service android:name="service.ServiceGraphique"/>
+
         <provider
             android:authorities="controleur"
             android:name="androidx.core.content.FileProvider"

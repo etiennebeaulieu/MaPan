@@ -441,17 +441,26 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
                 if (!choixAxeX.isChecked()) {
                     labelX.setText("Temps");
+                    data.clearValues();
+                    data.addDataSet(setAltitudeTemps);
+                    data.addDataSet(setVitesseTemps);
+
+
                     long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
                 } else {
                     labelX.setText("Distance");
+                    data.clearValues();
+                    data.addDataSet(setAltitudeDistance);
+                    data.addDataSet(setVitesseDistance);
                     double distance = 0;
-                    for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique){
-                        distance+=dx;
+                    for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique)
+                    {
+                        distance += dx;
                     }
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");                }
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeDistance");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");                }
 
 
                 Intent intent2 = new Intent(context, ServiceStats.class);
@@ -490,7 +499,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         NumberFormat formatterHauteur = new DecimalFormat("#0");
         NumberFormat formatterCoord = new DecimalFormat("#0.000000'°'");
 
-        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(ControleurNouvelleActivite.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(ControleurNouvelleActivite.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
         txtLatitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().size() - 1)));
         txtLongitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().size() - 1)));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))

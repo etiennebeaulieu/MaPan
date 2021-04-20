@@ -430,7 +430,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             startActivity(new Intent(ControleurEnCours.this, ControleurAccueil.class));
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
-
+    
     class ReceveurLocation extends BroadcastReceiver{
 
         @Override
@@ -447,8 +447,22 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
                     long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
-                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
-                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
+                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+                    {
+                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED, chart, "setAltitudeTemps");
+                    }
+                    else
+                    {
+                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
+                    }
+
+                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+                    {
+                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES, chart, "setVitesseTemps");
+                    }
+                    else{
+                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
+                    }
                 } else {
                     labelX.setText("Distance");
                     data.clearValues();
@@ -459,8 +473,29 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     {
                         distance += dx;
                     }
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeDistance");
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");                }
+                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+                    {
+                      distance =  distance*METRE_MILES;
+
+                    }
+                        if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+                        {
+                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED, chart, "setAltitudeDistance");
+                        }
+                        else
+                        {
+                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeDistance");
+                        }
+
+                        if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+                        {
+                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES, chart, "setVitesseDistance");
+                        }
+                        else
+                        {
+                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");
+                        }
+                }
 
 
                 Intent intent2 = new Intent(context, ServiceStats.class);
@@ -505,7 +540,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000 * METRE_MILES) + "mi");
-        } else
+        }
+        else
         {
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000) + "km");
         }
@@ -514,7 +550,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 1000 * METRE_MILES) + "mi/h");
             txtVitesseMoyenne.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique() * 1000 * METRE_MILES) + "mi/h");
-        } else
+        }
+        else
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
             txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique()) + "km/h");
@@ -523,20 +560,22 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique() * METRE_PIED) + "'");
-        } else
+        }
+        else
         {
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique()) + "'");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique()) + "'");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique()* METRE_PIED) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique()* METRE_PIED) + "'");
 
-        } else
+        }
+        else
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique() * METRE_PIED) + "m");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique() * METRE_PIED) + "m");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique() ) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique() ) + "m");
         }
     }
 

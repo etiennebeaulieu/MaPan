@@ -32,6 +32,7 @@ public class ServiceStats extends Service {
         denivele = new MutableLiveData<>();
         altitude = new MutableLiveData<>();
         deniveleList = new ArrayList<>();
+
         if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS")) {
             instancierValeur();
             envoyerStats();
@@ -66,6 +67,7 @@ public class ServiceStats extends Service {
                 descente += ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) - ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1);
             }
         }
+        System.out.println(montee);
         deniveleList.add(0, montee);
         deniveleList.add(1, descente);
     }

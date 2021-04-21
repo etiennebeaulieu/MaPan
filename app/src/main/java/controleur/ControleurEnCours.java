@@ -500,41 +500,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                     chart.setVisibleXRange(0f, (float) temps);
                 } else {
-<<<<<<< Updated upstream
-                    labelX.setText("Distance");
-                    data.clearValues();
-                    data.addDataSet(setAltitudeDistance);
-                    data.addDataSet(setVitesseDistance);
-                    double distance = 0;
-                    for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique)
-                    {
-                        distance += dx;
-                    }
-                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
-                    {
-                      distance =  distance * METRE_MILES;
-
-                    }
-                        if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
-                        {
-                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED*3600, chart, "setAltitudeDistance");
-                        }
-                        else
-                        {
-                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeDistance");
-                        }
-
-                        if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
-                        {
-                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES*3600, chart, "setVitesseDistance");
-                        }
-                        else
-                        {
-                            Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");
-                        }
-=======
                     labelX.setText("Distance" + unitDist);
-
 
                     setAltitudeDistance.setVisible(true);
                     setAltitudeDistance.setDrawValues(true);
@@ -548,7 +514,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     setVitesseTemps.setDrawValues(false);
 
                     chart.setVisibleXRange(0f, (float)distance);
->>>>>>> Stashed changes
                 }
 
 
@@ -603,7 +568,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * METRE_MILES *3600) + "mi/h");
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique() * METRE_MILES*3600) + "mi/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique() * METRE_MILES*1000) + "mi/h");
         }
         else
         {

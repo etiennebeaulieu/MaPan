@@ -201,6 +201,7 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             activiteEnCours = new Activite(nom, sp);
 
             Intent intent = new Intent(ControleurNouvelleActivite.this, ControleurEnCours.class);
+            intent.setAction("COMMENCER_ACTIVITE");
             startActivity(intent);
         }
 

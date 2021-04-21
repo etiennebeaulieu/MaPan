@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Fichier {
 
@@ -27,8 +28,35 @@ public class Fichier {
         if(!dossierActivite.exists())
             dossierActivite.mkdir();
 
+        ArrayList<File> fichiers = new ArrayList<File>(Arrays.asList(dossierActivite.listFiles()));
+
+
         String nomFichier = activite.getNom() + ".mp";
+
+        boolean isFini = false;
+
+        int indice = 0;
+        while(!isFini) {
+            boolean isChange = false;
+            for (int i = 0; i<fichiers.size() && !isChange; i++) {
+                if (fichiers.get(i).getName().equalsIgnoreCase(nomFichier)) {
+                    indice ++;
+                    if(nomFichier.endsWith(").mp")){
+                        nomFichier = nomFichier.replace("("+ (indice-1) + ")", "("+indice+")");
+                        isChange = true;
+                    }
+                    else {
+                        nomFichier = nomFichier.replace(".mp", " (1).mp");
+                        isChange = true;
+                    }
+                }
+            }
+            if(!isChange)
+                isFini = true;
+        }
+        activite.setNom(nomFichier.replace(".mp", ""));
         File fichier = new File(dossierActivite, nomFichier);
+
 
 
 

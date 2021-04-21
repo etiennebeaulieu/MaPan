@@ -175,26 +175,26 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
 
-       //Créer le graphique et instancier tout ce qui doit être instancier
-        chart = findViewById(R.id.chart);
-        data = new LineData();
-        chart.setData(data);
-        Graphique.modifierGraphique("Graphique", chart);
-        chart.getLegend().setEnabled(false);
-        //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
-        setAltitudeTemps = Graphique.createSetAltitude(true);
-        setAltitudeDistance = Graphique.createSetAltitude(false);
-        setVitesseTemps = Graphique.createSetVitesse(true);
-        setVitesseDistance = Graphique.createSetVitesse(false);
+       if(!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
+           //Créer le graphique et instancier tout ce qui doit être instancier
+           chart = findViewById(R.id.chart);
+           data = new LineData();
+           chart.setData(data);
+           Graphique.modifierGraphique("Graphique", chart);
+           chart.getLegend().setEnabled(false);
+           //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
+           setAltitudeTemps = Graphique.createSetAltitude(true);
+           setAltitudeDistance = Graphique.createSetAltitude(false);
+           setVitesseTemps = Graphique.createSetVitesse(true);
+           setVitesseDistance = Graphique.createSetVitesse(false);
 
-        //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
-        if (!choixAxeX.isChecked()) {
-            data.addDataSet(setAltitudeTemps);
-            data.addDataSet(setVitesseTemps);
-        } else {
-            data.addDataSet(setAltitudeDistance);
-            data.addDataSet(setVitesseDistance);
-        }
+           //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
+               data.addDataSet(setAltitudeTemps);
+               data.addDataSet(setVitesseTemps);
+               data.addDataSet(setAltitudeDistance);
+               data.addDataSet(setVitesseDistance);
+
+       }
 
 
     }
@@ -439,31 +439,68 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 setTabGPS((Location) intent.getExtras().get("Location"));
 
                 nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
+
+
+                String unitDist = "";
+                double temps = (double) ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
+                double distance = 0;
+                for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique)
+                {
+                    distance += dx;
+                }
+                if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+                {
+                    distance =  distance*METRE_MILES;
+                    unitDist = " (mi)";
+
+                }
+                else{
+                    distance /= 1000;
+                    unitDist = " (km)";
+                }
+
+                temps /= 60;
+
+
+
+                if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+                {
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED, chart, "setAltitudeTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED, chart, "setAltitudeDistance");
+                }
+                else
+                {
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeDistance");
+                }
+
+                if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+                {
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES, chart, "setVitesseTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES, chart, "setVitesseDistance");
+                }
+                else{
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");
+                }
+
                 if (!choixAxeX.isChecked()) {
-                    labelX.setText("Temps");
-                    data.clearValues();
-                    data.addDataSet(setAltitudeTemps);
-                    data.addDataSet(setVitesseTemps);
+                    labelX.setText("Temps (min)");
+
+                    setAltitudeDistance.setVisible(false);
+                    setAltitudeDistance.setDrawValues(false);
+                    setVitesseDistance.setVisible(false);
+                    setVitesseDistance.setDrawValues(false);
 
 
-                    long temps = ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
-                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
-                    {
-                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint)*METRE_PIED, chart, "setAltitudeTemps");
-                    }
-                    else
-                    {
-                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(nbrPoint), chart, "setAltitudeTemps");
-                    }
+                    setAltitudeTemps.setVisible(true);
+                    setAltitudeTemps.setDrawValues(true);
+                    setVitesseTemps.setVisible(true);
+                    setVitesseTemps.setDrawValues(true);
 
-                    if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
-                    {
-                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * METRE_MILES, chart, "setVitesseTemps");
-                    }
-                    else{
-                        Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
-                    }
+                    chart.setVisibleXRange(0f, (float) temps);
                 } else {
+<<<<<<< Updated upstream
                     labelX.setText("Distance");
                     data.clearValues();
                     data.addDataSet(setAltitudeDistance);
@@ -495,6 +532,23 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                         {
                             Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(nbrPoint) * 3.6, chart, "setVitesseDistance");
                         }
+=======
+                    labelX.setText("Distance" + unitDist);
+
+
+                    setAltitudeDistance.setVisible(true);
+                    setAltitudeDistance.setDrawValues(true);
+                    setVitesseDistance.setVisible(true);
+                    setVitesseDistance.setDrawValues(true);
+
+
+                    setAltitudeTemps.setVisible(false);
+                    setAltitudeTemps.setDrawValues(false);
+                    setVitesseTemps.setVisible(false);
+                    setVitesseTemps.setDrawValues(false);
+
+                    chart.setVisibleXRange(0f, (float)distance);
+>>>>>>> Stashed changes
                 }
 
 

@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.time.Duration;
 import java.util.ArrayList;
 
-import controleur.ControleurEnCours;
 import controleur.ControleurNouvelleActivite;
 
 public class ServiceStats extends Service {

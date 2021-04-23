@@ -357,7 +357,7 @@ public class Activite implements Serializable {
 
     public double calculerVitesseMoyenne() {
         double vitesseMoyenne;
-        if(tabVitesseMetrique != null){
+        if(tabVitesseMetrique == null){
             double total = 0;
             for(int i = 0; i<tabVitesseMetrique.size(); i++){
                 total += tabVitesseMetrique.get(i);
@@ -365,7 +365,7 @@ public class Activite implements Serializable {
             vitesseMoyenne = (total/tabVitesseMetrique.size()) *3.6;
         }
         else
-            vitesseMoyenne = (getDistanceMetrique() / getDuree().toMillis() / 1000) *3600;
+            vitesseMoyenne = (getDistanceMetrique() / (getDuree().toMillis() / 1000)) *3.6;
 
         return vitesseMoyenne;
     }
@@ -378,13 +378,18 @@ public class Activite implements Serializable {
         long t1   = 0;
         long t2 =   0;
 
-        if (tabTemps!= null && tabTemps.size()>1 && tabDistanceMetrique.size()>1) {
+        if (tabTemps!= null && tabTemps.size()>2 && tabDistanceMetrique.size()>2 && i2+1 < tabTemps.size()) {
             d1 = tabDistanceMetrique.get(i1);
-            d2 = tabDistanceMetrique.get(i2);
-            t1 = tabTemps.get(i1).getEpochSecond();
-            t2 = tabTemps.get(i2).getEpochSecond();
+            d2 = tabDistanceMetrique.get(i2+1)+ tabDistanceMetrique.get(i2);
+            t1 = tabTemps.get(i1).toEpochMilli();
+            t2 = tabTemps.get(i2+1).toEpochMilli();
+           /* t1 = tabTemps.get(i1).getEpochSecond();
+            t2 = tabTemps.get(i2).getEpochSecond();*/
         }
-        vitesse = (d2 - d1) / (t2 - t1);
+        if(t2 != t1)
+            vitesse = (d2) / ((t2 - t1)/1000.0);
+        else
+            vitesse = calculerVitesseMoyenne();
 
         return vitesse;
     }

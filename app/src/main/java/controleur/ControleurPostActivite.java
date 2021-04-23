@@ -88,7 +88,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        setContentView(R.layout.activite_en_cours);
+        setContentView(R.layout.post_activite);
 
 
         activite = (Activite) this.getIntent().getSerializableExtra("activité");

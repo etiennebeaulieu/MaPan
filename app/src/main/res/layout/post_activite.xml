@@ -44,7 +44,7 @@
 
             <TextView
                 android:id="@+id/nom_activite"
-                android:layout_width="match_parent"
+                android:layout_width="280dp"
                 android:layout_height="56dp"
                 android:autoSizeMaxTextSize="30sp"
                 android:autoSizeMinTextSize="15sp"
@@ -56,6 +56,16 @@
                 android:text="NOM ACTIVITÉ"
                 android:textColor="#FFFFFF"
                 android:textSize="30sp" />
+
+            <ImageButton
+                android:id="@+id/post_retour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:backgroundTint="#00FFFFFF"
+                android:scaleType="fitCenter"
+                mapbox:srcCompat="@android:drawable/ic_menu_revert" />
         </LinearLayout>
 
         <FrameLayout

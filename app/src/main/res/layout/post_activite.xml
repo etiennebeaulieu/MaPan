@@ -75,6 +75,18 @@
             android:layout_marginBottom="40dp"
             android:layout_weight="1">
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_centrer_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:backgroundTint="#316c19"
+                android:clickable="true"
+                android:onClick="centrer"
+                mapbox:srcCompat="@drawable/ic_my_location" />
+
             <com.mapbox.mapboxsdk.maps.MapView
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"

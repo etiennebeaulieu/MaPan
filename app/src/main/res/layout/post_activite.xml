@@ -64,6 +64,7 @@
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 android:backgroundTint="#00FFFFFF"
+                android:onClick="ouvrirHistorique"
                 android:scaleType="fitCenter"
                 mapbox:srcCompat="@android:drawable/ic_menu_revert" />
         </LinearLayout>

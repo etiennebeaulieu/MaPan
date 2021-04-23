@@ -275,7 +275,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 listAltitudeDistance.add(new Entry(distance, (activite.tabElevation.get(i)).floatValue()));
             }
 
-            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour Vitesse", false)) {
+            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
                 listVitesseTemps.add(new Entry(temps, (float) (activite.tabVitesse.get(i) * METRE_MILES * 3600)));
 
                 listVitesseDistance.add(new Entry(distance, (float) (activite.tabVitesse.get(i) * METRE_MILES * 3600)));

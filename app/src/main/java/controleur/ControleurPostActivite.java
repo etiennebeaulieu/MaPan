@@ -102,7 +102,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(activite.getNom());
         imageSport.setImageResource(activite.getSport().getImage());
-        choixAxeX = findViewById(R.id.choixAxeX);
+        choixAxeX = findViewById(R.id.postChoixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
         View bottomSheet = findViewById(R.id.bottomSheet);
@@ -128,7 +128,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         mapView.getMapAsync(this);
 
         //Créer le graphique et instancier tout ce qui doit être instancier
-        chart = findViewById(R.id.chart);
+        chart = findViewById(R.id.postChart);
         data = new LineData();
         chart.setData(data);
         Graphique.modifierGraphique("Graphique", chart);
@@ -145,7 +145,10 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                data.addDataSet(setAltitudeDistance);
                data.addDataSet(setVitesseDistance);
 
+
+
 formatterDonnees();
+creerGraphique();
     }
 
 
@@ -185,6 +188,152 @@ formatterDonnees();
 
     public void ouvrirHistorique(View view){
         startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
+    }
+
+    public void creerGraphique(){
+
+        int altitude = 0;
+
+        int vitesse = 0;
+
+        String unitDist = "";
+        double distance = activite.tabDistanceMetrique.get(activite.tabDistanceMetrique.size() - 1);
+        double temps = activite.tabTemps.get(activite.tabTemps.size() - 1).getEpochSecond();
+
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
+            distance =  distance*METRE_MILES;
+            unitDist = " (mi)";
+
+        }
+        else{
+            distance /= 1000;
+            unitDist = " (km)";
+        }
+
+        /*if(this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+        {*/
+            for(int k = 0; k < activite.tabTemps.size(); k++){
+                if(altitude < activite.tabElevationMetrique.size())
+                {
+                    if(this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
+                        Graphique.ajouterDonnee((double) activite.tabTemps.get(k).getEpochSecond(), activite.tabElevationMetrique.get(altitude) * METRE_PIED, chart, "setAltitudeTemps");
+
+                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(k), activite.tabElevationMetrique.get(altitude) * METRE_PIED, chart, "setAltitudeDistance");
+                    }
+                    else {
+                        Graphique.ajouterDonnee((double) activite.tabTemps.get(k).getEpochSecond(), activite.tabElevationMetrique.get(altitude), chart, "setAltitudeTemps");
+
+                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(k), activite.tabElevationMetrique.get(altitude), chart, "setAltitudeDistance");
+                    }
+                    altitude++;
+                }
+            }
+
+            /*for(int l = 0; l < activite.tabTemps.size(); l++){
+                if(altitudeDistanceImp < activite.tabElevationMetrique.size())
+                {
+                    Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(l), activite.tabElevationMetrique.get(altitudeDistanceImp) * METRE_PIED, chart, "setAltitudeDistance");
+                    altitudeDistanceImp++;
+                }
+            }*/
+        /*}
+        else{
+            for(int i = 0; i < activite.tabTemps.size(); i++){
+                if(altitudeTemps < activite.tabElevationMetrique.size())
+                {
+                    Graphique.ajouterDonnee((double) activite.tabTemps.get(i).getEpochSecond(), activite.tabElevationMetrique.get(altitudeTemps), chart, "setAltitudeTemps");
+                    altitudeTemps++;
+                }
+            }
+
+            for(int j = 0; j < activite.tabDistanceMetrique.size(); j++){
+                if(altitudeDistance < activite.tabElevationMetrique.size())
+                {
+                    Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(j), activite.tabElevationMetrique.get(altitudeDistance), chart, "setAltitudeDistance");
+                    altitudeDistance++;
+                }
+            }
+        }*/
+
+
+
+        /*if(this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour Vitesse", false))
+        {*/
+            for(int c = 0; c < activite.tabTemps.size(); c++){
+                if(vitesse < activite.tabVitesseMetrique.size())
+                {
+                    if(this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour Vitesse", false)) {
+                        Graphique.ajouterDonnee((double) activite.tabTemps.get(c).getEpochSecond(), activite.tabVitesseMetrique.get(vitesse) * METRE_MILES, chart, "setVitesseTemps");
+
+                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(c), activite.tabVitesseMetrique.get(vitesse) * METRE_MILES, chart, "setVitesseDistance");
+                    }
+                    else {
+                        Graphique.ajouterDonnee((double) activite.tabTemps.get(c).getEpochSecond(), activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseTemps");
+
+                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(c), activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseDistance");
+                    }
+                    vitesse++;
+                }
+            }
+
+            /*for(int d = 0; d < activite.tabDistanceMetrique.size(); d++){
+                if(vitesseDistanceImp < activite.tabElevationMetrique.size())
+                {
+                    Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(d), activite.tabVitesseMetrique.get(vitesseDistanceImp) * METRE_MILES, chart, "setVitesseDistance");
+                    vitesseDistanceImp++;
+                }
+            }
+        }
+        else{
+            for(int a = 0; a < activite.tabTemps.size(); a++){
+                if(vitesseTemps < activite.tabVitesseMetrique.size())
+                {
+                    Graphique.ajouterDonnee((double) activite.tabTemps.get(a).getEpochSecond(), activite.tabVitesseMetrique.get(vitesseTemps) * 3.6, chart, "setVitesseTemps");
+                    vitesseTemps++;
+                }
+            }
+
+            for(int b = 0; b < activite.tabDistanceMetrique.size(); b++){
+                if(vitesseDistance < activite.tabElevationMetrique.size())
+                {
+                    Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(b), activite.tabVitesseMetrique.get(vitesseDistance) * 3.6, chart, "setVitesseDistance");
+                    vitesseDistance++;
+                }
+            }
+        }*/
+
+        if (!choixAxeX.isChecked()) {
+            labelX.setText("Temps (min)");
+
+            setAltitudeDistance.setVisible(false);
+            setAltitudeDistance.setDrawValues(false);
+            setVitesseDistance.setVisible(false);
+            setVitesseDistance.setDrawValues(false);
+
+
+            setAltitudeTemps.setVisible(true);
+            setAltitudeTemps.setDrawValues(true);
+            setVitesseTemps.setVisible(true);
+            setVitesseTemps.setDrawValues(true);
+
+            chart.setVisibleXRange(0f, (float) temps);
+        } else {
+            labelX.setText("Distance" + unitDist);
+
+            setAltitudeDistance.setVisible(true);
+            setAltitudeDistance.setDrawValues(true);
+            setVitesseDistance.setVisible(true);
+            setVitesseDistance.setDrawValues(true);
+
+
+            setAltitudeTemps.setVisible(false);
+            setAltitudeTemps.setDrawValues(false);
+            setVitesseTemps.setVisible(false);
+            setVitesseTemps.setDrawValues(false);
+
+            chart.setVisibleXRange(0f, (float) distance);
+        }
     }
 
     /*class ReceveurLocation extends BroadcastReceiver{

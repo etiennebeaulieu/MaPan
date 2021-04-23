@@ -38,7 +38,6 @@ import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
-import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
@@ -126,7 +125,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
         imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
-        choixAxeX = findViewById(R.id.choixAxeX);
+        choixAxeX = findViewById(R.id.postChoixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
         View bottomSheet = findViewById(R.id.bottomSheet);
@@ -176,7 +175,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
        if(!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
            //Créer le graphique et instancier tout ce qui doit être instancier
-           chart = findViewById(R.id.chart);
+           chart = findViewById(R.id.postChart);
            data = new LineData();
            chart.setData(data);
            Graphique.modifierGraphique("Graphique", chart);

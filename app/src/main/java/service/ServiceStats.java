@@ -42,16 +42,16 @@ public class ServiceStats extends Service {
 
     public void instancierValeur() {
         double d = 0;
-        for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique){
+        for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistance){
             d+=dx;
         }
         distance.setValue(d);
         vitesseMoyenne.setValue(ControleurNouvelleActivite.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.setValue(ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.get(ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.size()-1));
+        vitesseActuelle.setValue(ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(ControleurNouvelleActivite.activiteEnCours.tabVitesse.size()-1));
             duree.setValue(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
         calculerDenivele();
         denivele.setValue(deniveleList);
-        altitude.setValue(ControleurNouvelleActivite.activiteEnCours.getTabElevationMetrique().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
+        altitude.setValue(ControleurNouvelleActivite.activiteEnCours.getTabElevation().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
     }
 
     public void calculerDenivele() {
@@ -59,11 +59,11 @@ public class ServiceStats extends Service {
         double montee = 0;
         double descente = 0;
 
-        for (int i = 0; i < ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.size() - 1; i++) {
-            if (ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) < ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1)) {
-                montee += ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1) - ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i);
-            } else if (ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) > ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1)) {
-                descente += ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i) - ControleurNouvelleActivite.activiteEnCours.tabElevationMetrique.get(i + 1);
+        for (int i = 0; i < ControleurNouvelleActivite.activiteEnCours.tabElevation.size() - 1; i++) {
+            if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) < ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1)) {
+                montee += ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1) - ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i);
+            } else if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) > ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1)) {
+                descente += ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) - ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1);
             }
         }
         System.out.println(montee);

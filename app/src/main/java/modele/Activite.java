@@ -32,21 +32,30 @@ public class Activite implements Serializable {
     private Duration duree = null;
     private Instant heureDebut = null;
     private Instant heureFin = null;
+
+    //En mètre
     private double distanceMetrique = 0;
-    private double denivelePositifMetrique = 0;
-    private double deniveleNegatifMetrique = 0;
-    private double vitesseActuelleMetrique = 0;
-    private double vitesseMetrique = 0;
-    private double altitudeMaxMetrique = 0;
-    private double altitudeMinMetrique = 0;
-    private double altitudeActuelleMetrique = 0;
+    //En mètre
+    private double denivelePositif = 0;
+    private double deniveleNegatif = 0;
+    //En m/s
+    private double vitesseActuelle = 0;
+    //En m/s
+    private double vitesseMoyenne = 0;
+    //En mètre
+    private double altitudeMax = 0;
+    private double altitudeMin = 0;
+    private double altitudeActuelle = 0;
 
     private Graphique graphique = null;
     public ArrayList<Double> tabLatitude = null;
     public ArrayList<Double> tabLongitude = null;
-    public ArrayList<Double> tabElevationMetrique = null;
-    public ArrayList<Double> tabDistanceMetrique = null;
-    public ArrayList<Double> tabVitesseMetrique = null;
+    //En mètre
+    public ArrayList<Double> tabElevation = null;
+    //En mètre
+    public ArrayList<Double> tabDistance = null;
+    //En m/s
+    public ArrayList<Double> tabVitesse = null;
     public ArrayList<Instant> tabTemps = null;
     public ArrayList<Point> listeCoordonnee = null;
 
@@ -63,7 +72,7 @@ public class Activite implements Serializable {
                 //Durée en minute
                 setDuree(pDuree);
                 setDistanceMetrique(pDistance*1000);
-                setVitesseMetrique(calculerVitesseMoyenne());
+                setVitesseMoyenne(calculerVitesseMoyenne());
             }
 
     }
@@ -81,13 +90,13 @@ public class Activite implements Serializable {
                 tabLatitude = new ArrayList<>();
                 tabLongitude = new ArrayList<>();
                 tabTemps = new ArrayList<>();
-                tabElevationMetrique = new ArrayList<>();
-                tabDistanceMetrique = new ArrayList<>();
-                tabVitesseMetrique = new ArrayList<>();
+                tabElevation = new ArrayList<>();
+                tabDistance = new ArrayList<>();
+                tabVitesse = new ArrayList<>();
                 listeCoordonnee = new ArrayList<>();
 
-                tabDistanceMetrique.add(0.0);
-                tabVitesseMetrique.add(0.0);
+                tabDistance.add(0.0);
+                tabVitesse.add(0.0);
 
 
                 setNom(pNom);
@@ -106,12 +115,12 @@ public class Activite implements Serializable {
                 setDistanceMetrique(calculerDistance(0, tabTemps.size() - 1));
                 calculerDenivele();
 
-                setVitesseActuelleMetrique(getVitesseActuelleMetrique());
+                setVitesseActuelle(getVitesseActuelle());
 
-                setVitesseMetrique(calculerVitesseMoyenne());
-                setAltitudeMaxMetrique(getAltitudeMaxMetrique());
-                setAltitudeMinMetrique(getAltitudeMinMetrique());
-                setAltitudeActuelleMetrique(getAltitudeActuelleMetrique());
+                setVitesseMoyenne(calculerVitesseMoyenne());
+                setAltitudeMax(getAltitudeMax());
+                setAltitudeMin(getAltitudeMin());
+                setAltitudeActuelle(getAltitudeActuelle());
 
             }
         } catch (Exception e) {
@@ -126,13 +135,13 @@ public class Activite implements Serializable {
             tabLatitude = new ArrayList<>();
             tabLongitude = new ArrayList<>();
             tabTemps = new ArrayList<>();
-            tabElevationMetrique = new ArrayList<>();
-            tabDistanceMetrique = new ArrayList<>();
-            tabVitesseMetrique = new ArrayList<>();
+            tabElevation = new ArrayList<>();
+            tabDistance = new ArrayList<>();
+            tabVitesse = new ArrayList<>();
             listeCoordonnee = new ArrayList<>();
 
-            tabDistanceMetrique.add(0.0);
-            tabVitesseMetrique.add(0.0);
+            tabDistance.add(0.0);
+            tabVitesse.add(0.0);
 
 
             setNom(pNom);
@@ -212,40 +221,40 @@ public class Activite implements Serializable {
         }
     }
 
-    public double getDenivelePositifMetrique() {
-        return denivelePositifMetrique;
+    public double getDenivelePositif() {
+        return denivelePositif;
     }
 
-    public void setDenivelePositifMetrique(double denivelePositifMetrique) {
-        this.denivelePositifMetrique = denivelePositifMetrique;
+    public void setDenivelePositif(double denivelePositif) {
+        this.denivelePositif = denivelePositif;
     }
 
-    public double getDeniveleNegatifMetrique() {
-        return deniveleNegatifMetrique;
+    public double getDeniveleNegatif() {
+        return deniveleNegatif;
     }
 
-    public void setDeniveleNegatifMetrique(double deniveleNegatifMetrique) {
-        this.deniveleNegatifMetrique = deniveleNegatifMetrique;
-    }
-
-    //calculer en km/h
-    public double getVitesseActuelleMetrique() {
-
-
-        return tabVitesseMetrique.get(tabVitesseMetrique.size()-1);
-    }
-
-    public void setVitesseActuelleMetrique(double vitesseActuelleMetrique) {
-        this.vitesseActuelleMetrique = vitesseActuelleMetrique;
+    public void setDeniveleNegatif(double deniveleNegatif) {
+        this.deniveleNegatif = deniveleNegatif;
     }
 
     //calculer en km/h
-    public double getVitesseMetrique() {
-        return vitesseMetrique;
+    public double getVitesseActuelle() {
+
+
+        return tabVitesse.get(tabVitesse.size()-1);
     }
 
-    public void setVitesseMetrique(double vitesseMetrique) {
-        this.vitesseMetrique = vitesseMetrique;
+    public void setVitesseActuelle(double vitesseActuelle) {
+        this.vitesseActuelle = vitesseActuelle;
+    }
+
+    //calculer en km/h
+    public double getVitesseMoyenne() {
+        return vitesseMoyenne;
+    }
+
+    public void setVitesseMoyenne(double vitesseMoyenne) {
+        this.vitesseMoyenne = vitesseMoyenne;
     }
 
     public ArrayList<Double> getTabLatitude() {
@@ -256,16 +265,16 @@ public class Activite implements Serializable {
         return tabLongitude;
     }
 
-    public ArrayList<Double> getTabDistanceMetrique() {
-        return tabDistanceMetrique;
+    public ArrayList<Double> getTabDistance() {
+        return tabDistance;
     }
 
-    public ArrayList<Double> getTabElevationMetrique() {
-        return tabElevationMetrique;
+    public ArrayList<Double> getTabElevation() {
+        return tabElevation;
     }
 
-    public ArrayList<Double> getTabVitesseMetrique() {
-        return tabVitesseMetrique;
+    public ArrayList<Double> getTabVitesse() {
+        return tabVitesse;
     }
 
     public ArrayList<Instant> getTabTemps() {
@@ -315,8 +324,8 @@ public class Activite implements Serializable {
             lon1 = tabLongitude.get(i);
             lat2 = tabLatitude.get(i + 1);
             lon2 = tabLongitude.get(i + 1);
-            ele1 = tabElevationMetrique.get(i);
-            ele2 = tabElevationMetrique.get(i + 1);
+            ele1 = tabElevation.get(i);
+            ele2 = tabElevation.get(i + 1);
 
             double theta = lon1 - lon2;
             //Calcule la la distance entre 2 points
@@ -343,33 +352,24 @@ public class Activite implements Serializable {
         double montee = 0;
         double descente = 0;
 
-        for (int i = 0; i < tabElevationMetrique.size() - 1; i++) {
-            if (tabElevationMetrique.get(i) < tabElevationMetrique.get(i + 1)) {
-                montee += tabElevationMetrique.get(i + 1) - tabElevationMetrique.get(i);
-            } else if (tabElevationMetrique.get(i) > tabElevationMetrique.get(i + 1)) {
-                descente += tabElevationMetrique.get(i) - tabElevationMetrique.get(i + 1);
+        for (int i = 0; i < tabElevation.size() - 1; i++) {
+            if (tabElevation.get(i) < tabElevation.get(i + 1)) {
+                montee += tabElevation.get(i + 1) - tabElevation.get(i);
+            } else if (tabElevation.get(i) > tabElevation.get(i + 1)) {
+                descente += tabElevation.get(i) - tabElevation.get(i + 1);
             }
 
         }
-        setDenivelePositifMetrique(montee);
-        setDeniveleNegatifMetrique(descente);
+        setDenivelePositif(montee);
+        setDeniveleNegatif(descente);
     }
-
+    //Vitesse moyenne en m/s
     public double calculerVitesseMoyenne() {
-        double vitesseMoyenne;
-        if(tabVitesseMetrique == null){
-            double total = 0;
-            for(int i = 0; i<tabVitesseMetrique.size(); i++){
-                total += tabVitesseMetrique.get(i);
-            }
-            vitesseMoyenne = (total/tabVitesseMetrique.size()) *3.6;
-        }
-        else
-            vitesseMoyenne = (getDistanceMetrique() / (getDuree().toMillis() / 1000)) *3.6;
 
-        return vitesseMoyenne;
+        return (getDistanceMetrique() / (getDuree().toMillis() / 1000));
     }
 
+    //En m/s
     public double calculerVitesse(int i1, int i2){
         double vitesse;
 
@@ -378,13 +378,11 @@ public class Activite implements Serializable {
         long t1   = 0;
         long t2 =   0;
 
-        if (tabTemps!= null && tabTemps.size()>2 && tabDistanceMetrique.size()>2 && i2+1 < tabTemps.size()) {
-            d1 = tabDistanceMetrique.get(i1);
-            d2 = tabDistanceMetrique.get(i2+1)+ tabDistanceMetrique.get(i2);
+        if (tabTemps!= null && tabTemps.size()>2 && tabDistance.size()>2 && i2+1 < tabTemps.size()) {
+            d1 = tabDistance.get(i1);
+            d2 = tabDistance.get(i2+1)+ tabDistance.get(i2);
             t1 = tabTemps.get(i1).toEpochMilli();
             t2 = tabTemps.get(i2+1).toEpochMilli();
-           /* t1 = tabTemps.get(i1).getEpochSecond();
-            t2 = tabTemps.get(i2).getEpochSecond();*/
         }
         if(t2 != t1)
             vitesse = (d2) / ((t2 - t1)/1000.0);
@@ -398,58 +396,58 @@ public class Activite implements Serializable {
     {
         double maxVal = Double.MIN_VALUE;
 
-        for (int i = 0; i < tabVitesseMetrique.size(); i++) {
+        for (int i = 0; i < tabVitesse.size(); i++) {
 
-            if (tabVitesseMetrique.get(i) > maxVal) {
-                maxVal = tabVitesseMetrique.get(i);
+            if (tabVitesse.get(i) > maxVal) {
+                maxVal = tabVitesse.get(i);
             }
         }
         return maxVal;
     }
 
-    public double getAltitudeMaxMetrique() {
+    public double getAltitudeMax() {
         double maxVal = Double.MIN_VALUE;
 
-        for (int i = 0; i < tabElevationMetrique.size(); i++) {
+        for (int i = 0; i < tabElevation.size(); i++) {
 
-            if (tabElevationMetrique.get(i) > maxVal) {
-                maxVal = tabElevationMetrique.get(i);
+            if (tabElevation.get(i) > maxVal) {
+                maxVal = tabElevation.get(i);
             }
         }
         return maxVal;
     }
 
-    public void setAltitudeMaxMetrique(double altitudeMaxMetrique) {
-        this.altitudeMaxMetrique = altitudeMaxMetrique;
+    public void setAltitudeMax(double altitudeMax) {
+        this.altitudeMax = altitudeMax;
     }
 
-    public double getAltitudeMinMetrique() {
+    public double getAltitudeMin() {
         double minVal = Double.MAX_VALUE;
 
-        for (int i = 0; i < tabElevationMetrique.size(); i++) {
+        for (int i = 0; i < tabElevation.size(); i++) {
 
-            if (tabElevationMetrique.get(i) < minVal) {
-                minVal = tabElevationMetrique.get(i);
+            if (tabElevation.get(i) < minVal) {
+                minVal = tabElevation.get(i);
             }
         }
         return minVal;
     }
 
-    public void setAltitudeMinMetrique(double altitudeMinMetrique) {
-        this.altitudeMinMetrique = altitudeMinMetrique;
+    public void setAltitudeMin(double altitudeMin) {
+        this.altitudeMin = altitudeMin;
     }
 
-    public double getAltitudeActuelleMetrique() {
-        return this.tabElevationMetrique.get(tabElevationMetrique.size() - 1);
+    public double getAltitudeActuelle() {
+        return this.tabElevation.get(tabElevation.size() - 1);
     }
 
-    public void setAltitudeActuelleMetrique(double altitudeActuelleMetrique) {
-        this.altitudeActuelleMetrique = altitudeActuelleMetrique;
+    public void setAltitudeActuelle(double altitudeActuelle) {
+        this.altitudeActuelle = altitudeActuelle;
     }
 
     private void construireTabDistance() {
         for (int i = 0; i < tabTemps.size() - 1; i++) {
-            tabDistanceMetrique.add(calculerDistance(i, i + 1));
+            tabDistance.add(calculerDistance(i, i + 1));
         }
 
     }
@@ -458,7 +456,7 @@ public class Activite implements Serializable {
         {
             for (int i = 0;i<tabTemps.size()-1;i++)
             {
-                tabVitesseMetrique.add(calculerVitesse(i, i+1));
+                tabVitesse.add((calculerVitesse(i, i+1)));
             }
         }
 
@@ -498,7 +496,7 @@ public class Activite implements Serializable {
 
 
                     Double ele = Double.parseDouble(node.getChildText("ele", node.getNamespace()));
-                    this.tabElevationMetrique.add(ele);
+                    this.tabElevation.add(ele);
 
                     Instant time2 = Instant.from((OffsetDateTime) OffsetDateTime.parse(node.getChildText("time", node.getNamespace())).withOffsetSameInstant(ZoneOffset.UTC));
                     //Instant time = Instant.parse(node.getChildText("time", node.getNamespace()));
@@ -520,7 +518,7 @@ public class Activite implements Serializable {
     public void ecrireFichier(File fichier) {
         ArrayList<Double> tabLatitude = this.getTabLatitude();
         ArrayList<Double> tabLongitude = this.getTabLongitude();
-        ArrayList<Double> tabElevation = this.getTabElevationMetrique();
+        ArrayList<Double> tabElevation = this.getTabElevation();
         ArrayList<Instant> tabTemps = this.getTabTemps();
 
         try {

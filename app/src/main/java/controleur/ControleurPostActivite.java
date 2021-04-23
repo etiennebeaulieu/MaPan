@@ -145,7 +145,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                data.addDataSet(setAltitudeDistance);
                data.addDataSet(setVitesseDistance);
 
-
+formatterDonnees();
     }
 
 
@@ -294,63 +294,65 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
     public void formatterDonnees()
     {
+        TextView txtDuree = findViewById(R.id.duree_post);
+        TextView txtdebut = findViewById(R.id.temps_debut);
+        TextView txtfin = findViewById(R.id.temps_fin);
+        TextView txtDistance = findViewById(R.id.distance_post);
+        TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne_post);
+        TextView txtVitesse = findViewById(R.id.vitesse_max);
+        TextView txtAltitudeMax = findViewById(R.id.altitude_max);
+        TextView txtAltitudeMin = findViewById(R.id.altitude_min);
+        TextView txtDenivelePos = findViewById(R.id.denivele_positif_post);
+        TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif_post);
 
-        TextView txtDuree = findViewById(R.id.duree_en_cours);
-        TextView txtDistance = findViewById(R.id.distance_en_cours);
-        TextView txtVitesse = findViewById(R.id.vitesse_en_cours);
-        TextView txtVitesseMoyenne = findViewById(R.id.vitesse_moyenne);
-        TextView txtAltitude = findViewById(R.id.altitude_en_cours);
-        TextView txtDenivelePos = findViewById(R.id.denivele_positif);
-        TextView txtDeniveleNeg = findViewById(R.id.denivele_negatif);
-        TextView txtLatitude = findViewById(R.id.latitude);
-        TextView txtLongitude = findViewById(R.id.longitude);
 
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
-        NumberFormat formatterCoord = new DecimalFormat("#0.000000'°'");
 
-        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(ControleurNouvelleActivite.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
-        txtLatitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().size() - 1)));
-        txtLongitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().size() - 1)));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtdebut .setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtfin .setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
-            txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() * METRE_MILES) + "mi");
+            txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() * METRE_MILES) + "mi");
         }
         else
         {
-            txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000) + "km");
+            txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() / 1000) + "km");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
-            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * METRE_MILES *3600) + "mi/h");
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique() * METRE_MILES*1000) + "mi/h");
+            txtVitesse.setText("max : " + formatterDistance.format(activite.trouverVitesseMax() * METRE_MILES *3600) + "mi/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(activite.getVitesseMetrique() * METRE_MILES*1000) + "mi/h");
         }
         else
         {
-            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelleMetrique() * 3.6) + "km/h");
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMetrique()) + "km/h");
+            txtVitesse.setText("max : " + formatterDistance.format(activite.trouverVitesseMax() * 3.6) + "km/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(activite.getVitesseMetrique()) + "km/h");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique() * METRE_PIED) + "'");
+            txtAltitudeMax.setText(formatterHauteur.format(activite.getAltitudeMaxMetrique() * METRE_PIED) + "'");
+            txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMinMetrique() * METRE_PIED) + "'");
         }
         else
         {
-            txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelleMetrique()) + "m");
+            txtAltitudeMax.setText(formatterHauteur.format(activite.getAltitudeMaxMetrique()) + "m");
+            txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMinMetrique()) + "m");
         }
 
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique()* METRE_PIED) + "'");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique()* METRE_PIED) + "'");
+            txtDenivelePos.setText(formatterHauteur.format(activite.getDenivelePositifMetrique()* METRE_PIED) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(activite.getDeniveleNegatifMetrique()* METRE_PIED) + "'");
 
         }
         else
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositifMetrique() ) + "m");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatifMetrique() ) + "m");
+            txtDenivelePos.setText(formatterHauteur.format(activite.getDenivelePositifMetrique() ) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(activite.getDeniveleNegatifMetrique() ) + "m");
         }
     }
 

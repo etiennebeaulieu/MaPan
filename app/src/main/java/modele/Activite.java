@@ -389,6 +389,19 @@ public class Activite implements Serializable {
         return vitesse;
     }
 
+    public double trouverVitesseMax()
+    {
+        double maxVal = Double.MIN_VALUE;
+
+        for (int i = 0; i < tabVitesseMetrique.size(); i++) {
+
+            if (tabVitesseMetrique.get(i) > maxVal) {
+                maxVal = tabVitesseMetrique.get(i);
+            }
+        }
+        return maxVal;
+    }
+
     public double getAltitudeMaxMetrique() {
         double maxVal = Double.MIN_VALUE;
 
@@ -430,7 +443,6 @@ public class Activite implements Serializable {
     }
 
     private void construireTabDistance() {
-        tabDistanceMetrique.add(0.0);
         for (int i = 0; i < tabTemps.size() - 1; i++) {
             tabDistanceMetrique.add(calculerDistance(i, i + 1));
         }
@@ -439,7 +451,6 @@ public class Activite implements Serializable {
 
     private void construireTabVitesse()
         {
-            tabVitesseMetrique.add(0.0);
             for (int i = 0;i<tabTemps.size()-1;i++)
             {
                 tabVitesseMetrique.add(calculerVitesse(i, i+1));

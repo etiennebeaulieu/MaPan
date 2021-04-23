@@ -357,7 +357,7 @@ public class Activite implements Serializable {
 
     public double calculerVitesseMoyenne() {
         double vitesseMoyenne;
-        if(tabTemps != null){
+        if(tabVitesseMetrique != null){
             double total = 0;
             for(int i = 0; i<tabVitesseMetrique.size(); i++){
                 total += tabVitesseMetrique.get(i);
@@ -455,7 +455,6 @@ public class Activite implements Serializable {
             {
                 tabVitesseMetrique.add(calculerVitesse(i, i+1));
             }
-            System.out.println(tabVitesseMetrique.size());
         }
 
 

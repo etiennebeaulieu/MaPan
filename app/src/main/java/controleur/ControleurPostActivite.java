@@ -1,53 +1,36 @@
 package controleur;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.mapan.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.location.LocationEngineCallback;
-import com.mapbox.android.core.location.LocationEngineProvider;
-import com.mapbox.android.core.location.LocationEngineRequest;
-import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
-import com.mapbox.mapboxsdk.location.LocationComponentOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -59,20 +42,14 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 import modele.Activite;
-import modele.Fichier;
 import modele.Graphique;
-import service.ServiceLocation;
-import service.ServiceStats;
 
 public class ControleurPostActivite extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -140,7 +117,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 behavior.setPeekHeight(cache.getTop());
                 behavior.setGestureInsetBottomIgnored(false);
                 behavior.setFitToContents(false);
-                behavior.setExpandedOffset(bottomSheet.getHeight()-interieur.getHeight());
+                behavior.setExpandedOffset(bottomSheet.getHeight() - interieur.getHeight());
                 behavior.setHalfExpandedRatio(0.4f);
             }
         });
@@ -148,31 +125,18 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
-        //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (Build.VERSION.SDK_INT > 28) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mapView.getMapAsync(this);
-             else
-                 demanderPermissionLocation29();
+        mapView.getMapAsync(this);
 
-        } else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mapView.getMapAsync(this);
-            else
-                demanderPermissionLocation();
-
-        }
-
-           //Créer le graphique et instancier tout ce qui doit être instancier
-           chart = findViewById(R.id.chart);
-           data = new LineData();
-           chart.setData(data);
-           Graphique.modifierGraphique("Graphique", chart);
-           chart.getLegend().setEnabled(false);
-           //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
-           setAltitudeTemps = Graphique.createSetAltitude(true);
-           setAltitudeDistance = Graphique.createSetAltitude(false);
-           setVitesseTemps = Graphique.createSetVitesse(true);
+        //Créer le graphique et instancier tout ce qui doit être instancier
+        chart = findViewById(R.id.chart);
+        data = new LineData();
+        chart.setData(data);
+        Graphique.modifierGraphique("Graphique", chart);
+        chart.getLegend().setEnabled(false);
+        //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
+        setAltitudeTemps = Graphique.createSetAltitude(true);
+        setAltitudeDistance = Graphique.createSetAltitude(false);
+        setVitesseTemps = Graphique.createSetVitesse(true);
            setVitesseDistance = Graphique.createSetVitesse(false);
 
            //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
@@ -184,50 +148,6 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
     }
 
-
-    private void demanderPermissionLocation() {
-        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurPostActivite.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-    }
-
-    private void demanderPermissionLocation29(){
-        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurPostActivite.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if (requestCode == 2) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     @SuppressLint("MissingPermission")
     @Override
@@ -250,54 +170,16 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                     PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
                     PropertyFactory.lineColor(Color.parseColor("#FFF44336"))
             ));
-
-
-            //Pointeur de localisation personnalisé
-            LocationComponentOptions customLocationComponentOptions = LocationComponentOptions.builder(this).
-                    layerAbove("linelayer").
-                    accuracyColor(Color.parseColor("#00FFFFFF")).
-                    accuracyAlpha(0.4f).
-                    foregroundTintColor(Color.parseColor("#FFF44336")).
-                    build();
-
-
-            //Paramètre la camera par rapport à la map
-            locationComponent = mapboxMap.getLocationComponent();
-            /*locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions
-                            .builder(ControleurPostActivite.this, style1).locationComponentOptions(customLocationComponentOptions).build());
-            locationComponent.setLocationComponentEnabled(true);*/
-            locationComponent.setCameraMode(cameraMode);
-            locationComponent.setRenderMode(renderMode);
-
-
-            //initLocationEngine();
         });
+
+        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0))).zoom(13).build());
     }
-
-   /* @SuppressLint("MissingPermission")
-    private void initLocationEngine() {
-        locationEngine = LocationEngineProvider.getBestLocationEngine(this);
-
-        LocationEngineRequest request = new LocationEngineRequest.Builder(INTERVAL_DEFAUT_MILLIS)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
-
-
-        locationEngine.requestLocationUpdates(request, callback, getMainLooper());
-        locationEngine.getLastLocation(callback);
-    }*/
-
-
-
-
-
 
 
     //Centre la caméra sur la position de l'utilisateur
     public void centrer(View view){
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0)), 15), 1000);
+                new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0)), 13), 1000);
     }
 
 

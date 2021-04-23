@@ -125,7 +125,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
         imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
-        choixAxeX = findViewById(R.id.postChoixAxeX);
+        choixAxeX = findViewById(R.id.choixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
         View bottomSheet = findViewById(R.id.bottomSheet);
@@ -175,7 +175,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
        if(!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
            //Créer le graphique et instancier tout ce qui doit être instancier
-           chart = findViewById(R.id.postChart);
+           chart = findViewById(R.id.chart);
            data = new LineData();
            chart.setData(data);
            Graphique.modifierGraphique("Graphique", chart);
@@ -352,6 +352,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         ControleurNouvelleActivite.activiteEnCours.getTabLongitude().add(location.getLongitude());
         ControleurNouvelleActivite.activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
         ControleurNouvelleActivite.activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
+        ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0),
+                ControleurNouvelleActivite.activiteEnCours.tabTemps.get(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1)));
         ControleurNouvelleActivite.activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
         if(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()>1)
             ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique.add(ControleurNouvelleActivite.activiteEnCours.calculerDistance(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-2, ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1));

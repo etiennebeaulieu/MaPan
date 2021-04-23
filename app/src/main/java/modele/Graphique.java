@@ -20,7 +20,7 @@ public class Graphique{
         chart.setDefaultFocusHighlightEnabled(true);
 
         // enable touch gesture
-        chart.setTouchEnabled(false);
+        chart.setTouchEnabled(true);
 
         // enable scaling and dragging
         chart.setDragEnabled(false);

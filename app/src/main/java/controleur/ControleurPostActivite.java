@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mapan.R;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -47,6 +48,7 @@ import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import modele.Activite;
 import modele.Graphique;
@@ -137,18 +139,28 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         setAltitudeTemps = Graphique.createSetAltitude(true);
         setAltitudeDistance = Graphique.createSetAltitude(false);
         setVitesseTemps = Graphique.createSetVitesse(true);
-           setVitesseDistance = Graphique.createSetVitesse(false);
+        setVitesseDistance = Graphique.createSetVitesse(false);
+
+        ArrayList<Entry> values = new ArrayList<>();
+        for(int i = 0; i<activite.tabTemps.size(); i++){
+            values.add(new Entry((float)((activite.tabTemps.get(i).getEpochSecond()-activite.tabTemps.get(0).getEpochSecond())/60.0),
+                    (activite.tabElevationMetrique.get(i)).floatValue()));
+        }
+
 
            //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
-               data.addDataSet(setAltitudeTemps);
-               data.addDataSet(setVitesseTemps);
-               data.addDataSet(setAltitudeDistance);
-               data.addDataSet(setVitesseDistance);
+        data.addDataSet(setAltitudeTemps);
+        //data.addDataSet(setVitesseTemps);
+        //data.addDataSet(setAltitudeDistance);
+        //data.addDataSet(setVitesseDistance);
 
+        setAltitudeTemps.setValues(values);
+        //creerGraphique();
+        chart.notifyDataSetChanged();
+        chart.invalidate();
 
+        formatterDonnees();
 
-formatterDonnees();
-creerGraphique();
     }
 
 
@@ -222,9 +234,9 @@ creerGraphique();
                         Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(k), activite.tabElevationMetrique.get(altitude) * METRE_PIED, chart, "setAltitudeDistance");
                     }
                     else {
-                        Graphique.ajouterDonnee((double) activite.tabTemps.get(k).getEpochSecond(), activite.tabElevationMetrique.get(altitude), chart, "setAltitudeTemps");
-
-                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(k), activite.tabElevationMetrique.get(altitude), chart, "setAltitudeDistance");
+                        Graphique.ajouterDonnee((double) (activite.tabTemps.get(k).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond())/60, activite.tabElevationMetrique.get(altitude), chart, "setAltitudeTemps");
+                        //setAltitudeTemps.addEntry(new Entry((float)((activite.tabTemps.get(k).getEpochSecond()-activite.tabTemps.get(0).getEpochSecond())/60.0), (activite.tabElevationMetrique.get(altitude)).floatValue()));
+                        //Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(k), activite.tabElevationMetrique.get(altitude), chart, "setAltitudeDistance");
                     }
                     altitude++;
                 }
@@ -269,9 +281,9 @@ creerGraphique();
                         Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(c), activite.tabVitesseMetrique.get(vitesse) * METRE_MILES, chart, "setVitesseDistance");
                     }
                     else {
-                        Graphique.ajouterDonnee((double) activite.tabTemps.get(c).getEpochSecond(), activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseTemps");
-
-                        Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(c), activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseDistance");
+                        //Graphique.ajouterDonnee((double) (activite.tabTemps.get(c).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond())/60, activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseTemps");
+                        //setVitesseTemps.addEntry(new Entry((float)((activite.tabTemps.get(c).getEpochSecond()-activite.tabTemps.get(0).getEpochSecond())/60.0), (float)(activite.tabVitesseMetrique.get(vitesse) * 3.6)));
+                        //Graphique.ajouterDonnee(activite.tabDistanceMetrique.get(c), activite.tabVitesseMetrique.get(vitesse) * 3.6, chart, "setVitesseDistance");
                     }
                     vitesse++;
                 }
@@ -306,18 +318,18 @@ creerGraphique();
         if (!choixAxeX.isChecked()) {
             labelX.setText("Temps (min)");
 
-            setAltitudeDistance.setVisible(false);
-            setAltitudeDistance.setDrawValues(false);
-            setVitesseDistance.setVisible(false);
-            setVitesseDistance.setDrawValues(false);
+            //setAltitudeDistance.setVisible(false);
+            //setAltitudeDistance.setDrawValues(false);
+            //setVitesseDistance.setVisible(false);
+            //setVitesseDistance.setDrawValues(false);
 
 
             setAltitudeTemps.setVisible(true);
             setAltitudeTemps.setDrawValues(true);
-            setVitesseTemps.setVisible(true);
-            setVitesseTemps.setDrawValues(true);
+            //setVitesseTemps.setVisible(true);
+            //setVitesseTemps.setDrawValues(true);
 
-            chart.setVisibleXRange(0f, (float) temps);
+            chart.setVisibleXRange(0f, (float) 16);
         } else {
             labelX.setText("Distance" + unitDist);
 

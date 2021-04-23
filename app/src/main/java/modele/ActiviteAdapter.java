@@ -51,7 +51,7 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
             iconSport.setImageResource(getItem(position).getSport().getImage());
             txtNom.setText(getItem(position).getNom());
-            txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.of("EST")).format(getItem(position).getDate()));
+            txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.systemDefault()).format(getItem(position).getDate()));
             txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
             if (mContext.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
             {

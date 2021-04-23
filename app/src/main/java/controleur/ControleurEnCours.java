@@ -80,7 +80,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
-    private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
     private long INTERVAL_DEFAUT_MILLIS = 1000;
     private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS * 5;

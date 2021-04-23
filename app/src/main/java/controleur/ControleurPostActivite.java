@@ -310,8 +310,8 @@ formatterDonnees();
         NumberFormat formatterHauteur = new DecimalFormat("#0");
 
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
-        txtdebut .setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
-        txtfin .setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
+        txtdebut .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(0)));
+        txtfin .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(activite.tabTemps.size()-1)));
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() * METRE_MILES) + "mi");

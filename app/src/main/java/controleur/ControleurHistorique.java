@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mapan.R;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,6 +39,12 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list = findViewById(R.id.modifier_list);
         adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         historique_list.setAdapter(adapter);
+
+        historique_list.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(ControleurHistorique.this, ControleurPostActivite.class);
+            intent.putExtra("activité", (Activite) historique_list.getItemAtPosition(position));
+            startActivity(intent);
+        });
 
 
         Fichier.rafraichir(this.getApplicationContext());

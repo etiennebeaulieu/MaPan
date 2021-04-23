@@ -68,6 +68,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import modele.Activite;
 import modele.Fichier;
 import modele.Graphique;
 import service.ServiceLocation;
@@ -82,16 +83,9 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     private LocationComponent locationComponent;
     private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
-    private long INTERVAL_DEFAUT_MILLIS = 1000;
-    private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS * 5;
-    private FloatingActionButton fabPause;
-    private FloatingActionButton fabEnregistrer;
-    private FloatingActionButton fabSupprimer;
-    private boolean fabOuvert;
     private CheckBox choixAxeX;
     private TextView labelX;
     private BottomSheetBehavior<View> behavior;
-    private ReceveurLocation receveur;
     protected LineString lineString;
     protected GeoJsonSource geoJsonSource;
     private LineChart chart = null;
@@ -100,17 +94,17 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     private LineDataSet setVitesseTemps = null;
     private LineDataSet setVitesseDistance = null;
     private LineData data = null;
+    private Activite activite = null;
 
     protected Boolean graphIsTemps = true;
     protected int nbrPoint = 0;
 
 
     @CameraMode.Mode
-    private int cameraMode = CameraMode.TRACKING;
+    private int cameraMode = CameraMode.NONE;
 
     @RenderMode.Mode
-    private int renderMode = RenderMode.COMPASS;
-    private AccueilLocationCallback callback = new AccueilLocationCallback(this);
+    private int renderMode = RenderMode.NORMAL;
 
 
     @Override
@@ -119,14 +113,18 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activite_en_cours);
 
-        receveur = new ReceveurLocation();
-        registerReceiver(receveur, new IntentFilter("DERNIERE_LOCATION"));
-        registerReceiver(receveur, new IntentFilter("DERNIERE_STATS"));
+
+        activite = (Activite) this.getIntent().getSerializableExtra("activité");
+
+        for(int i= 0; i < activite.tabTemps.size(); i++){
+            activite.listeCoordonnee.add(Point.fromLngLat(activite.tabLongitude.get(i), activite.tabLatitude.get(i)));
+        }
+
 
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
-        nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
-        imageSport.setImageResource(ControleurNouvelleActivite.activiteEnCours.getSport().getImage());
+        nomActivite.setText(activite.getNom());
+        imageSport.setImageResource(activite.getSport().getImage());
         choixAxeX = findViewById(R.id.choixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
@@ -147,13 +145,6 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             }
         });
 
-
-        fabPause = findViewById(R.id.fab_pause);
-        fabEnregistrer = findViewById(R.id.fab_enregistrer);
-        fabSupprimer = findViewById(R.id.fab_supprimer);
-        fabOuvert = false;
-
-
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
@@ -172,10 +163,6 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
         }
 
-
-        lancerServiceLocation("ACTION_COMMENCER_SERVICE");
-
-       if(!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
            //Créer le graphique et instancier tout ce qui doit être instancier
            chart = findViewById(R.id.chart);
            data = new LineData();
@@ -194,18 +181,9 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                data.addDataSet(setAltitudeDistance);
                data.addDataSet(setVitesseDistance);
 
-       }
-
 
     }
 
-    private void lancerServiceLocation(String action) {
-        Intent intent = new Intent(this, ServiceLocation.class);
-        intent.setAction(action);
-
-        startService(intent);
-
-    }
 
     private void demanderPermissionLocation() {
         //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
@@ -260,7 +238,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         mapboxMap.setStyle(style, style1 ->
         {
             //Création du tracer GPS
-            lineString = LineString.fromLngLats(ControleurNouvelleActivite.activiteEnCours.listeCoordonnee);
+            lineString = LineString.fromLngLats(activite.listeCoordonnee);
             Feature feature = Feature.fromGeometry(lineString);
             geoJsonSource = new GeoJsonSource("geojson-source", feature);
             style1.addSource(geoJsonSource);
@@ -285,19 +263,19 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
             //Paramètre la camera par rapport à la map
             locationComponent = mapboxMap.getLocationComponent();
-            locationComponent.activateLocationComponent(
+            /*locationComponent.activateLocationComponent(
                     LocationComponentActivationOptions
                             .builder(ControleurPostActivite.this, style1).locationComponentOptions(customLocationComponentOptions).build());
-            locationComponent.setLocationComponentEnabled(true);
+            locationComponent.setLocationComponentEnabled(true);*/
             locationComponent.setCameraMode(cameraMode);
             locationComponent.setRenderMode(renderMode);
 
 
-            initLocationEngine();
+            //initLocationEngine();
         });
     }
 
-    @SuppressLint("MissingPermission")
+   /* @SuppressLint("MissingPermission")
     private void initLocationEngine() {
         locationEngine = LocationEngineProvider.getBestLocationEngine(this);
 
@@ -308,130 +286,26 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
-    }
-    private static class AccueilLocationCallback
-            implements LocationEngineCallback<LocationEngineResult> {
-
-        private final WeakReference<ControleurPostActivite> activityWeakReference;
-
-        AccueilLocationCallback(ControleurPostActivite activity) {
-            this.activityWeakReference = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void onSuccess(LocationEngineResult result) {
-            ControleurPostActivite activity = activityWeakReference.get();
-
-            if (activity != null) {
-                Location location = result.getLastLocation();
-
-                if (location == null) {
-                    return;
-                }
-
-                if (activity.mapboxMap != null && result.getLastLocation() != null) {
-                    activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-                    activity.updateTracer();
-
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(@NonNull Exception exception) {
-            Log.d("LocationChangeActivity", exception.getLocalizedMessage());
-            ControleurPostActivite activity = activityWeakReference.get();
-            if (activity != null) {
-                Toast.makeText(activity, exception.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+    }*/
 
 
-    private static void setTabGPS(Location location) {
-        ControleurNouvelleActivite.activiteEnCours.getTabLatitude().add(location.getLatitude());
-        ControleurNouvelleActivite.activiteEnCours.getTabLongitude().add(location.getLongitude());
-        ControleurNouvelleActivite.activiteEnCours.getTabElevationMetrique().add(location.getAltitude());
-        ControleurNouvelleActivite.activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
-        ControleurNouvelleActivite.activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
-        if(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()>1)
-            ControleurNouvelleActivite.activiteEnCours.tabDistanceMetrique.add(ControleurNouvelleActivite.activiteEnCours.calculerDistance(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-2, ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1));
-        ControleurNouvelleActivite.activiteEnCours.tabVitesseMetrique.add((double)location.getSpeed());
 
 
-    }
 
-    //Mettre à jour le tracer selon les nouveaux point GPS
-    private void updateTracer(){
-        lineString = LineString.fromLngLats(ControleurNouvelleActivite.activiteEnCours.listeCoordonnee);
-        geoJsonSource.setGeoJson(lineString);
-    }
+
 
     //Centre la caméra sur la position de l'utilisateur
     public void centrer(View view){
-        Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
-
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 15), 1000);
+                new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0)), 15), 1000);
     }
 
 
-    public void pause(View view){
-
-
-        if(!fabOuvert){
-            lancerServiceLocation("ACTION_PAUSE_SERVICE");
-            locationEngine.removeLocationUpdates(callback);
-            fabOuvert = true;
-
-            fabPause.animate().rotation(360);
-            fabPause.setImageDrawable(getDrawable(R.drawable.ic_play));
-            fabEnregistrer.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
-            fabSupprimer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
-
-            System.out.println(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
-        }
-        else{
-            initLocationEngine();
-            lancerServiceLocation("ACTION_COMMENCER_SERVICE");
-            fabOuvert = false;
-
-            fabPause.animate().rotation(-360);
-            fabPause.setImageDrawable(getDrawable(R.drawable.ic_pause));
-            fabSupprimer.animate().translationY(0);
-            fabEnregistrer.animate().translationY(0);
-
-        }
-
+    public void ouvrirHistorique(View view){
+        startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
     }
 
-    public void enregistrer(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
-        {
-            lancerServiceLocation("ACTION_STOP_SERVICE");
-            ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
-
-            ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1)));
-
-            Fichier.enregistrer(this, ControleurNouvelleActivite.activiteEnCours);
-            startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
-        }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
-    }
-
-    public void supprimer(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("Supprimer").setMessage("Voulez-vous vraiment supprimer l'activité?").setPositiveButton("Supprimer", (dialog, which) ->
-        {
-            lancerServiceLocation("ACTION_STOP_SERVICE");
-            startActivity(new Intent(ControleurPostActivite.this, ControleurAccueil.class));
-        }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
-    }
-
-    class ReceveurLocation extends BroadcastReceiver{
+    /*class ReceveurLocation extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -534,7 +408,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 formatterDonnees();
             }
         }
-    }
+    }*/
 
     public void formatterDonnees()
     {
@@ -600,7 +474,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
     @Override
     public void onBackPressed() {
-
+        startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
     }
 
     @Override

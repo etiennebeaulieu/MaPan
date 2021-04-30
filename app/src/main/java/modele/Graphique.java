@@ -9,6 +9,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 public class Graphique{
@@ -94,6 +97,12 @@ public class Graphique{
         set.setLineWidth(0f);
         set.setFillAlpha(100);
         set.setDrawFilled(true);
+        set.setFillFormatter(new IFillFormatter() {
+            @Override
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                return -30f;
+            }
+        });
         set.setFillColor(ColorTemplate.getHoloBlue());
         set.setValueTextSize(0f);
         set.setDrawCircles(false);
@@ -110,7 +119,7 @@ public class Graphique{
 
 
         set.setAxisDependency(YAxis.AxisDependency.RIGHT);
-        set.setColor(Color.RED);
+        set.setColor(Color.parseColor("#FF5722"));
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setCubicIntensity(0.05f);
         set.setLineWidth(2f);

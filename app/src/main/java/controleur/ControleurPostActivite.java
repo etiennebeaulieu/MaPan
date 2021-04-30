@@ -235,7 +235,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                     PropertyFactory.lineWidth(4f),
                     PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
                     PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
-                    PropertyFactory.lineColor(Color.parseColor("#FFF44336"))
+                    PropertyFactory.lineColor(Color.parseColor("#FF5722"))
             ));
         });
 
@@ -263,43 +263,56 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         listVitesseTemps = new ArrayList<>();
         listVitesseDistance = new ArrayList<>();
 
+        float distance = 0f;
+        float temps = 0f;
 
         //Parcours le tableau des temps de l'activité
         for (int i = 0; i < activite.tabTemps.size(); i++) {
             //Calcule les données à mettre pour l'axe X
-            float distance = (float) activite.calculerDistance(0, i);
-            float temps = (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0);
+            distance = (float) activite.calculerDistance(0, i);
 
-            //Règle la bonne unité de distance pour l'étiquette de l'axe X selon les préférences
-            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
-                distance = (float) (distance * METRE_MILES);
-                unitDist = " (mi)";
+            if(temps != (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0)) {
 
-            } else {
-                distance /= 1000;
-                unitDist = " (km)";
-            }
+                temps = (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0);
 
-            //Règle l'altitude en fonction du temps et de la distance avec les bonnes unités selon les préférences
-            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
-                listAltitudeTemps.add(new Entry(temps, (float) (activite.tabElevation.get(i) * METRE_PIED)));
+                //Règle la bonne unité de distance pour l'étiquette de l'axe X selon les préférences
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
+                    distance = (float) (distance * METRE_MILES);
+                    unitDist = " (mi)";
 
-                listAltitudeDistance.add(new Entry(distance, (float) (activite.tabElevation.get(i) * METRE_PIED)));
-            } else {
-                listAltitudeTemps.add(new Entry(temps, (activite.tabElevation.get(i)).floatValue()));
+                } else {
+                    distance /= 1000;
+                    unitDist = " (km)";
+                }
 
-                listAltitudeDistance.add(new Entry(distance, (activite.tabElevation.get(i)).floatValue()));
-            }
+                //Règle l'altitude en fonction du temps et de la distance avec les bonnes unités selon les préférences
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
+                    listAltitudeTemps.add(new Entry(temps, (float) (activite.tabElevation.get(i) * METRE_PIED)));
 
-            //Règle la vitesse en fonction du temps et de la distance avec les bonnes unités selon les préférences
-            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
-                listVitesseTemps.add(new Entry(temps, (float) (activite.tabVitesse.get(i) * METRE_MILES * 3600)));
+                    listAltitudeDistance.add(new Entry(distance, (float) (activite.tabElevation.get(i) * METRE_PIED)));
+                } else {
+                    listAltitudeTemps.add(new Entry(temps, (activite.tabElevation.get(i)).floatValue()));
 
-                listVitesseDistance.add(new Entry(distance, (float) (activite.tabVitesse.get(i) * METRE_MILES * 3600)));
-            } else {
-                listVitesseTemps.add(new Entry(temps, (float) (activite.tabVitesse.get(i) * 3.6)));
+                    listAltitudeDistance.add(new Entry(distance, (activite.tabElevation.get(i)).floatValue()));
+                }
 
-                listVitesseDistance.add(new Entry(distance, (float) (activite.tabVitesse.get(i) * 3.6)));
+                double vitesseMetreSec;
+            /*if(i > 0 && i < activite.tabVitesse.size() -1)
+                vitesseMetreSec = (activite.tabVitesse.get(i - 1) + activite.tabVitesse.get(i + 1))/2.0;
+            else*/
+                vitesseMetreSec = activite.tabVitesse.get(i);
+
+                //Règle la vitesse en fonction du temps et de la distance avec les bonnes unités selon les préférences
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
+                    listVitesseTemps.add(new Entry(temps, (float) (vitesseMetreSec * METRE_MILES * 3600)));
+
+                    listVitesseDistance.add(new Entry(distance, (float) (vitesseMetreSec * METRE_MILES * 3600)));
+                } else {
+                    listVitesseTemps.add(new Entry(temps, (float) (vitesseMetreSec * 3.6)));
+
+                    listVitesseDistance.add(new Entry(distance, (float) (vitesseMetreSec * 3.6)));
+                }
+
             }
 
 

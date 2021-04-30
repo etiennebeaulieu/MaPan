@@ -37,7 +37,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list.setAdapter(adapter);
 
         historique_list.setOnItemClickListener((parent, view, position, id) -> {
-            if(((Activite)historique_list.getItemAtPosition(position)).listeCoordonnee != null){
+            if(((Activite)historique_list.getItemAtPosition(position)).tabTemps != null){
                 Intent intent = new Intent(ControleurHistorique.this, ControleurPostActivite.class);
                 intent.putExtra("activité", (Activite) historique_list.getItemAtPosition(position));
                 startActivity(intent);

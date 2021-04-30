@@ -72,6 +72,7 @@ import modele.Graphique;
 import service.ServiceLocation;
 import service.ServiceStats;
 
+//Classe s'occupant de gérer les données et statistiques pendant l'activité ainsi que de les enregistrer lors de l'achèvement de l'activité.
 public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final double METRE_PIED = 3.28084;
@@ -116,10 +117,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activite_en_cours);
 
+        //On trouve la location de l'utilisateur
         receveur = new ReceveurLocation();
         registerReceiver(receveur, new IntentFilter("DERNIERE_LOCATION"));
         registerReceiver(receveur, new IntentFilter("DERNIERE_STATS"));
 
+        //On associe les éléments xml aux variables de la classe.
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(ControleurNouvelleActivite.activiteEnCours.getNom());
@@ -127,6 +130,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         choixAxeX = findViewById(R.id.choixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
+        //On associe les éléments xml aux variables de la classe.
         View bottomSheet = findViewById(R.id.bottomSheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
         LinearLayout interieur = findViewById(R.id.interieur);
@@ -144,7 +148,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
-
+        //On associe les éléments xml aux variables de la classe.
         fabPause = findViewById(R.id.fab_pause);
         fabEnregistrer = findViewById(R.id.fab_enregistrer);
         fabSupprimer = findViewById(R.id.fab_supprimer);
@@ -196,6 +200,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    //Lance le service de localisation du téléphone
     private void lancerServiceLocation(String action) {
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.setAction(action);
@@ -204,6 +209,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    //Pop-up pour demander la permission d'utiliser la localisation de l'appareil
     private void demanderPermissionLocation() {
         //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -216,6 +222,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    //Pop-up alternatif pour demander la permission d'utiliser la localisation de l'appareil
     private void demanderPermissionLocation29(){
         //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
@@ -228,6 +235,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    //Gère la réponse à la permissions de localisation
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -306,6 +314,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
     }
+
+    //S'occupe de faire le tracé du parcours de l'utilisateur.
     private static class AccueilLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
 
@@ -345,7 +355,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-
+    //On remplis les tableaux de données avec celles enregistrées en temps réel.
     private static void setTabGPS(Location location) {
         ControleurNouvelleActivite.activiteEnCours.getTabLatitude().add(location.getLatitude());
         ControleurNouvelleActivite.activiteEnCours.getTabLongitude().add(location.getLongitude());
@@ -375,7 +385,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 15), 1000);
     }
 
-
+    //Gère le bouton pause de la fenêtre. Si l'activité est mise en pause,
+    // on arrête d'enregistrer les données puis on recommence lorsque l'utilisateur clique sur "play".
     public void pause(View view){
 
 
@@ -405,6 +416,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     }
 
+    //Enregistre l'activité lorsque l'utilisateur la met en pause et sélectionne l'icone "Enregistrer".
     public void enregistrer(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -420,6 +432,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
 
+    //Supprime l'activité lorsque l'utilisatuer la met en pause et sélectionne l'icone "Supprimer".
     public void supprimer(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -430,8 +443,10 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }
 
+    //Classe s'occupant des méthodes accomplies pour le graphique.
     class ReceveurLocation extends BroadcastReceiver{
 
+        //S'occupe d'aller chercher toutes les données nécessaire à la création du graphique en fonction de toutes les préférences de l'utilisateur.
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("DERNIERE_LOCATION")) {
@@ -441,12 +456,14 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
                 String unitDist = "";
+                //set le temps qui sera utilisé pour le graphique.
                 double temps = (double) ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
                 double distance = 0;
                 for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistance)
                 {
                     distance += dx;
                 }
+                //On vérifie si la préférence "impériale pour distance" a été sélectionnée par l'utilisateur avant de débuter l'activité. Puis on change les unités du graphique en fonction.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
                 {
                     distance =  distance*METRE_MILES;
@@ -454,14 +471,16 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                 }
                 else{
+                    //mettre la distance en km
                     distance /= 1000;
                     unitDist = " (km)";
                 }
 
+                //mettre le temps en minutes.
                 temps /= 60;
 
 
-
+                //Vérifie au fur et à mesure la préférence "impériale pour altitude" et ajoute l'altitude dans le graphique en fonction du temps et dans celui en fonction de la distance.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
                 {
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint)*METRE_PIED, chart, "setAltitudeTemps");
@@ -473,6 +492,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint), chart, "setAltitudeDistance");
                 }
 
+                //Vérifie au fur et à mesure la préférence "impérial pour vitesse" et ajoute la vitesse dans le graphique en fonction du temps et dans celui en fonction de la distance.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
                 {
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES*3600, chart, "setVitesseTemps");
@@ -483,35 +503,42 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3600, chart, "setVitesseDistance");
                 }
 
+                //
                 if (!choixAxeX.isChecked()) {
+                    //Change l'étiquette de l'axe X
                     labelX.setText("Temps (min)");
 
+                    //Retire les valeurs en fonction de la distance
                     setAltitudeDistance.setVisible(false);
                     setAltitudeDistance.setDrawValues(false);
                     setVitesseDistance.setVisible(false);
                     setVitesseDistance.setDrawValues(false);
 
-
+                    //Rend visible les valeurs en fonction du temps
                     setAltitudeTemps.setVisible(true);
                     setAltitudeTemps.setDrawValues(true);
                     setVitesseTemps.setVisible(true);
                     setVitesseTemps.setDrawValues(true);
 
+                    //Limite le range d'affichage jusqu'à la dernière valeur
                     chart.setVisibleXRange(0f, (float) temps);
                 } else {
+                    //Change l'étiquette de l'axe X
                     labelX.setText("Distance" + unitDist);
 
+                    //Retire les valeurs en fonction de la distance
                     setAltitudeDistance.setVisible(true);
                     setAltitudeDistance.setDrawValues(true);
                     setVitesseDistance.setVisible(true);
                     setVitesseDistance.setDrawValues(true);
 
-
+                    //Rend visible les valeurs en fonction du temps
                     setAltitudeTemps.setVisible(false);
                     setAltitudeTemps.setDrawValues(false);
                     setVitesseTemps.setVisible(false);
                     setVitesseTemps.setDrawValues(false);
 
+                    //Limite le range d'affichage jusqu'à la dernière valeur
                     chart.setVisibleXRange(0f, (float)distance);
                 }
 
@@ -555,6 +582,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(ControleurNouvelleActivite.activiteEnCours.getDuree().addTo(Instant.ofEpochSecond(0))));
         txtLatitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLatitude().size() - 1)));
         txtLongitude.setText(formatterCoord.format(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().get(ControleurNouvelleActivite.activiteEnCours.getTabLongitude().size() - 1)));
+
+        //Affiche la distance selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() * METRE_MILES) + "mi");
@@ -564,6 +593,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000) + "km");
         }
 
+        //Affiche les vitesse selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelle() * METRE_MILES *3600) + "mi/h");
@@ -575,6 +605,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMoyenne()*3.6) + "km/h");
         }
 
+        //Affiche les altitudes selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelle() * METRE_PIED) + "'");
@@ -584,6 +615,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelle()) + "m");
         }
 
+        //Affiche les dénivelé selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
             txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositif()* METRE_PIED) + "'");

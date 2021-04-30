@@ -5,11 +5,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -62,7 +64,15 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        setTheme(R.style.Theme_AppCompat_Light_NoActionBar);
         super.onCreate(savedInstanceState);
+
+
+
+
+        Intent iSplash = new Intent(ControleurAccueil.this, ControleurSplashScreen.class);
+
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.accueil);
 

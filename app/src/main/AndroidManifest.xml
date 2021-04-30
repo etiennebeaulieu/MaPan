@@ -14,11 +14,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/icon_mapan"
         android:label= "MaPan"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icon_mapan_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <activity android:name="controleur.ControleurAccueil"
-                android:screenOrientation = "sensorPortrait">
+                android:screenOrientation = "sensorPortrait"
+                android:theme="@style/SplashTheme">
                 <intent-filter>
                     <action android:name="android.intent.action.MAIN"/>
                     <category android:name="android.intent.category.LAUNCHER"/>

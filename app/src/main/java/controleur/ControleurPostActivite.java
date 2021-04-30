@@ -22,8 +22,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.mapbox.android.core.location.LocationEngine;
-import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
@@ -31,7 +29,6 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -59,29 +56,30 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     private static final boolean AXE_IS_DISTANCE = false;
     private MapboxMap mapboxMap;
     private MapView mapView;
-    private LocationComponent locationComponent;
-    private PermissionsManager permissionsManager;
-    private LocationEngine locationEngine;
     private CheckBox choixAxeX;
     private TextView labelX;
+    //Page de stats
     private BottomSheetBehavior<View> behavior;
+    //Tracé GPS
     protected LineString lineString;
     protected GeoJsonSource geoJsonSource;
+    //Graphique
     private LineChart chart = null;
+    //Sets des données
     private LineDataSet setAltitudeTemps = null;
     private LineDataSet setAltitudeDistance = null;
     private LineDataSet setVitesseTemps = null;
     private LineDataSet setVitesseDistance = null;
-    private LineData data = null;
-    private Activite activite = null;
+    //Listes des données
     private ArrayList<Entry> listAltitudeTemps = null;
     private ArrayList<Entry> listAltitudeDistance = null;
     private ArrayList<Entry> listVitesseTemps = null;
     private ArrayList<Entry> listVitesseDistance = null;
+    //L'activité dont on regarde les stats
+    private Activite activite = null;
     private String unitDist = "";
 
 
-    protected Boolean graphIsTemps = true;
 
 
     @Override
@@ -91,20 +89,25 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         setContentView(R.layout.post_activite);
 
 
+        //Récupère l'activité à partir de l'intent envoyé par historique
         activite = (Activite) this.getIntent().getSerializableExtra("activité");
 
+        //Crée un liste de coordonnée à partir des tableaux latitude et longitude
         for(int i= 0; i < activite.tabTemps.size(); i++){
             activite.listeCoordonnee.add(Point.fromLngLat(activite.tabLongitude.get(i), activite.tabLatitude.get(i)));
         }
 
 
+        //Affiche le bon nom et icon pour l'activité
         TextView nomActivite = findViewById(R.id.nom_activite);
         ImageView imageSport = findViewById(R.id.icon_activite);
         nomActivite.setText(activite.getNom());
         imageSport.setImageResource(activite.getSport().getImage());
+
         choixAxeX = findViewById(R.id.postChoixAxeX);
         labelX = findViewById(R.id.TextViewX);
 
+        //Paramètre la page de statistique
         View bottomSheet = findViewById(R.id.bottomSheet);
         behavior = BottomSheetBehavior.from(bottomSheet);
         LinearLayout interieur = findViewById(R.id.interieur);
@@ -125,14 +128,16 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
+        //Instancie la map
         mapView.getMapAsync(this);
 
 
+        //Rempli les listes de données
         remplirListGraph();
 
         //Créer le graphique et instancier tout ce qui doit être instancier
         chart = findViewById(R.id.postChart);
-        data = new LineData();
+        LineData data = new LineData();
         chart.setData(data);
         Graphique.modifierGraphique("Graphique", chart);
         chart.getLegend().setEnabled(false);
@@ -142,19 +147,19 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         setVitesseTemps = Graphique.createSetVitesse(true);
         setVitesseDistance = Graphique.createSetVitesse(false);
 
+        //Atribue les listes de données pour les bons sets
         setAltitudeTemps.setValues(listAltitudeTemps);
         setAltitudeDistance.setValues(listAltitudeDistance);
         setVitesseTemps.setValues(listVitesseTemps);
         setVitesseDistance.setValues(listVitesseDistance);
 
-
-        //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
         data.addDataSet(setAltitudeTemps);
         data.addDataSet(setVitesseTemps);
         data.addDataSet(setAltitudeDistance);
         data.addDataSet(setVitesseDistance);
 
 
+        //Vérifie le checkbox du choix d'axe X
         choixAxeX.setOnClickListener(l -> {
             if (!choixAxeX.isChecked())
                 unitAxeX(AXE_IS_TEMPS);
@@ -165,6 +170,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         unitAxeX(AXE_IS_TEMPS);
 
 
+        //Rempli les champs de statistique
         formatterDonnees();
 
     }
@@ -172,19 +178,23 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     public void unitAxeX(boolean unit) {
 
         if (unit) {
+            //Change l'étiquette de l'axe X
             labelX.setText("Temps (min)");
 
+            //Retire les valeurs en fonction de la distance
             setAltitudeDistance.setVisible(false);
             setAltitudeDistance.setDrawValues(false);
             setVitesseDistance.setVisible(false);
             setVitesseDistance.setDrawValues(false);
 
 
+            //Rend visible les valeurs en fonction du temps
             setAltitudeTemps.setVisible(true);
             setAltitudeTemps.setDrawValues(true);
             setVitesseTemps.setVisible(true);
             setVitesseTemps.setDrawValues(true);
 
+            //Limite le range d'affichage jusqu'à la dernière valeur
             chart.setVisibleXRange(0f, listAltitudeTemps.get(listAltitudeTemps.size() - 1).getX());
         } else {
             labelX.setText("Distance" + unitDist);
@@ -229,6 +239,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             ));
         });
 
+        //Centre la caméra sur la première position de l'activité
         mapboxMap.setCameraPosition(new CameraPosition.Builder().target(new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0))).zoom(13).build());
     }
 
@@ -240,6 +251,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     }
 
 
+    //Ouvre l'historique lorsque l'utilisateur clique sur back
     public void ouvrirHistorique(View view){
         startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
     }
@@ -252,10 +264,13 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         listVitesseDistance = new ArrayList<>();
 
 
+        //Parcours le tableau des temps de l'activité
         for (int i = 0; i < activite.tabTemps.size(); i++) {
+            //Calcule les données à mettre pour l'axe X
             float distance = (float) activite.calculerDistance(0, i);
             float temps = (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0);
 
+            //Règle la bonne unité de distance pour l'étiquette de l'axe X selon les préférences
             if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
                 distance = (float) (distance * METRE_MILES);
                 unitDist = " (mi)";
@@ -265,6 +280,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 unitDist = " (km)";
             }
 
+            //Règle l'altitude en fonction du temps et de la distance avec les bonnes unités selon les préférences
             if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
                 listAltitudeTemps.add(new Entry(temps, (float) (activite.tabElevation.get(i) * METRE_PIED)));
 
@@ -275,6 +291,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 listAltitudeDistance.add(new Entry(distance, (activite.tabElevation.get(i)).floatValue()));
             }
 
+            //Règle la vitesse en fonction du temps et de la distance avec les bonnes unités selon les préférences
             if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
                 listVitesseTemps.add(new Entry(temps, (float) (activite.tabVitesse.get(i) * METRE_MILES * 3600)));
 
@@ -312,6 +329,8 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
         txtdebut .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(0)));
         txtfin .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(activite.tabTemps.size()-1)));
+
+        //Affiche la distance selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() * METRE_MILES) + "mi");
@@ -321,6 +340,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() / 1000) + "km");
         }
 
+        //Affiche les vitesse selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
             txtVitesse.setText("max : " + formatterDistance.format(activite.trouverVitesseMax() * METRE_MILES * 3600) + "mi/h");
@@ -332,6 +352,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             txtVitesseMoyenne.setText("moy : " + formatterDistance.format(activite.getVitesseMoyenne() * 3.6) + "km/h");
         }
 
+        //Affiche les altitudes selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
             txtAltitudeMax.setText(formatterHauteur.format(activite.getAltitudeMax() * METRE_PIED) + "'");
             txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMin() * METRE_PIED) + "'");
@@ -340,6 +361,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMin()) + "m");
         }
 
+        //Affiche les dénivelé selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false)) {
             txtDenivelePos.setText(formatterHauteur.format(activite.getDenivelePositif() * METRE_PIED) + "'");
             txtDeniveleNeg.setText(formatterHauteur.format(activite.getDeniveleNegatif() * METRE_PIED) + "'");

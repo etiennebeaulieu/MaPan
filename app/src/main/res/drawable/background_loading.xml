@@ -4,7 +4,7 @@
     <item android:drawable="@color/vert"/>
     <item>
         <bitmap android:src="@drawable/icon_mapan"
-            android:gravity="center"/>
+            android:gravity="center" />
     </item>
 
 

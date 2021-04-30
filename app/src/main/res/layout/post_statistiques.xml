@@ -345,6 +345,24 @@
 
             </com.github.mikephil.charting.charts.LineChart>
 
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="■"
+                android:textColor="#33b5e5"
+                android:translationX="5dp"
+                android:translationY="160dp" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="■"
+                android:textColor="#FF5722"
+                android:translationX="370dp"
+                android:translationY="160dp" />
+
         </FrameLayout>
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

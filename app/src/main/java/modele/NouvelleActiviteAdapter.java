@@ -15,12 +15,14 @@ import com.example.mapan.R;
 
 import java.util.ArrayList;
 
-public class NouvelleActiviteAdapter extends ArrayAdapter<Sport> {
+public class NouvelleActiviteAdapter extends ArrayAdapter<Sport>
+{
 
     private Context mContext;
     private int mResource;
 
-    public NouvelleActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Sport> objects) {
+    public NouvelleActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Sport> objects)
+    {
         super(context, resource, objects);
         this.mContext = context;
         this.mResource = resource;
@@ -28,7 +30,8 @@ public class NouvelleActiviteAdapter extends ArrayAdapter<Sport> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
+    {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         Sport sport = getItem(position);
 

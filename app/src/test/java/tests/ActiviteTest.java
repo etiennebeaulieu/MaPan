@@ -16,40 +16,37 @@ import static org.junit.Assert.assertTrue;
 public class ActiviteTest
 {
 
-    Activite activite1,activite2,activite3,activite4,
-            activite5,activite6,activite7,activite8,
-            activite9,activite10,activite11,activite12,
-            activite13,activite14,activite15,activite16;
+    Activite activite1, activite2, activite3, activite4, activite5, activite6, activite7, activite8, activite9, activite10, activite11, activite12, activite13, activite14, activite15, activite16;
 
-Activite activite17, activite18;
+    Activite activite17, activite18;
 
     @Before
     public void Activite()
     {
         activite1 = new Activite("Activité 1", Instant.ofEpochSecond(1000), Sport.RANDONNEE, 60, 6.0);
-        activite2 = new Activite("Activité 2",Instant.ofEpochSecond(10000),Sport.RANDONNEE,80,6.40);
-        activite3 = new Activite("Activité 3",Instant.ofEpochSecond(100000),Sport.COURSE,10,2.21);
-        activite4 = new Activite("Activité 4",Instant.ofEpochSecond(2000),Sport.COURSE,30,4.60);
-        activite5 = new Activite("Activité 5",Instant.ofEpochSecond(20000),Sport.VELO,90,20.73);
-        activite6 = new Activite("Activité 6",Instant.ofEpochSecond(200000),Sport.VELO,20,10.20);
-        activite7 = new Activite("Activité 7",Instant.ofEpochSecond(3000),Sport.RAQUETTE,50,4.75);
-        activite8 = new Activite("Activité 8",Instant.ofEpochSecond(30000),Sport.RAQUETTE,60,5.20);
-        activite9 = new Activite("Activité 9",Instant.ofEpochSecond(300000),Sport.SKI_RANDONNEE,120,12.30);
-        activite10 = new Activite("Activité 10",Instant.ofEpochSecond(4000),Sport.SKI_RANDONNEE,100,4.90);
-        activite11 = new Activite("Activité 11",Instant.ofEpochSecond(40000),Sport.SKI,75,7.60);
-        activite12 = new Activite("Activité 12",Instant.ofEpochSecond(400000),Sport.SKI,90,9.42);
-        activite13 = new Activite("Activité 13",Instant.ofEpochSecond(5000),Sport.PATIN,45,7.35);
-        activite14 = new Activite("Activité 14",Instant.ofEpochSecond(50000),Sport.PATIN,25,3.4);
-        activite15 = new Activite("Activité 15",Instant.ofEpochSecond(500000),Sport.SKI_FOND,35,8.4);
-        activite16 = new Activite("Activité 16",Instant.ofEpochSecond(600000),Sport.SKI_FOND,12,1.9);
+        activite2 = new Activite("Activité 2", Instant.ofEpochSecond(10000), Sport.RANDONNEE, 80, 6.40);
+        activite3 = new Activite("Activité 3", Instant.ofEpochSecond(100000), Sport.COURSE, 10, 2.21);
+        activite4 = new Activite("Activité 4", Instant.ofEpochSecond(2000), Sport.COURSE, 30, 4.60);
+        activite5 = new Activite("Activité 5", Instant.ofEpochSecond(20000), Sport.VELO, 90, 20.73);
+        activite6 = new Activite("Activité 6", Instant.ofEpochSecond(200000), Sport.VELO, 20, 10.20);
+        activite7 = new Activite("Activité 7", Instant.ofEpochSecond(3000), Sport.RAQUETTE, 50, 4.75);
+        activite8 = new Activite("Activité 8", Instant.ofEpochSecond(30000), Sport.RAQUETTE, 60, 5.20);
+        activite9 = new Activite("Activité 9", Instant.ofEpochSecond(300000), Sport.SKI_RANDONNEE, 120, 12.30);
+        activite10 = new Activite("Activité 10", Instant.ofEpochSecond(4000), Sport.SKI_RANDONNEE, 100, 4.90);
+        activite11 = new Activite("Activité 11", Instant.ofEpochSecond(40000), Sport.SKI, 75, 7.60);
+        activite12 = new Activite("Activité 12", Instant.ofEpochSecond(400000), Sport.SKI, 90, 9.42);
+        activite13 = new Activite("Activité 13", Instant.ofEpochSecond(5000), Sport.PATIN, 45, 7.35);
+        activite14 = new Activite("Activité 14", Instant.ofEpochSecond(50000), Sport.PATIN, 25, 3.4);
+        activite15 = new Activite("Activité 15", Instant.ofEpochSecond(500000), Sport.SKI_FOND, 35, 8.4);
+        activite16 = new Activite("Activité 16", Instant.ofEpochSecond(600000), Sport.SKI_FOND, 12, 1.9);
     }
 
     @Before
     public void ActiviteFichier()
     {
-        activite17 = new Activite("Activité 17", Sport.RANDONNEE, new File("D:test fichiers.gpx"));
+        activite17 = new Activite("Activité 17", Sport.RANDONNEE, new File("D:run.gpx"));
 
-        activite18 = new Activite("Activité 18",  Sport.SKI_FOND, new File("D:test fichiers2.gpx"));
+        activite18 = new Activite("Activité 18", Sport.SKI_FOND, new File("D:exemple-de-trace-gps.gpx"));
     }
 
     @Test
@@ -57,58 +54,51 @@ Activite activite17, activite18;
     {
         try
         {
-              new Activite("", Instant.now(), Sport.RANDONNEE, 60, 6.0);
+            new Activite("", Instant.now(), Sport.RANDONNEE, 60, 6.0);
 
-}
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
         try
         {
             new Activite(null, Instant.now(), Sport.RANDONNEE, 60, 6.0);
 
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
         try
         {
             new Activite("Allo", Instant.now(), Sport.RANDONNEE, 60, -1);
 
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
         try
         {
             new Activite("Allo", Instant.now(), Sport.RANDONNEE, 0, 6.0);
 
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
         try
         {
             new Activite("Allo", Instant.now(), Sport.RANDONNEE, -1, -1);
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
         try
         {
             new Activite("Allo", Instant.now(), null, 60, 6.0);
 
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
 
         try
         {
-            new Activite("Allo", Sport.VELO,null);
+            new Activite("Allo", Sport.VELO, null);
 
-        }
-        catch (Exception ignored)
+        } catch (Exception ignored)
         {
         }
 
@@ -265,22 +255,22 @@ Activite activite17, activite18;
     @Test
     public void getDistanceMetrique()
     {
-        assertEquals(6, activite1.getDistanceMetrique(), 0.0);
-        assertEquals(6.4, activite2.getDistanceMetrique(), 0.0);
-        assertEquals(2.21, activite3.getDistanceMetrique(), 0.0);
-        assertEquals(4.6, activite4.getDistanceMetrique(), 0.0);
-        assertEquals(20.73, activite5.getDistanceMetrique(), 0.0);
-        assertEquals(10.20, activite6.getDistanceMetrique(), 0.0);
-        assertEquals(4.75, activite7.getDistanceMetrique(), 0.0);
-        assertEquals(5.2, activite8.getDistanceMetrique(), 0.0);
-        assertEquals(12.3, activite9.getDistanceMetrique(), 0.0);
-        assertEquals(4.9, activite10.getDistanceMetrique(), 0.0);
-        assertEquals(7.6, activite11.getDistanceMetrique(), 0.0);
-        assertEquals(9.42, activite12.getDistanceMetrique(), 0.0);
-        assertEquals(7.35, activite13.getDistanceMetrique(), 0.0);
-        assertEquals(3.4, activite14.getDistanceMetrique(), 0.0);
-        assertEquals(8.4, activite15.getDistanceMetrique(), 0.0);
-        assertEquals(1.9, activite16.getDistanceMetrique(), 0.0);
+        assertEquals(6000, activite1.getDistanceMetrique(), 0.0);
+        assertEquals(6400, activite2.getDistanceMetrique(), 0.0);
+        assertEquals(2210, activite3.getDistanceMetrique(), 0.0);
+        assertEquals(4600, activite4.getDistanceMetrique(), 0.0);
+        assertEquals(20730, activite5.getDistanceMetrique(), 0.0);
+        assertEquals(10200, activite6.getDistanceMetrique(), 0.0);
+        assertEquals(4750, activite7.getDistanceMetrique(), 0.0);
+        assertEquals(5200, activite8.getDistanceMetrique(), 0.0);
+        assertEquals(12300, activite9.getDistanceMetrique(), 0.0);
+        assertEquals(4900, activite10.getDistanceMetrique(), 0.0);
+        assertEquals(7600, activite11.getDistanceMetrique(), 0.0);
+        assertEquals(9420, activite12.getDistanceMetrique(), 0.0);
+        assertEquals(7350, activite13.getDistanceMetrique(), 0.0);
+        assertEquals(3400, activite14.getDistanceMetrique(), 0.0);
+        assertEquals(8400, activite15.getDistanceMetrique(), 0.0);
+        assertEquals(1900, activite16.getDistanceMetrique(), 0.0);
         assertEquals(3125.701786185354, activite17.getDistanceMetrique(), 0.0);
         assertEquals(9248.34046827275, activite18.getDistanceMetrique(), 0.0);
     }
@@ -295,48 +285,49 @@ Activite activite17, activite18;
     @Test
     public void getDeniveleNegatifMetrique()
     {
+        double x = activite17.getDeniveleNegatif();
         assertEquals(135.40000343322754, activite17.getDeniveleNegatif(), 0.0);
     }
 
     @Test
     public void getVitesseActuelleMetrique()
     {
-        System.out.println("Vitesse actuelle fin fichier 1\n"+ activite17.getVitesseActuelle() + " km/h\n");
-        System.out.println("Vitesse actuelle fin fichier 2\n"+ activite18.getVitesseActuelle() + " km/h\n");
+        System.out.println("Vitesse actuelle fin fichier 1\n" + activite17.getVitesseActuelle() + " km/h\n");
+        System.out.println("Vitesse actuelle fin fichier 2\n" + activite18.getVitesseActuelle() + " km/h\n");
     }
 
     @Test
     public void getVitesseMetrique()
     {
-        assertEquals(6, activite1.getVitesseMoyenne(), 0.0);
-        //assertEquals(4.8, activite2.getVitesseMetrique(), 0.0);
-        assertEquals(13.26, activite3.getVitesseMoyenne(), 0.0);
-        assertEquals(9.2, activite4.getVitesseMoyenne(), 0.0);
-        assertEquals(13.82, activite5.getVitesseMoyenne(), 0.0);
-        //assertEquals(30.6, activite6.getVitesseMetrique(), 0.0);
-        assertEquals(5.7, activite7.getVitesseMoyenne(), 0.0);
-        assertEquals(5.2, activite8.getVitesseMoyenne(), 0.0);
-        assertEquals(6.15, activite9.getVitesseMoyenne(), 0.0);
-        assertEquals(2.94, activite10.getVitesseMoyenne(), 0.0);
-        assertEquals(6.08, activite11.getVitesseMoyenne(), 0.0);
-        assertEquals(6.28, activite12.getVitesseMoyenne(), 0.0);
-        assertEquals(9.8, activite13.getVitesseMoyenne(), 0.0);
-        //assertEquals(8.16, activite14.getVitesseMetrique(), 0.0);
-        assertEquals(14.4, activite15.getVitesseMoyenne(), 0.0);
-        assertEquals(9.5, activite16.getVitesseMoyenne(), 0.0);
+        //  assertEquals(6/3.6, activite1.getVitesseMoyenne(), 0.0);
+        assertEquals(4.8 / 3.6, activite2.getVitesseMoyenne(), 0.0);
+        assertEquals(13.26 / 3.6, activite3.getVitesseMoyenne(), 0.0);
+        assertEquals(9.2 / 3.6, activite4.getVitesseMoyenne(), 0.0);
+        assertEquals(13.82 / 3.6, activite5.getVitesseMoyenne(), 0.0);
+        assertEquals(30.6 / 3.6, activite6.getVitesseMoyenne(), 0.0);
+        assertEquals(5.7 / 3.6, activite7.getVitesseMoyenne(), 0.0);
+        assertEquals(5.2 / 3.6, activite8.getVitesseMoyenne(), 0.0);
+        assertEquals(1.7083333333333333, activite9.getVitesseMoyenne(), 0.0);
+        assertEquals(2.94 / 3.6, activite10.getVitesseMoyenne(), 0.0);
+        assertEquals(6.08 / 3.6, activite11.getVitesseMoyenne(), 0.0);
+        assertEquals(6.28 / 3.6, activite12.getVitesseMoyenne(), 0.0);
+        assertEquals(9.8 / 3.6, activite13.getVitesseMoyenne(), 0.0);
+        assertEquals(8.16 / 3.6, activite14.getVitesseMoyenne(), 0.0);
+        assertEquals(14.4 / 3.6, activite15.getVitesseMoyenne(), 0.0);
+        assertEquals(9.5 / 3.6, activite16.getVitesseMoyenne(), 0.0);
     }
 
 
     @Test
     public void getTabLatitude()
     {
-        assertTrue(activite17.getTabLatitude().size() ==206 && activite17.getTabLatitude().get(0)==38.92747367732227 && activite17.getTabLatitude().get(activite17.getTabLatitude().size()-1)==38.92482256516814);
+        assertTrue(activite17.getTabLatitude().size() == 206 && activite17.getTabLatitude().get(0) == 38.92747367732227 && activite17.getTabLatitude().get(activite17.getTabLatitude().size() - 1) == 38.92482256516814);
     }
 
     @Test
     public void getTabLongitude()
     {
-        assertTrue(activite17.getTabLongitude().size() ==206 && activite17.getTabLongitude().get(0)==-77.02016168273985 && activite17.getTabLongitude().get(activite17.getTabLongitude().size()-1)==-77.02575484290719);
+        assertTrue(activite17.getTabLongitude().size() == 206 && activite17.getTabLongitude().get(0) == -77.02016168273985 && activite17.getTabLongitude().get(activite17.getTabLongitude().size() - 1) == -77.02575484290719);
     }
 
     @Test
@@ -351,7 +342,7 @@ Activite activite17, activite18;
         assertEquals(activite17.getDistanceMetrique(), distance, 0.0);
 
         assertEquals(206, activite17.getTabDistance().size());
-         distance = 0;
+        distance = 0;
         for (int i = 0; i < activite18.getTabDistance().size(); i++)
         {
             distance += activite18.getTabDistance().get(i);
@@ -362,7 +353,7 @@ Activite activite17, activite18;
     @Test
     public void getTabElevationMetrique()
     {
-        assertTrue(activite17.getTabElevation().size() ==206 && activite17.getTabElevation().get(0)==25.600000381469727 && activite17.getTabElevation().get(activite17.getTabElevation().size()-1)==48.599998474121094);
+        assertTrue(activite17.getTabElevation().size() == 206 && activite17.getTabElevation().get(0) == 25.600000381469727 && activite17.getTabElevation().get(activite17.getTabElevation().size() - 1) == 48.599998474121094);
     }
 
     @Test
@@ -373,7 +364,7 @@ Activite activite17, activite18;
     @Test
     public void getTabTemps()
     {
-        assertTrue(activite17.getTabTemps().size() ==206 && activite17.getTabTemps().get(0).equals(Instant.parse("2012-10-24T23:29:40.000Z")) && activite17.getTabTemps().get(activite17.getTabTemps().size()-1).equals(Instant.parse("2012-10-24T23:45:28.000Z")));
+        assertTrue(activite17.getTabTemps().size() == 206 && activite17.getTabTemps().get(0).equals(Instant.parse("2012-10-24T23:29:40.000Z")) && activite17.getTabTemps().get(activite17.getTabTemps().size() - 1).equals(Instant.parse("2012-10-24T23:45:28.000Z")));
     }
 
     @Test
@@ -389,8 +380,8 @@ Activite activite17, activite18;
     @Test
     public void calculerDistance()
     {
-        System.out.println("Distance fichier 1\n"+activite17.calculerDistance(0,activite17.getTabTemps().size()-1)+" mètres\n");
-        System.out.println("Distance fichier 2\n"+activite18.calculerDistance(0,activite18.getTabTemps().size()-1)+" mètres\n");
+        System.out.println("Distance fichier 1\n" + activite17.calculerDistance(0, activite17.getTabTemps().size() - 1) + " mètres\n");
+        System.out.println("Distance fichier 2\n" + activite18.calculerDistance(0, activite18.getTabTemps().size() - 1) + " mètres\n");
 
         //trop long à calculer, mais l'algo fonctionne activite 18 = https://www.visugpx.com/1310202508
     }
@@ -398,44 +389,44 @@ Activite activite17, activite18;
     @Test
     public void calculerVitesseMoyenne()
     {
-        assertEquals(6,activite1.calculerVitesseMoyenne() , 0.0);
-       //assertEquals(4.8, activite2.calculerVitesseMoyenne(), 0.0);
-        assertEquals(13.26, activite3.calculerVitesseMoyenne() , 0.0);
-        assertEquals(9.2, activite4.calculerVitesseMoyenne(), 0.0);
-        assertEquals(13.82, activite5.calculerVitesseMoyenne(), 0.0);
-          //assertEquals(30.6, activite6.calculerVitesseMoyenne(activite6.getDuree().toMillis()/1000)*3600, 0.0);
-        assertEquals(5.7, activite7.calculerVitesseMoyenne(), 0.0);
-        assertEquals(5.2, activite8.calculerVitesseMoyenne(), 0.0);
-        assertEquals(6.15, activite9.calculerVitesseMoyenne(), 0.0);
-        assertEquals(2.94, activite10.calculerVitesseMoyenne(), 0.0);
-        assertEquals(6.08, activite11.calculerVitesseMoyenne(), 0.0);
-        assertEquals(6.28, activite12.calculerVitesseMoyenne(), 0.0);
-        assertEquals(9.8, activite13.calculerVitesseMoyenne(), 0.0);
-         //assertEquals(8.16, activite14.calculerVitesseMoyenne(), 0.0);
-        assertEquals(14.4, activite15.calculerVitesseMoyenne(), 0.0);
-        assertEquals(9.5, activite16.calculerVitesseMoyenne(), 0.0);
+        assertEquals(1.6666666666666667, activite1.calculerVitesseMoyenne(), 0.0);
+        assertEquals(4.8 / 3.6, activite2.calculerVitesseMoyenne(), 0.0);
+        assertEquals(13.26 / 3.6, activite3.calculerVitesseMoyenne(), 0.0);
+        assertEquals(9.2 / 3.6, activite4.calculerVitesseMoyenne(), 0.0);
+        assertEquals(13.82 / 3.6, activite5.calculerVitesseMoyenne(), 0.0);
+        assertEquals(30.6 / 3.6, activite6.calculerVitesseMoyenne(), 0.0);
+        assertEquals(5.7 / 3.6, activite7.calculerVitesseMoyenne(), 0.0);
+        assertEquals(5.2 / 3.6, activite8.calculerVitesseMoyenne(), 0.0);
+        assertEquals(1.7083333333333333, activite9.calculerVitesseMoyenne(), 0.0);
+        assertEquals(2.94 / 3.6, activite10.calculerVitesseMoyenne(), 0.0);
+        assertEquals(6.08 / 3.6, activite11.calculerVitesseMoyenne(), 0.0);
+        assertEquals(6.28 / 3.6, activite12.calculerVitesseMoyenne(), 0.0);
+        assertEquals(9.8 / 3.6, activite13.calculerVitesseMoyenne(), 0.0);
+        assertEquals(8.16 / 3.6, activite14.calculerVitesseMoyenne(), 0.0);
+        assertEquals(14.4 / 3.6, activite15.calculerVitesseMoyenne(), 0.0);
+        assertEquals(9.5 / 3.6, activite16.calculerVitesseMoyenne(), 0.0);
 
-        System.out.println("Vitesse fichier 1\n"+ activite17.calculerVitesseMoyenne() + " km/h\n");
-        assertEquals(11.869753618425397, activite17.calculerVitesseMoyenne(), 0.0);
+        System.out.println("Vitesse fichier 1\n" + activite17.calculerVitesseMoyenne() + " km/h\n");
+        assertEquals(11.869753618425397 / 3.6, activite17.calculerVitesseMoyenne(), 0.0);
 
-        System.out.println("Vitesse fichier 2\n"+ activite18.calculerVitesseMoyenne() + " km/h\n");
-        assertEquals(0.4447089596989582,activite18.calculerVitesseMoyenne(), 0.0);
+        System.out.println("Vitesse fichier 2\n" + activite18.calculerVitesseMoyenne() + " km/h\n");
+        assertEquals(0.4447089596989582 / 3.6, activite18.calculerVitesseMoyenne(), 0.0);
     }
 
 
     @Test
     public void getAltitudeMaxMetrique()
     {
-        assertEquals(activite17.getAltitudeMax(), 82.80000305175781,0);
-        assertEquals(activite18.getAltitudeMax(), 181.7,0);
+        assertEquals(activite17.getAltitudeMax(), 82.80000305175781, 0);
+        assertEquals(activite18.getAltitudeMax(), 181.7, 0);
 
     }
 
     @Test
     public void getAltitudeMinMetrique()
     {
-        assertEquals(activite17.getAltitudeMin(), 25.600000381469727,0);
-        assertEquals(activite18.getAltitudeMin(), 73.1,0);
+        assertEquals(activite17.getAltitudeMin(), 25.600000381469727, 0);
+        assertEquals(activite18.getAltitudeMin(), 73.1, 0);
     }
 
     @Test

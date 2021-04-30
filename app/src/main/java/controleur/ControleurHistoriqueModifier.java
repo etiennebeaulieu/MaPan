@@ -37,7 +37,8 @@ import modele.ActiviteAdapter;
 import modele.Fichier;
 import modele.Sport;
 
-public class ControleurHistoriqueModifier extends AppCompatActivity implements PickiTCallbacks {
+public class ControleurHistoriqueModifier extends AppCompatActivity implements PickiTCallbacks
+{
 
     //Affichage des activité
     private ListView modifier_list;
@@ -48,11 +49,12 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     //L'activité qui est sélectionné dans la liste
     private Activite activiteSelect;
     private static final int CHOISIR_GPX = 2;
-    private static final int   PARTAGER_GPX = 3;
+    private static final int PARTAGER_GPX = 3;
     PickiT pickiT;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique_modifier);
 
@@ -69,25 +71,30 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         adapter.notifyDataSetChanged();
 
 
-
         //Action a faire si une autre application envoie un fichier GPX à MaPan
         Intent intent = getIntent();
-        if(intent != null){
+        if (intent != null)
+        {
             String action = intent.getAction();
             String type = intent.getType();
 
-            if((Intent.ACTION_SEND.equals(action)|| Intent.ACTION_VIEW.equals(action))&& type != null){
-                if(type.equalsIgnoreCase("application/gpx+xml")){
+            if ((Intent.ACTION_SEND.equals(action) || Intent.ACTION_VIEW.equals(action)) && type != null)
+            {
+                if (type.equalsIgnoreCase("application/gpx+xml"))
+                {
                     Uri fichierGPX = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                    if(fichierGPX != null){
+                    if (fichierGPX != null)
+                    {
                         pickiT.getPath(fichierGPX, Build.VERSION.SDK_INT);
                     }
                 }
-            }
-            else if(Intent.ACTION_SEND_MULTIPLE.equals(action)&&type!=null){
-                if(type.equalsIgnoreCase("application/gpx+xml")){
+            } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null)
+            {
+                if (type.equalsIgnoreCase("application/gpx+xml"))
+                {
                     ArrayList<Uri> listGPX = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                    if(listGPX.get(0) != null){
+                    if (listGPX.get(0) != null)
+                    {
                         pickiT.getPath(listGPX.get(0), Build.VERSION.SDK_INT);
                     }
                 }
@@ -96,24 +103,30 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     }
 
 
-    public void ouvrirAccueil(View view) {
+    public void ouvrirAccueil(View view)
+    {
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurAccueil.class));
     }
 
-    public void ouvrirHistorique(View view) {
+    public void ouvrirHistorique(View view)
+    {
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         startActivity(new Intent(ControleurHistoriqueModifier.this, ControleurHistorique.class));
     }
 
-    public void exporterGPX(View view) {
+    public void exporterGPX(View view)
+    {
 
-        if(activiteSelect != null) {
+        if (activiteSelect != null)
+        {
             //Vérifie si l'activité a des données GPS
-            if(activiteSelect.getTabLatitude() != null) {
+            if (activiteSelect.getTabLatitude() != null)
+            {
 
                 File fichier = Fichier.partager(this.getApplicationContext(), activiteSelect);
 
@@ -125,8 +138,8 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 shareIntent.setType("application/gpx+xml");
                 startActivityForResult(Intent.createChooser(shareIntent, "Partager..."), PARTAGER_GPX);
-            }
-            else{
+            } else
+            {
                 Toast.makeText(this, "Le fichier doit avoir des données de localisation", Toast.LENGTH_SHORT).show();
             }
             modifier_list.clearChoices();
@@ -135,59 +148,72 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public void importerGPX(View view) {
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+    public void importerGPX(View view)
+    {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+        {
 
             Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             loadIntent.setType("application/*");
             startActivityForResult(loadIntent, CHOISIR_GPX);
-        } else {
+        } else
+        {
             demanderPermissionStockage();
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-            Context context = this.getApplicationContext();
-        if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK) {
+        Context context = this.getApplicationContext();
+        if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK)
+        {
             Uri uri = null;
-            if (data != null) {
+            if (data != null)
+            {
                 uri = data.getData();
                 pickiT.getPath(uri, Build.VERSION.SDK_INT);
             }
         }
-        if(requestCode == PARTAGER_GPX){
-            new File(this.getFilesDir(), activiteSelect.getNom()+".gpx").delete();
+        if (requestCode == PARTAGER_GPX)
+        {
+            new File(this.getFilesDir(), activiteSelect.getNom() + ".gpx").delete();
         }
     }
 
-    private void demanderPermissionStockage() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La permission est nécessaire pour avoir accès aux fichiers")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurHistoriqueModifier.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
+    private void demanderPermissionStockage()
+    {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La permission est nécessaire pour avoir accès aux fichiers").setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurHistoriqueModifier.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1)).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
+        } else
+        {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 1)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
+            } else
+            {
                 Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 
-    public void deleteActivity(View view) {
-        if (activiteSelect != null) {
+    public void deleteActivity(View view)
+    {
+        if (activiteSelect != null)
+        {
             Fichier.supprimer(this.getApplicationContext(), activiteSelect);
             Fichier.rafraichir(this.getApplicationContext());
             modifier_list.clearChoices();
@@ -195,8 +221,10 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         }
     }
 
-    public void renommer(View view){
-        if(activiteSelect != null) {
+    public void renommer(View view)
+    {
+        if (activiteSelect != null)
+        {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -213,53 +241,59 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
         }
     }
 
-    public void changerSport(View view){
-        if(activiteSelect != null){
+    public void changerSport(View view)
+    {
+        if (activiteSelect != null)
+        {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Spinner spinner = new Spinner(this);
-            ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+            ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
             aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(aa2);
-            builder.setTitle("Changer le type d'activité").setMessage("Sélectionner le type d'activité")
-                    .setPositiveButton("Confirmer", (dialog, which) ->
-                    {
-                        Fichier.supprimer(ControleurHistoriqueModifier.this, activiteSelect);
-                        activiteSelect.setSport(Sport.valueOf(spinner.getSelectedItem().toString()));
-                        Fichier.enregistrer(ControleurHistoriqueModifier.this, activiteSelect);
-                        Fichier.rafraichir(ControleurHistoriqueModifier.this);
-                        modifier_list.clearChoices();
-                        adapter.notifyDataSetChanged();
-                    }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).setView(spinner).show();
+            builder.setTitle("Changer le type d'activité").setMessage("Sélectionner le type d'activité").setPositiveButton("Confirmer", (dialog, which) ->
+            {
+                Fichier.supprimer(ControleurHistoriqueModifier.this, activiteSelect);
+                activiteSelect.setSport(Sport.valueOf(spinner.getSelectedItem().toString()));
+                Fichier.enregistrer(ControleurHistoriqueModifier.this, activiteSelect);
+                Fichier.rafraichir(ControleurHistoriqueModifier.this);
+                modifier_list.clearChoices();
+                adapter.notifyDataSetChanged();
+            }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).setView(spinner).show();
         }
     }
 
 
     @Override
-    public void PickiTonUriReturned() {
+    public void PickiTonUriReturned()
+    {
 
     }
 
     @Override
-    public void PickiTonStartListener() {
+    public void PickiTonStartListener()
+    {
 
     }
 
     @Override
-    public void PickiTonProgressUpdate(int progress) {
+    public void PickiTonProgressUpdate(int progress)
+    {
 
     }
 
     @Override
-    public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason) {
-      Context context= this.getApplicationContext();
+    public void PickiTonCompleteListener(String path, boolean wasDriveFile, boolean wasUnknownProvider, boolean wasSuccessful, String Reason)
+    {
+        Context context = this.getApplicationContext();
         File fichier = new File(path);
-        if(fichier.exists()) {
+        if (fichier.exists())
+        {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             builder.setView(input);
             Spinner spinner = new Spinner(this);
-            ArrayAdapter aa2 = new ArrayAdapter(this,android.R.layout.simple_spinner_item,Sport.values());
+            ArrayAdapter aa2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
             aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(aa2);
             LinearLayout vBox = new LinearLayout(this);
@@ -270,13 +304,14 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             builder.setView(vBox);
             builder.setTitle("Définir l'activité").setMessage("Entrez le nouveau nom et le sport").setPositiveButton("Confirmer", (dialog, which) ->
             {
-                if(!input.getText().toString().isEmpty()) {
+                if (!input.getText().toString().isEmpty())
+                {
                     Activite importation = new Activite(input.getText().toString(), Sport.valueOf(spinner.getSelectedItem().toString()), fichier);
                     Fichier.enregistrer(context, importation);
                     Fichier.rafraichir(context);
                     adapter.notifyDataSetChanged();
-                }
-                else{
+                } else
+                {
                     Toast.makeText(context, "L'activité doit avoir un nom", Toast.LENGTH_SHORT).show();
                 }
             }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();

@@ -48,7 +48,8 @@ import java.util.ArrayList;
 import modele.Activite;
 import modele.Graphique;
 
-public class ControleurPostActivite extends AppCompatActivity implements OnMapReadyCallback {
+public class ControleurPostActivite extends AppCompatActivity implements OnMapReadyCallback
+{
 
     public static final double METRE_PIED = 3.28084;
     public static final double METRE_MILES = 0.000621371;
@@ -80,10 +81,9 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     private String unitDist = "";
 
 
-
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.post_activite);
@@ -93,7 +93,8 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         activite = (Activite) this.getIntent().getSerializableExtra("activité");
 
         //Crée un liste de coordonnée à partir des tableaux latitude et longitude
-        for(int i= 0; i < activite.tabTemps.size(); i++){
+        for (int i = 0; i < activite.tabTemps.size(); i++)
+        {
             activite.listeCoordonnee.add(Point.fromLngLat(activite.tabLongitude.get(i), activite.tabLatitude.get(i)));
         }
 
@@ -112,9 +113,11 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         behavior = BottomSheetBehavior.from(bottomSheet);
         LinearLayout interieur = findViewById(R.id.interieur);
 
-        interieur.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        interieur.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
             @Override
-            public void onGlobalLayout() {
+            public void onGlobalLayout()
+            {
                 interieur.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 View cache = interieur.getChildAt(1);
                 behavior.setPeekHeight(cache.getTop());
@@ -160,11 +163,10 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
 
         //Vérifie le checkbox du choix d'axe X
-        choixAxeX.setOnClickListener(l -> {
-            if (!choixAxeX.isChecked())
-                unitAxeX(AXE_IS_TEMPS);
-            else
-                unitAxeX(AXE_IS_DISTANCE);
+        choixAxeX.setOnClickListener(l ->
+        {
+            if (!choixAxeX.isChecked()) unitAxeX(AXE_IS_TEMPS);
+            else unitAxeX(AXE_IS_DISTANCE);
         });
 
         unitAxeX(AXE_IS_TEMPS);
@@ -175,9 +177,11 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
     }
 
-    public void unitAxeX(boolean unit) {
+    public void unitAxeX(boolean unit)
+    {
 
-        if (unit) {
+        if (unit)
+        {
             //Change l'étiquette de l'axe X
             labelX.setText("Temps (min)");
 
@@ -196,7 +200,8 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
             //Limite le range d'affichage jusqu'à la dernière valeur
             chart.setVisibleXRange(0f, listAltitudeTemps.get(listAltitudeTemps.size() - 1).getX());
-        } else {
+        } else
+        {
             labelX.setText("Distance" + unitDist);
 
             setAltitudeDistance.setVisible(true);
@@ -218,7 +223,8 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+    public void onMapReady(@NonNull MapboxMap mapboxMap)
+    {
         this.mapboxMap = mapboxMap;
         //Importe notre style de map
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
@@ -231,12 +237,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
             style1.addSource(geoJsonSource);
 
             //Affichage du tracé GPS
-            style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(
-                    PropertyFactory.lineWidth(4f),
-                    PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
-                    PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
-                    PropertyFactory.lineColor(Color.parseColor("#FF5722"))
-            ));
+            style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(PropertyFactory.lineWidth(4f), PropertyFactory.lineCap(Property.LINE_CAP_ROUND), PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND), PropertyFactory.lineColor(Color.parseColor("#FF5722"))));
         });
 
         //Centre la caméra sur la première position de l'activité
@@ -245,18 +246,20 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
 
 
     //Centre la caméra sur la position de l'utilisateur
-    public void centrer(View view){
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0)), 13), 1000);
+    public void centrer(View view)
+    {
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(activite.tabLatitude.get(0), activite.tabLongitude.get(0)), 13), 1000);
     }
 
 
     //Ouvre l'historique lorsque l'utilisateur clique sur back
-    public void ouvrirHistorique(View view){
+    public void ouvrirHistorique(View view)
+    {
         startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
     }
 
-    public void remplirListGraph() {
+    public void remplirListGraph()
+    {
 
         listAltitudeTemps = new ArrayList<>();
         listAltitudeDistance = new ArrayList<>();
@@ -267,30 +270,36 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         float temps = 0f;
 
         //Parcours le tableau des temps de l'activité
-        for (int i = 0; i < activite.tabTemps.size(); i++) {
+        for (int i = 0; i < activite.tabTemps.size(); i++)
+        {
             //Calcule les données à mettre pour l'axe X
             distance = (float) activite.calculerDistance(0, i);
 
-            if(temps != (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0)) {
+            if (temps != (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0))
+            {
 
                 temps = (float) ((activite.tabTemps.get(i).getEpochSecond() - activite.tabTemps.get(0).getEpochSecond()) / 60.0);
 
                 //Règle la bonne unité de distance pour l'étiquette de l'axe X selon les préférences
-                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+                {
                     distance = (float) (distance * METRE_MILES);
                     unitDist = " (mi)";
 
-                } else {
+                } else
+                {
                     distance /= 1000;
                     unitDist = " (km)";
                 }
 
                 //Règle l'altitude en fonction du temps et de la distance avec les bonnes unités selon les préférences
-                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+                {
                     listAltitudeTemps.add(new Entry(temps, (float) (activite.tabElevation.get(i) * METRE_PIED)));
 
                     listAltitudeDistance.add(new Entry(distance, (float) (activite.tabElevation.get(i) * METRE_PIED)));
-                } else {
+                } else
+                {
                     listAltitudeTemps.add(new Entry(temps, (activite.tabElevation.get(i)).floatValue()));
 
                     listAltitudeDistance.add(new Entry(distance, (activite.tabElevation.get(i)).floatValue()));
@@ -303,11 +312,13 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
                 vitesseMetreSec = activite.tabVitesse.get(i);
 
                 //Règle la vitesse en fonction du temps et de la distance avec les bonnes unités selon les préférences
-                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
+                if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+                {
                     listVitesseTemps.add(new Entry(temps, (float) (vitesseMetreSec * METRE_MILES * 3600)));
 
                     listVitesseDistance.add(new Entry(distance, (float) (vitesseMetreSec * METRE_MILES * 3600)));
-                } else {
+                } else
+                {
                     listVitesseTemps.add(new Entry(temps, (float) (vitesseMetreSec * 3.6)));
 
                     listVitesseDistance.add(new Entry(distance, (float) (vitesseMetreSec * 3.6)));
@@ -340,15 +351,14 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         NumberFormat formatterHauteur = new DecimalFormat("#0");
 
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'ss'sec'").withZone(ZoneId.of("UTC")).format(activite.getDuree().addTo(Instant.ofEpochSecond(0))));
-        txtdebut .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(0)));
-        txtfin .setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(activite.tabTemps.size()-1)));
+        txtdebut.setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(0)));
+        txtfin.setText(DateTimeFormatter.ofPattern("yyyy-MM-dd - HH':'mm':'ss").withZone(ZoneId.systemDefault()).format(activite.tabTemps.get(activite.tabTemps.size() - 1)));
 
         //Affiche la distance selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() * METRE_MILES) + "mi");
-        }
-        else
+        } else
         {
             txtDistance.setText(formatterDistance.format(activite.getDistanceMetrique() / 1000) + "km");
         }
@@ -358,28 +368,31 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         {
             txtVitesse.setText("max : " + formatterDistance.format(activite.trouverVitesseMax() * METRE_MILES * 3600) + "mi/h");
             txtVitesseMoyenne.setText("moy : " + formatterDistance.format(activite.getVitesseMoyenne() * METRE_MILES * 3600) + "mi/h");
-        }
-        else
+        } else
         {
             txtVitesse.setText("max : " + formatterDistance.format(activite.trouverVitesseMax() * 3.6) + "km/h");
             txtVitesseMoyenne.setText("moy : " + formatterDistance.format(activite.getVitesseMoyenne() * 3.6) + "km/h");
         }
 
         //Affiche les altitudes selon les préférences
-        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false)) {
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
+        {
             txtAltitudeMax.setText(formatterHauteur.format(activite.getAltitudeMax() * METRE_PIED) + "'");
             txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMin() * METRE_PIED) + "'");
-        } else {
+        } else
+        {
             txtAltitudeMax.setText(formatterHauteur.format(activite.getAltitudeMax()) + "m");
             txtAltitudeMin.setText(formatterHauteur.format(activite.getAltitudeMin()) + "m");
         }
 
         //Affiche les dénivelé selon les préférences
-        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false)) {
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
+        {
             txtDenivelePos.setText(formatterHauteur.format(activite.getDenivelePositif() * METRE_PIED) + "'");
             txtDeniveleNeg.setText(formatterHauteur.format(activite.getDeniveleNegatif() * METRE_PIED) + "'");
 
-        } else {
+        } else
+        {
             txtDenivelePos.setText(formatterHauteur.format(activite.getDenivelePositif()) + "m");
             txtDeniveleNeg.setText(formatterHauteur.format(activite.getDeniveleNegatif()) + "m");
         }
@@ -388,48 +401,56 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         startActivity(new Intent(ControleurPostActivite.this, ControleurHistorique.class));
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         mapView.onStart();
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mapView.onPause();
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
         super.onStop();
         mapView.onStop();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         mapView.onLowMemory();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
         mapView.onDestroy();
     }

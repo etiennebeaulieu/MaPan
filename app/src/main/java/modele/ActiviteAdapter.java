@@ -21,12 +21,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ActiviteAdapter extends ArrayAdapter<Activite> {
+public class ActiviteAdapter extends ArrayAdapter<Activite>
+{
 
     private Context mContext;
     private int mResource;
 
-    public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
+    public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects)
+    {
         super(context, resource, objects);
         this.mContext = context;
         this.mResource = resource;
@@ -34,7 +36,8 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
+    {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         NumberFormat formatter = new DecimalFormat("#0.00");
         Activite activite = getItem(position);
@@ -48,17 +51,17 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
         TextView txtDistance = convertView.findViewById(R.id.textViewDistance);
 
 
-            iconSport.setImageResource(getItem(position).getSport().getImage());
-            txtNom.setText(getItem(position).getNom());
-            txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.systemDefault()).format(getItem(position).getDate()));
-            txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
-            if (mContext.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
-            {
-                txtDistance.setText(formatter.format((getItem(position).getDistanceMetrique()/1000) *0.621371) + "mi");
-            } else
-            {
-                txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique() / 1000) + "km");
-           }
+        iconSport.setImageResource(getItem(position).getSport().getImage());
+        txtNom.setText(getItem(position).getNom());
+        txtDate.setText(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.CANADA_FRENCH).withZone(ZoneId.systemDefault()).format(getItem(position).getDate()));
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(getItem(position).getDuree().addTo(Instant.ofEpochSecond(0))));
+        if (mContext.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
+            txtDistance.setText(formatter.format((getItem(position).getDistanceMetrique() / 1000) * 0.621371) + "mi");
+        } else
+        {
+            txtDistance.setText(formatter.format(getItem(position).getDistanceMetrique() / 1000) + "km");
+        }
         return convertView;
     }
 }

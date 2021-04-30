@@ -25,7 +25,8 @@ import modele.Fichier;
 import modele.Sport;
 
 //Classe contenant les méthodes qui controlent le fichier .xml de la fenêtre servant à ajouter une activité.
-public class ControleurAjouterActivite extends AppCompatActivity {
+public class ControleurAjouterActivite extends AppCompatActivity
+{
 
     //Champ de texte pour le nom de l'activité à ajouter
     private EditText editTextNom;
@@ -44,7 +45,8 @@ public class ControleurAjouterActivite extends AppCompatActivity {
     private ActiviteAdapter adapter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         //On associe chaque élément de code à leur équivalent du fichier .xml correspondant avec le controleur.
@@ -60,14 +62,17 @@ public class ControleurAjouterActivite extends AppCompatActivity {
 
         adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
 
-        if (adapter.getContext().getSharedPreferences("Preferences", MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
+        if (adapter.getContext().getSharedPreferences("Preferences", MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
             editTextDistance.setHint("- - . - - mi");
-        } else {
+        } else
+        {
             editTextDistance.setHint("- - . - - km");
         }
     }
 
-    public void choisirDate(View view) {
+    public void choisirDate(View view)
+    {
         //On instancie un calendrier. Puis, on instancie la date courante(année/mois/jour)
         Calendar c = Calendar.getInstance();
         int selectedYear = c.get(Calendar.YEAR);
@@ -90,17 +95,15 @@ public class ControleurAjouterActivite extends AppCompatActivity {
 
     //Cette méthode s'occupe de créer l'activité à ajouter après avoir vérifié que ses composantes soient conformes.
     //Par contre, si une ou plusieurs des composantes ne sont pas conformes, elle affiche un message d'erreur à l'utilisateur afin qu'il corrige le problème.
-    public void confirmer(View view) {
+    public void confirmer(View view)
+    {
         //Vérifier si tout est conforme avant de créer l'activité à ajouter.
-        if (adapter.getContext().getSharedPreferences("Preferences", MODE_PRIVATE).getBoolean("impérial pour distance", false)) {
-            if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null)))
-                    && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null)))
-                    && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0")))
-                    && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals(".")))) {
+        if (adapter.getContext().getSharedPreferences("Preferences", MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
+            if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null))) && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null))) && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0"))) && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals("."))))
+            {
                 double distance = Double.valueOf(editTextDistance.getText().toString()) / 0.621371;
-                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200),
-                        Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()),
-                        distance);
+                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()), distance);
 
                 //On enregistre l'activité
                 Fichier.enregistrer(ControleurAjouterActivite.this, activiteAjoutee);
@@ -109,7 +112,8 @@ public class ControleurAjouterActivite extends AppCompatActivity {
                 startActivity(new Intent(ControleurAjouterActivite.this, ControleurHistorique.class));
             }
             //Si un des éléments vérifiés plus haut est incorforme, on affiche un message d'erreur en indiquant à l'utilisateur quel élément était en faute et ce qu'il doit faire afin de remédier au problème.
-            else {
+            else
+            {
                 //Ici on crée la variable String nécessaire pour chacun message en la laissant vide
                 String message = "";
 
@@ -120,37 +124,41 @@ public class ControleurAjouterActivite extends AppCompatActivity {
                 builder.setView(input);
 
                 //On vérifie le type d'erreur individuellement et on crée un message personnalisé pour chaque type d'erreur.
-                if ((editTextNom.getText().toString().isEmpty() || editTextNom.getText().toString().equals(null))) {
+                if ((editTextNom.getText().toString().isEmpty() || editTextNom.getText().toString().equals(null)))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de nom. Veuillez insérer un nom.";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if ((editTextDate.getText().toString().isEmpty()) || ((editTextDate.getText().toString().equals(null)))) {
+                } else if ((editTextDate.getText().toString().isEmpty()) || ((editTextDate.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de date ou sa date est inscrite incorrectement. Veuillez inscrire une date. (ex: 2020-9-6)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if (((editTextDuree.getText().toString().contains(":")) || (editTextDuree.getText().toString().equals("0")) || (editTextDuree.getText().toString().isEmpty()) || (editTextDuree.getText().toString().equals(null)))) {
+                } else if (((editTextDuree.getText().toString().contains(":")) || (editTextDuree.getText().toString().equals("0")) || (editTextDuree.getText().toString().isEmpty()) || (editTextDuree.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de durée ou la durée est inscrite incorrectement. Veuillez inscrire une durée en minutes.(ex: 90)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if (((editTextDistance.getText().toString().equals(".")) || (editTextDistance.getText().toString().isEmpty()) || (editTextDistance.getText().toString().equals(null)))) {
+                } else if (((editTextDistance.getText().toString().equals(".")) || (editTextDistance.getText().toString().isEmpty()) || (editTextDistance.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de distance parcourue ou la distance est inscrite incorrectement. Veuillez inscrire une distance en kilomètres(ex: 4.55)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
                 }
             }
-        }
-        else{
-            if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null)))
-                    && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null)))
-                    && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0")))
-                    && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals(".")))) {
-                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200),
-                        Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()),
-                        Double.valueOf(editTextDistance.getText().toString()));
+        } else
+        {
+            if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null))) && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null))) && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0"))) && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals("."))))
+            {
+                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()), Double.valueOf(editTextDistance.getText().toString()));
 
 
                 //On enregistre l'activité
@@ -160,7 +168,8 @@ public class ControleurAjouterActivite extends AppCompatActivity {
                 startActivity(new Intent(ControleurAjouterActivite.this, ControleurHistorique.class));
             }
             //Si un des éléments vérifiés plus haut est incorforme, on affiche un message d'erreur en indiquant à l'utilisateur quel élément était en faute et ce qu'il doit faire afin de remédier au problème.
-            else {
+            else
+            {
                 //Ici on crée la variable String nécessaire pour chacun message en la laissant vide
                 String message = "";
 
@@ -171,24 +180,32 @@ public class ControleurAjouterActivite extends AppCompatActivity {
                 builder.setView(input);
 
                 //On vérifie le type d'erreur individuellement et on crée un message personnalisé pour chaque type d'erreur.
-                if ((editTextNom.getText().toString().isEmpty() || editTextNom.getText().toString().equals(null))) {
+                if ((editTextNom.getText().toString().isEmpty() || editTextNom.getText().toString().equals(null)))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de nom. Veuillez insérer un nom.";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if ((editTextDate.getText().toString().isEmpty()) || ((editTextDate.getText().toString().equals(null)))) {
+                } else if ((editTextDate.getText().toString().isEmpty()) || ((editTextDate.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de date ou sa date est inscrite incorrectement. Veuillez inscrire une date. (ex: 2020-9-6)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if (((editTextDuree.getText().toString().contains(":")) || (editTextDuree.getText().toString().equals("0")) || (editTextDuree.getText().toString().isEmpty()) || (editTextDuree.getText().toString().equals(null)))) {
+                } else if (((editTextDuree.getText().toString().contains(":")) || (editTextDuree.getText().toString().equals("0")) || (editTextDuree.getText().toString().isEmpty()) || (editTextDuree.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de durée ou la durée est inscrite incorrectement. Veuillez inscrire une durée en minutes.(ex: 90)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
-                } else if (((editTextDistance.getText().toString().equals(".")) || (editTextDistance.getText().toString().isEmpty()) || (editTextDistance.getText().toString().equals(null)))) {
+                } else if (((editTextDistance.getText().toString().equals(".")) || (editTextDistance.getText().toString().isEmpty()) || (editTextDistance.getText().toString().equals(null))))
+                {
                     message = "L'activité que vous tentez de créer ne possède pas de distance parcourue ou la distance est inscrite incorrectement. Veuillez inscrire une distance en kilomètres(ex: 4.55)";
-                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) -> {
+                    builder.setTitle("Attention!").setMessage(message).setPositiveButton("Confirmer", (dialog, which) ->
+                    {
                         dialog.dismiss();
                     }).show();
                 }
@@ -197,7 +214,8 @@ public class ControleurAjouterActivite extends AppCompatActivity {
     }
 
     //Permet de fermer la fenêtre de création d'une activité à ajouter si on ne veut pas sauvegarder les changements.
-    public void annuler(View view) {
+    public void annuler(View view)
+    {
         startActivity(new Intent(ControleurAjouterActivite.this, ControleurHistorique.class));
     }
 }

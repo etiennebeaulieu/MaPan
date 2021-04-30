@@ -19,7 +19,8 @@ import modele.Activite;
 import modele.ActiviteAdapter;
 import modele.Fichier;
 
-public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class ControleurHistorique extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener
+{
 
     //Affichage liste des activités
     private ListView historique_list;
@@ -28,7 +29,8 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
     private ActiviteAdapter adapter;
 
 
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.historique);
@@ -36,12 +38,15 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         adapter = new ActiviteAdapter(this, R.layout.list_row, Fichier.getListeActivites());
         historique_list.setAdapter(adapter);
 
-        historique_list.setOnItemClickListener((parent, view, position, id) -> {
-            if(((Activite)historique_list.getItemAtPosition(position)).tabTemps != null){
+        historique_list.setOnItemClickListener((parent, view, position, id) ->
+        {
+            if (((Activite) historique_list.getItemAtPosition(position)).tabTemps != null)
+            {
                 Intent intent = new Intent(ControleurHistorique.this, ControleurPostActivite.class);
                 intent.putExtra("activité", (Activite) historique_list.getItemAtPosition(position));
                 startActivity(intent);
-            }else{
+            } else
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
                 builder.setTitle("Impossible d'ouvrir l'activité").setMessage("L'activité doit avoir des données de localisation pour afficher les statistique").
@@ -55,44 +60,53 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         adapter.notifyDataSetChanged();
     }
 
-    public void trierListeDate() {
+    public void trierListeDate()
+    {
         Fichier.getListeActivites().sort(Comparator.comparing(Activite::getDate));
         adapter.notifyDataSetChanged();
     }
 
-    public void trierListeDuree() {
+    public void trierListeDuree()
+    {
         Fichier.getListeActivites().sort(Comparator.comparing(Activite::getDuree));
         adapter.notifyDataSetChanged();
     }
 
-    public void trierListeDistance() {
+    public void trierListeDistance()
+    {
         Fichier.getListeActivites().sort(Comparator.comparingDouble(Activite::getDistanceMetrique).reversed());
         adapter.notifyDataSetChanged();
     }
 
-    public void trierListeNom() {
+    public void trierListeNom()
+    {
         Fichier.getListeActivites().sort(Comparator.comparing(Activite::getNom));
         adapter.notifyDataSetChanged();
     }
 
-    public void trierListeSport() {
+    public void trierListeSport()
+    {
         Fichier.getListeActivites().sort(Comparator.comparing(Activite::getSport));
         adapter.notifyDataSetChanged();
     }
 
-    public void ouvrirAccueil(View view) {
+    public void ouvrirAccueil(View view)
+    {
         startActivity(new Intent(ControleurHistorique.this, ControleurAccueil.class));
     }
 
-    public void ouvrirModifier(View view) {
+    public void ouvrirModifier(View view)
+    {
         startActivity(new Intent(ControleurHistorique.this, ControleurHistoriqueModifier.class));
     }
 
-    public void ouvrirParametre(View view) {
+    public void ouvrirParametre(View view)
+    {
         startActivity(new Intent(ControleurHistorique.this, ControleurParametre.class));
     }
 
-    public void afficherMenuTri(View view) {
+    public void afficherMenuTri(View view)
+    {
         PopupMenu menuTri = new PopupMenu(this, view);
         menuTri.setOnMenuItemClickListener(this);
         MenuInflater inflater = menuTri.getMenuInflater();
@@ -102,15 +116,18 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
 
     }
 
-    public void ajouterActivite(View view) {
+    public void ajouterActivite(View view)
+    {
         startActivity(new Intent(ControleurHistorique.this, ControleurAjouterActivite.class));
     }
 
     //Vérifie quel trie faire selon ce que l'utilisateur a choisi
     @Override
-    public boolean onMenuItemClick(MenuItem item) {
+    public boolean onMenuItemClick(MenuItem item)
+    {
         boolean retour = false;
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case R.id.triNom:
                 trierListeNom();
                 retour = true;

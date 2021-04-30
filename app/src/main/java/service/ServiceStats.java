@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 import controleur.ControleurNouvelleActivite;
 
-public class ServiceStats extends Service {
+public class ServiceStats extends Service
+{
     public static MutableLiveData<Double> distance;
     public static MutableLiveData<Double> vitesseMoyenne;
     public static MutableLiveData<Double> vitesseActuelle;
@@ -22,7 +23,8 @@ public class ServiceStats extends Service {
     ArrayList<Double> deniveleList;
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
 
         distance = new MutableLiveData<>();
         vitesseMoyenne = new MutableLiveData<>();
@@ -32,7 +34,8 @@ public class ServiceStats extends Service {
         altitude = new MutableLiveData<>();
         deniveleList = new ArrayList<>();
 
-        if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS")) {
+        if (intent != null && intent.getAction().equals("ACTION_CALCULER_STATS"))
+        {
             instancierValeur();
             envoyerStats();
         }
@@ -40,29 +43,35 @@ public class ServiceStats extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void instancierValeur() {
+    public void instancierValeur()
+    {
         double d = 0;
-        for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistance){
-            d+=dx;
+        for (double dx : ControleurNouvelleActivite.activiteEnCours.tabDistance)
+        {
+            d += dx;
         }
         distance.setValue(d);
         vitesseMoyenne.setValue(ControleurNouvelleActivite.activiteEnCours.calculerVitesseMoyenne());
-        vitesseActuelle.setValue(ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(ControleurNouvelleActivite.activiteEnCours.tabVitesse.size()-1));
-            duree.setValue(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
+        vitesseActuelle.setValue(ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(ControleurNouvelleActivite.activiteEnCours.tabVitesse.size() - 1));
+        duree.setValue(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
         calculerDenivele();
         denivele.setValue(deniveleList);
         altitude.setValue(ControleurNouvelleActivite.activiteEnCours.getTabElevation().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
     }
 
-    public void calculerDenivele() {
+    public void calculerDenivele()
+    {
 
         double montee = 0;
         double descente = 0;
 
-        for (int i = 0; i < ControleurNouvelleActivite.activiteEnCours.tabElevation.size() - 1; i++) {
-            if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) < ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1)) {
+        for (int i = 0; i < ControleurNouvelleActivite.activiteEnCours.tabElevation.size() - 1; i++)
+        {
+            if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) < ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1))
+            {
                 montee += ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1) - ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i);
-            } else if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) > ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1)) {
+            } else if (ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) > ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1))
+            {
                 descente += ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i) - ControleurNouvelleActivite.activiteEnCours.tabElevation.get(i + 1);
             }
         }
@@ -71,7 +80,8 @@ public class ServiceStats extends Service {
         deniveleList.add(1, descente);
     }
 
-    private void envoyerStats(){
+    private void envoyerStats()
+    {
         Intent intent = new Intent();
         intent.setAction("DERNIERE_STATS");
         intent.putExtra("Distance", distance.getValue());
@@ -85,7 +95,8 @@ public class ServiceStats extends Service {
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return null;
     }
 }

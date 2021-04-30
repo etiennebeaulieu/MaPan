@@ -73,7 +73,8 @@ import service.ServiceLocation;
 import service.ServiceStats;
 
 //Classe s'occupant de gérer les données et statistiques pendant l'activité ainsi que de les enregistrer lors de l'achèvement de l'activité.
-public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback {
+public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCallback
+{
 
     public static final double METRE_PIED = 3.28084;
     public static final double METRE_MILES = 0.000621371;
@@ -112,7 +113,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activite_en_cours);
@@ -135,15 +137,17 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         behavior = BottomSheetBehavior.from(bottomSheet);
         LinearLayout interieur = findViewById(R.id.interieur);
 
-        interieur.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        interieur.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
             @Override
-            public void onGlobalLayout() {
+            public void onGlobalLayout()
+            {
                 interieur.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 View cache = interieur.getChildAt(1);
                 behavior.setPeekHeight(cache.getTop());
                 behavior.setGestureInsetBottomIgnored(false);
                 behavior.setFitToContents(false);
-                behavior.setExpandedOffset(bottomSheet.getHeight()-interieur.getHeight());
+                behavior.setExpandedOffset(bottomSheet.getHeight() - interieur.getHeight());
                 behavior.setHalfExpandedRatio(0.4f);
             }
         });
@@ -159,49 +163,51 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         mapView.onCreate(savedInstanceState);
 
         //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (Build.VERSION.SDK_INT > 28) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (Build.VERSION.SDK_INT > 28)
+        {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 mapView.getMapAsync(this);
-             else
-                 demanderPermissionLocation29();
+            else demanderPermissionLocation29();
 
-        } else {
+        } else
+        {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 mapView.getMapAsync(this);
-            else
-                demanderPermissionLocation();
+            else demanderPermissionLocation();
 
         }
 
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
 
-       if(!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
-           //Créer le graphique et instancier tout ce qui doit être instancier
-           chart = findViewById(R.id.chart);
-           data = new LineData();
-           chart.setData(data);
-           Graphique.modifierGraphique("Graphique", chart);
-           chart.getLegend().setEnabled(false);
-           //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
-           setAltitudeTemps = Graphique.createSetAltitude(true);
-           setAltitudeDistance = Graphique.createSetAltitude(false);
-           setVitesseTemps = Graphique.createSetVitesse(true);
-           setVitesseDistance = Graphique.createSetVitesse(false);
+        if (!(this.getIntent().getAction().equals(Intent.ACTION_MAIN)))
+        {
+            //Créer le graphique et instancier tout ce qui doit être instancier
+            chart = findViewById(R.id.chart);
+            data = new LineData();
+            chart.setData(data);
+            Graphique.modifierGraphique("Graphique", chart);
+            chart.getLegend().setEnabled(false);
+            //4 différent sets de données pour les 4 possibilité, mais seulement 2 d'afficher à la fois
+            setAltitudeTemps = Graphique.createSetAltitude(true);
+            setAltitudeDistance = Graphique.createSetAltitude(false);
+            setVitesseTemps = Graphique.createSetVitesse(true);
+            setVitesseDistance = Graphique.createSetVitesse(false);
 
-           //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
-               data.addDataSet(setAltitudeTemps);
-               data.addDataSet(setVitesseTemps);
-               data.addDataSet(setAltitudeDistance);
-               data.addDataSet(setVitesseDistance);
+            //Possiblement rajouter une option dans les paramètre ou simplement checkbox pour choisir l'axe x du graphique
+            data.addDataSet(setAltitudeTemps);
+            data.addDataSet(setVitesseTemps);
+            data.addDataSet(setAltitudeDistance);
+            data.addDataSet(setVitesseDistance);
 
-       }
+        }
 
 
     }
 
     //Lance le service de localisation du téléphone
-    private void lancerServiceLocation(String action) {
+    private void lancerServiceLocation(String action)
+    {
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.setAction(action);
 
@@ -210,47 +216,54 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     //Pop-up pour demander la permission d'utiliser la localisation de l'appareil
-    private void demanderPermissionLocation() {
+    private void demanderPermissionLocation()
+    {
         //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
+        {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application").setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1)).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
+        } else
+        {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
     }
 
     //Pop-up alternatif pour demander la permission d'utiliser la localisation de l'appareil
-    private void demanderPermissionLocation29(){
+    private void demanderPermissionLocation29()
+    {
         //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+        {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application").setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2)).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
+        } else
+        {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
         }
     }
 
     //Gère la réponse à la permissions de localisation
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 1)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
+            } else
+            {
                 Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
             }
         }
 
-        if (requestCode == 2) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == 2)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
+            } else
+            {
                 Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
             }
         }
@@ -258,7 +271,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onMapReady(@NonNull MapboxMap mapboxMap) {
+    public void onMapReady(@NonNull MapboxMap mapboxMap)
+    {
         this.mapboxMap = mapboxMap;
         //Importe notre style de map
         Style.Builder style = new Style.Builder().fromUri("mapbox://styles/etiennebeaulieu2/ckksiyxzv188t18oa1u88mp2c");
@@ -271,12 +285,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             style1.addSource(geoJsonSource);
 
             //Affichage du tracé GPS
-            style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(
-                    PropertyFactory.lineWidth(4f),
-                    PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
-                    PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
-                    PropertyFactory.lineColor(Color.parseColor("#FFF44336"))
-            ));
+            style1.addLayer(new LineLayer("linelayer", "geojson-source").withProperties(PropertyFactory.lineWidth(4f), PropertyFactory.lineCap(Property.LINE_CAP_ROUND), PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND), PropertyFactory.lineColor(Color.parseColor("#FFF44336"))));
 
 
             //Pointeur de localisation personnalisé
@@ -290,9 +299,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
             //Paramètre la camera par rapport à la map
             locationComponent = mapboxMap.getLocationComponent();
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions
-                            .builder(ControleurEnCours.this, style1).locationComponentOptions(customLocationComponentOptions).build());
+            locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(ControleurEnCours.this, style1).locationComponentOptions(customLocationComponentOptions).build());
             locationComponent.setLocationComponentEnabled(true);
             locationComponent.setCameraMode(cameraMode);
             locationComponent.setRenderMode(renderMode);
@@ -303,12 +310,11 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     @SuppressLint("MissingPermission")
-    private void initLocationEngine() {
+    private void initLocationEngine()
+    {
         locationEngine = LocationEngineProvider.getBestLocationEngine(this);
 
-        LocationEngineRequest request = new LocationEngineRequest.Builder(INTERVAL_DEFAUT_MILLIS)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
+        LocationEngineRequest request = new LocationEngineRequest.Builder(INTERVAL_DEFAUT_MILLIS).setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY).setMaxWaitTime(TEMPS_ATTENTE_DEFAUT).build();
 
 
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
@@ -316,27 +322,32 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     //S'occupe de faire le tracé du parcours de l'utilisateur.
-    private static class AccueilLocationCallback
-            implements LocationEngineCallback<LocationEngineResult> {
+    private static class AccueilLocationCallback implements LocationEngineCallback<LocationEngineResult>
+    {
 
         private final WeakReference<ControleurEnCours> activityWeakReference;
 
-        AccueilLocationCallback(ControleurEnCours activity) {
+        AccueilLocationCallback(ControleurEnCours activity)
+        {
             this.activityWeakReference = new WeakReference<>(activity);
         }
 
         @Override
-        public void onSuccess(LocationEngineResult result) {
+        public void onSuccess(LocationEngineResult result)
+        {
             ControleurEnCours activity = activityWeakReference.get();
 
-            if (activity != null) {
+            if (activity != null)
+            {
                 Location location = result.getLastLocation();
 
-                if (location == null) {
+                if (location == null)
+                {
                     return;
                 }
 
-                if (activity.mapboxMap != null && result.getLastLocation() != null) {
+                if (activity.mapboxMap != null && result.getLastLocation() != null)
+                {
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
                     activity.updateTracer();
 
@@ -345,52 +356,56 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         }
 
         @Override
-        public void onFailure(@NonNull Exception exception) {
+        public void onFailure(@NonNull Exception exception)
+        {
             Log.d("LocationChangeActivity", exception.getLocalizedMessage());
             ControleurEnCours activity = activityWeakReference.get();
-            if (activity != null) {
-                Toast.makeText(activity, exception.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
+            if (activity != null)
+            {
+                Toast.makeText(activity, exception.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     //On remplis les tableaux de données avec celles enregistrées en temps réel.
-    private static void setTabGPS(Location location) {
+    private static void setTabGPS(Location location)
+    {
         ControleurNouvelleActivite.activiteEnCours.getTabLatitude().add(location.getLatitude());
         ControleurNouvelleActivite.activiteEnCours.getTabLongitude().add(location.getLongitude());
         ControleurNouvelleActivite.activiteEnCours.getTabElevation().add(location.getAltitude());
         ControleurNouvelleActivite.activiteEnCours.getTabTemps().add(Instant.ofEpochMilli(location.getTime()));
-        ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0),
-                ControleurNouvelleActivite.activiteEnCours.tabTemps.get(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1)));
+        ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0), ControleurNouvelleActivite.activiteEnCours.tabTemps.get(ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1)));
         ControleurNouvelleActivite.activiteEnCours.listeCoordonnee.add(Point.fromLngLat(location.getLongitude(), location.getLatitude()));
-        if(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()>1)
-            ControleurNouvelleActivite.activiteEnCours.tabDistance.add(ControleurNouvelleActivite.activiteEnCours.calculerDistance(ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-2, ControleurNouvelleActivite.activiteEnCours.tabTemps.size()-1));
-        ControleurNouvelleActivite.activiteEnCours.tabVitesse.add((double)location.getSpeed());
+        if (ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() > 1)
+            ControleurNouvelleActivite.activiteEnCours.tabDistance.add(ControleurNouvelleActivite.activiteEnCours.calculerDistance(ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 2, ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1));
+        ControleurNouvelleActivite.activiteEnCours.tabVitesse.add((double) location.getSpeed());
 
 
     }
 
     //Mettre à jour le tracer selon les nouveaux point GPS
-    private void updateTracer(){
+    private void updateTracer()
+    {
         lineString = LineString.fromLngLats(ControleurNouvelleActivite.activiteEnCours.listeCoordonnee);
         geoJsonSource.setGeoJson(lineString);
     }
 
     //Centre la caméra sur la position de l'utilisateur
-    public void centrer(View view){
+    public void centrer(View view)
+    {
         Location lastKnownLocation = mapboxMap.getLocationComponent().getLastKnownLocation();
 
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 15), 1000);
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), 15), 1000);
     }
 
     //Gère le bouton pause de la fenêtre. Si l'activité est mise en pause,
     // on arrête d'enregistrer les données puis on recommence lorsque l'utilisateur clique sur "play".
-    public void pause(View view){
+    public void pause(View view)
+    {
 
 
-        if(!fabOuvert){
+        if (!fabOuvert)
+        {
             lancerServiceLocation("ACTION_PAUSE_SERVICE");
             locationEngine.removeLocationUpdates(callback);
             fabOuvert = true;
@@ -400,9 +415,9 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
             fabEnregistrer.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
             fabSupprimer.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
 
-            System.out.println(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
-        }
-        else{
+            System.out.println(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
+        } else
+        {
             initLocationEngine();
             lancerServiceLocation("ACTION_COMMENCER_SERVICE");
             fabOuvert = false;
@@ -417,15 +432,16 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     //Enregistre l'activité lorsque l'utilisateur la met en pause et sélectionne l'icone "Enregistrer".
-    public void enregistrer(View view){
+    public void enregistrer(View view)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Enregistrer").setMessage("Voulez-vous vraiment enregistrer l'activité?").setPositiveButton("Enregistrer", (dialog, which) ->
         {
             lancerServiceLocation("ACTION_STOP_SERVICE");
-            ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1));
+            ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique(ControleurNouvelleActivite.activiteEnCours.calculerDistance(0, ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1));
 
-            ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size()-1)));
+            ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
 
             Fichier.enregistrer(this, ControleurNouvelleActivite.activiteEnCours);
             startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
@@ -433,7 +449,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     //Supprime l'activité lorsque l'utilisatuer la met en pause et sélectionne l'icone "Supprimer".
-    public void supprimer(View view){
+    public void supprimer(View view)
+    {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Supprimer").setMessage("Voulez-vous vraiment supprimer l'activité?").setPositiveButton("Supprimer", (dialog, which) ->
@@ -444,12 +461,15 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     }
 
     //Classe s'occupant des méthodes accomplies pour le graphique.
-    class ReceveurLocation extends BroadcastReceiver{
+    class ReceveurLocation extends BroadcastReceiver
+    {
 
         //S'occupe d'aller chercher toutes les données nécessaire à la création du graphique en fonction de toutes les préférences de l'utilisateur.
         @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("DERNIERE_LOCATION")) {
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent.getAction().equals("DERNIERE_LOCATION"))
+            {
                 setTabGPS((Location) intent.getExtras().get("Location"));
 
                 nbrPoint = ControleurNouvelleActivite.activiteEnCours.tabTemps.size() - 1;
@@ -459,18 +479,18 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 //set le temps qui sera utilisé pour le graphique.
                 double temps = (double) ControleurNouvelleActivite.activiteEnCours.tabTemps.get(nbrPoint).getEpochSecond() - ControleurNouvelleActivite.activiteEnCours.tabTemps.get(0).getEpochSecond();
                 double distance = 0;
-                for(double dx: ControleurNouvelleActivite.activiteEnCours.tabDistance)
+                for (double dx : ControleurNouvelleActivite.activiteEnCours.tabDistance)
                 {
                     distance += dx;
                 }
                 //On vérifie si la préférence "impériale pour distance" a été sélectionnée par l'utilisateur avant de débuter l'activité. Puis on change les unités du graphique en fonction.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
                 {
-                    distance =  distance*METRE_MILES;
+                    distance = distance * METRE_MILES;
                     unitDist = " (mi)";
 
-                }
-                else{
+                } else
+                {
                     //mettre la distance en km
                     distance /= 1000;
                     unitDist = " (km)";
@@ -483,10 +503,9 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 //Vérifie au fur et à mesure la préférence "impériale pour altitude" et ajoute l'altitude dans le graphique en fonction du temps et dans celui en fonction de la distance.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
                 {
-                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint)*METRE_PIED, chart, "setAltitudeTemps");
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint)*METRE_PIED, chart, "setAltitudeDistance");
-                }
-                else
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint) * METRE_PIED, chart, "setAltitudeTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint) * METRE_PIED, chart, "setAltitudeDistance");
+                } else
                 {
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint), chart, "setAltitudeTemps");
                     Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabElevation.get(nbrPoint), chart, "setAltitudeDistance");
@@ -495,16 +514,17 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 //Vérifie au fur et à mesure la préférence "impérial pour vitesse" et ajoute la vitesse dans le graphique en fonction du temps et dans celui en fonction de la distance.
                 if (context.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
                 {
-                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES*3600, chart, "setVitesseTemps");
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES*3600, chart, "setVitesseDistance");
-                }
-                else{
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES * 3600, chart, "setVitesseTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES * 3600, chart, "setVitesseDistance");
+                } else
+                {
                     Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3600, chart, "setVitesseTemps");
                     Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3600, chart, "setVitesseDistance");
                 }
 
                 //
-                if (!choixAxeX.isChecked()) {
+                if (!choixAxeX.isChecked())
+                {
                     //Change l'étiquette de l'axe X
                     labelX.setText("Temps (min)");
 
@@ -522,7 +542,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
                     //Limite le range d'affichage jusqu'à la dernière valeur
                     chart.setVisibleXRange(0f, (float) temps);
-                } else {
+                } else
+                {
                     //Change l'étiquette de l'axe X
                     labelX.setText("Distance" + unitDist);
 
@@ -539,7 +560,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     setVitesseTemps.setDrawValues(false);
 
                     //Limite le range d'affichage jusqu'à la dernière valeur
-                    chart.setVisibleXRange(0f, (float)distance);
+                    chart.setVisibleXRange(0f, (float) distance);
                 }
 
 
@@ -547,8 +568,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                 intent2.setAction("ACTION_CALCULER_STATS");
                 context.startService(intent2);
 
-            }
-             else if(intent.getAction().equals("DERNIERE_STATS")){
+            } else if (intent.getAction().equals("DERNIERE_STATS"))
+            {
                 ControleurNouvelleActivite.activiteEnCours.setDistanceMetrique((Double) intent.getExtras().get("Distance"));
                 ControleurNouvelleActivite.activiteEnCours.setVitesseMoyenne((Double) intent.getExtras().get("Vitesse moyenne"));
                 ControleurNouvelleActivite.activiteEnCours.setVitesseActuelle((Double) intent.getExtras().get("Vitesse actuelle"));
@@ -587,8 +608,7 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() * METRE_MILES) + "mi");
-        }
-        else
+        } else
         {
             txtDistance.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getDistanceMetrique() / 1000) + "km");
         }
@@ -596,21 +616,19 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         //Affiche les vitesse selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
         {
-            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelle() * METRE_MILES *3600) + "mi/h");
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMoyenne() * METRE_MILES*3600) + "mi/h");
-        }
-        else
+            txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelle() * METRE_MILES * 3600) + "mi/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMoyenne() * METRE_MILES * 3600) + "mi/h");
+        } else
         {
             txtVitesse.setText(formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseActuelle() * 3.6) + "km/h");
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMoyenne()*3.6) + "km/h");
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(ControleurNouvelleActivite.activiteEnCours.getVitesseMoyenne() * 3.6) + "km/h");
         }
 
         //Affiche les altitudes selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour altitude", false))
         {
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelle() * METRE_PIED) + "'");
-        }
-        else
+        } else
         {
             txtAltitude.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getAltitudeActuelle()) + "m");
         }
@@ -618,60 +636,67 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
         //Affiche les dénivelé selon les préférences
         if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositif()* METRE_PIED) + "'");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatif()* METRE_PIED) + "'");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositif() * METRE_PIED) + "'");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatif() * METRE_PIED) + "'");
 
-        }
-        else
+        } else
         {
-            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositif() ) + "m");
-            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatif() ) + "m");
+            txtDenivelePos.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDenivelePositif()) + "m");
+            txtDeniveleNeg.setText(formatterHauteur.format(ControleurNouvelleActivite.activiteEnCours.getDeniveleNegatif()) + "m");
         }
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
 
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         mapView.onStart();
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         mapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
         mapView.onPause();
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
         super.onStop();
         mapView.onStop();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
         mapView.onLowMemory();
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy()
+    {
         super.onDestroy();
         mapView.onDestroy();
     }

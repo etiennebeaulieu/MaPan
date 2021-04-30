@@ -14,11 +14,13 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-public class Graphique{
+public class Graphique
+{
 
 
     // crée les bases du lineChart: les paramètres nécessaires à l'ajout de données en temps réel, définit les axes x et y
-    public static void modifierGraphique(String titre, LineChart chart){
+    public static void modifierGraphique(String titre, LineChart chart)
+    {
         // enable value highlighting
         chart.setDefaultFocusHighlightEnabled(true);
 
@@ -66,15 +68,17 @@ public class Graphique{
     }
 
     // crée un point avec les coordonnées reçues et l'ajoute dans le lineChart
-    public static void ajouterDonnee(double xValue, double yValue, LineChart chart, String nomSet){
+    public static void ajouterDonnee(double xValue, double yValue, LineChart chart, String nomSet)
+    {
         LineData data = chart.getData();
 
-        if(data != null){
+        if (data != null)
+        {
             //Get le bon set selon le paramètre
             LineDataSet set = (LineDataSet) data.getDataSetByLabel(nomSet, true);
 
 
-            set.addEntry(new Entry((float) xValue,(float) yValue));
+            set.addEntry(new Entry((float) xValue, (float) yValue));
 
             //Update la largeur affiché, les donnée, et l'affichage
             chart.setVisibleXRange(0, (float) xValue);
@@ -84,12 +88,11 @@ public class Graphique{
     }
 
     // crée un lineDataSet pour la méthode ajouterDonnee si le LineData n'en possède pas
-    public static LineDataSet createSetAltitude(Boolean isTemps){
+    public static LineDataSet createSetAltitude(Boolean isTemps)
+    {
         LineDataSet set = new LineDataSet(null, "");
-        if(isTemps)
-            set.setLabel("setAltitudeTemps");
-        else
-            set.setLabel("setAltitudeDistance");
+        if (isTemps) set.setLabel("setAltitudeTemps");
+        else set.setLabel("setAltitudeDistance");
 
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -97,9 +100,11 @@ public class Graphique{
         set.setLineWidth(0f);
         set.setFillAlpha(100);
         set.setDrawFilled(true);
-        set.setFillFormatter(new IFillFormatter() {
+        set.setFillFormatter(new IFillFormatter()
+        {
             @Override
-            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider)
+            {
                 return -30f;
             }
         });
@@ -110,12 +115,11 @@ public class Graphique{
         return set;
     }
 
-    public static LineDataSet createSetVitesse(Boolean isTemps){
+    public static LineDataSet createSetVitesse(Boolean isTemps)
+    {
         LineDataSet set = new LineDataSet(null, "");
-        if(isTemps)
-            set.setLabel("setVitesseTemps");
-        else
-            set.setLabel("setVitesseDistance");
+        if (isTemps) set.setLabel("setVitesseTemps");
+        else set.setLabel("setVitesseDistance");
 
 
         set.setAxisDependency(YAxis.AxisDependency.RIGHT);

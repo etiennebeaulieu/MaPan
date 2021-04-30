@@ -47,7 +47,6 @@ public class Activite implements Serializable {
     private double altitudeMin = 0;
     private double altitudeActuelle = 0;
 
-    private Graphique graphique = null;
     public ArrayList<Double> tabLatitude = null;
     public ArrayList<Double> tabLongitude = null;
     //En mètre
@@ -273,20 +272,8 @@ public class Activite implements Serializable {
         return tabElevation;
     }
 
-    public ArrayList<Double> getTabVitesse() {
-        return tabVitesse;
-    }
-
     public ArrayList<Instant> getTabTemps() {
         return tabTemps;
-    }
-
-    public Graphique getGraphique() {
-        return graphique;
-    }
-
-    public void setGraphique(Graphique graphique) {
-        this.graphique = graphique;
     }
 
     private boolean validerNom(String pNom) {

@@ -28,8 +28,6 @@ import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
 import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
-import com.mapbox.android.core.permissions.PermissionsListener;
-import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -44,15 +42,12 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapboxMap mapboxMap;
     private MapView mapView;
     private LocationComponent locationComponent;
-    private Location lastLocation;
-    private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
     private long INTERVAL_DEFAUT_MILLIS = 1000;
     private long TEMPS_ATTENTE_DEFAUT = INTERVAL_DEFAUT_MILLIS*5;
@@ -182,10 +177,6 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
 
         locationEngine.requestLocationUpdates(request, callback, getMainLooper());
         locationEngine.getLastLocation(callback);
-    }
-
-    public Location getLastLocation(){
-        return lastLocation;
     }
 
     private static class AccueilLocationCallback

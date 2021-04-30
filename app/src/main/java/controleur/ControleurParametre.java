@@ -126,21 +126,4 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
             aa1.notifyDataSetChanged();
         }
     }
-
-    public String getNomDefaut(){
-        return nomDefaut;
-    }
-
-    public void choisirTypeDefaut(){
-        String sport = spin_type.getSelectedItem().toString();
-
-        if(!sport.equals(null) && !sport.isEmpty()) {
-            sportDefaut = Sport.valueOf(sport);
-            aa2.notifyDataSetChanged();
-        }
-    }
-
-    public Sport getTypeDefaut(){
-        return sportDefaut;
-    }
 }

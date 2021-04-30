@@ -99,7 +99,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
     private LineDataSet setVitesseDistance = null;
     private LineData data = null;
 
-    protected Boolean graphIsTemps = true;
     protected int nbrPoint = 0;
 
 

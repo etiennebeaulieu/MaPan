@@ -134,8 +134,6 @@ public class ControleurNouvelleActivite extends AppCompatActivity
             /*Vérifie si l'utilisateur a sélectionné un type et inscrit un nom ou si l'un ou l'autre
             * doit être réglé selon la valeur par défaut inscrite dans les paramètres
             * */
-            Editable textNom = nouveau_nom.getText();
-            Object activite = sportSelect;
 
 
             if(!nouveau_nom.getText().toString().equals("") && sportSelect !=null) {
@@ -210,7 +208,8 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         startActivity(new Intent(ControleurNouvelleActivite.this, ControleurParametre.class));
     }
 
-    public void ouvrirAccueil(View view) throws InterruptedException {
+    public void ouvrirAccueil(View view)
+    {
         //Lance l'animation si l'utilisateur retourne à l'accueil
         int cx = (int) getDips(44);
         int cy = (int) background.getHeight() - getDips(44)- 80;

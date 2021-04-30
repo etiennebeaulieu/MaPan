@@ -61,7 +61,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         imperial_pour_tout=(SwitchCompat)findViewById(R.id.imperial_pour_tout);
         imperial_pour_tout.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour tout",false));
         imperial_pour_tout.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
+            //Coche tous les sliders si impérial pour tout est coché
             imperial_pour_distance.setChecked(imperial_pour_tout.isChecked());
             imperial_pour_vitesse.setChecked(imperial_pour_tout.isChecked());
             imperial_pour_altitude.setChecked(imperial_pour_tout.isChecked());
@@ -74,7 +74,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
             editor.putBoolean("impérial pour tout", imperial_pour_tout.isChecked()).apply();
 
         });
-
+            //Change les SharedPreference selon l'état du bouton
         imperial_pour_distance=(SwitchCompat)findViewById(R.id.imperial_pour_distance);
         imperial_pour_distance.setChecked(getSharedPreferences("Preferences", 0).getBoolean("impérial pour distance",false));
         imperial_pour_distance.setOnCheckedChangeListener((buttonView, isChecked) -> editor.putBoolean("impérial pour distance", imperial_pour_distance.isChecked()).apply());
@@ -116,14 +116,5 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
 
     public void ouvrirHistorique(View view){
         startActivity(new Intent(ControleurParametre.this, ControleurHistorique.class));
-    }
-
-    public void choisirNomDefaut(){
-        String nom = spin_nom.getSelectedItem().toString();
-
-        if(!nom.isEmpty() && !nom.equals(null)){
-            nomDefaut = nom;
-            aa1.notifyDataSetChanged();
-        }
     }
 }

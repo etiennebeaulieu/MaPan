@@ -25,7 +25,6 @@ public class ActiviteAdapter extends ArrayAdapter<Activite> {
 
     private Context mContext;
     private int mResource;
-    private boolean isDistanceMetrique = true;
 
     public ActiviteAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Activite> objects) {
         super(context, resource, objects);

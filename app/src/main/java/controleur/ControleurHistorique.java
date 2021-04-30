@@ -1,5 +1,6 @@
 package controleur;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuInflater;
@@ -36,9 +37,17 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         historique_list.setAdapter(adapter);
 
         historique_list.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(ControleurHistorique.this, ControleurPostActivite.class);
-            intent.putExtra("activité", (Activite) historique_list.getItemAtPosition(position));
-            startActivity(intent);
+            if(((Activite)historique_list.getItemAtPosition(position)).tabTemps != null){
+                Intent intent = new Intent(ControleurHistorique.this, ControleurPostActivite.class);
+                intent.putExtra("activité", (Activite) historique_list.getItemAtPosition(position));
+                startActivity(intent);
+            }else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Impossible d'ouvrir l'activité").setMessage("L'activité doit avoir des données de localisation pour afficher les statistique").
+                        setNeutralButton("Ok", ((dialog, which) -> dialog.dismiss())).show();
+            }
+
         });
 
 
@@ -97,6 +106,7 @@ public class ControleurHistorique extends AppCompatActivity implements PopupMenu
         startActivity(new Intent(ControleurHistorique.this, ControleurAjouterActivite.class));
     }
 
+    //Vérifie quel trie faire selon ce que l'utilisateur a choisi
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         boolean retour = false;

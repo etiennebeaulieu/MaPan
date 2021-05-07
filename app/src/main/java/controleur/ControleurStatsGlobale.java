@@ -31,7 +31,7 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
 
     private ArrayAdapter aa;
     private Spinner spin_type;
-    private String[] type = {"Tout", "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
+    private String[] type = {"Tout", "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond", "Autre"};
 
     int nb = 0;
     long duree = 0;
@@ -61,15 +61,16 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
         String s = type[position];
         Fichier.loadActivites(this);
 
+        nb = 0;
+        duree = 0;
+        distance = 0;
+        denivelePositif = 0;
+        distanceMax = 0;
+        vitesseMoy = 0;
 
         for (Activite a : Fichier.getListeActivites())
         {
-            nb = 0;
-            duree = 0;
-            distance = 0;
-            denivelePositif = 0;
-            distanceMax = 0;
-            vitesseMoy = 0;
+
 
             if (s.equals("Tout"))
             {
@@ -111,12 +112,13 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
         TextView txtDistanceMax = findViewById(R.id.plusLongueActivite);
         TextView txtVitesseMoyenne = findViewById(R.id.vitesseMoyenne);
         TextView txtDenivele = findViewById(R.id.denivelePositifTotal);
+        TextView labelVitesseMoyenne = findViewById(R.id.vitMoyenneLabel);
 
 
         NumberFormat formatterDistance = new DecimalFormat("#0.00");
         NumberFormat formatterHauteur = new DecimalFormat("#0");
 
-        txtNbr.setText(nb + "activités");
+        txtNbr.setText(nb + "");
         txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(Duration.ofSeconds(duree).addTo(Instant.ofEpochSecond(0))));
 
         //Affiche la distance selon les préférences
@@ -131,12 +133,17 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
         }
 
         //Affiche les vitesse selon les préférences
-        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+        if(Fichier.getListeActivites().size() > nb) {
+            labelVitesseMoyenne.setText("Vitesse moyenne");
+            if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false)) {
+                txtVitesseMoyenne.setText(formatterDistance.format(vitesseMoy * METRE_MILES * 3600) + "mi/h");
+            } else {
+                txtVitesseMoyenne.setText(formatterDistance.format(vitesseMoy * 3.6) + "km/h");
+            }
+        }else
         {
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(vitesseMoy * METRE_MILES * 3600) + "mi/h");
-        } else
-        {
-            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(vitesseMoy * 3.6) + "km/h");
+            txtVitesseMoyenne.setText("");
+            labelVitesseMoyenne.setText("");
         }
 
         //Affiche les dénivelé selon les préférences

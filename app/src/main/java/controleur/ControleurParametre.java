@@ -26,8 +26,6 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     private Spinner spin_type;
     private ArrayAdapter aa1;
     private ArrayAdapter aa2;
-    private Sport sportDefaut;
-    private String nomDefaut;
     private SwitchCompat imperial_pour_tout;
     private SwitchCompat imperial_pour_distance;
     private SwitchCompat imperial_pour_vitesse;

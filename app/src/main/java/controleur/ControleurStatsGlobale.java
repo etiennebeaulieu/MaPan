@@ -1,15 +1,24 @@
 package controleur;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mapan.R;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import modele.Activite;
 import modele.Fichier;
@@ -17,6 +26,9 @@ import modele.Fichier;
 
 public class ControleurStatsGlobale extends AppCompatActivity implements AdapterView.OnItemSelectedListener
 {
+    public static final double METRE_PIED = 3.28084;
+    public static final double METRE_MILES = 0.000621371;
+
     private ArrayAdapter aa;
     private Spinner spin_type;
     private String[] type = {"Tout", "Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
@@ -89,6 +101,53 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
     public void onNothingSelected(AdapterView<?> parent)
     {
 
+    }
+
+    private void afficher()
+    {
+        TextView txtNbr = findViewById(R.id.nombreActivite);
+        TextView txtDuree = findViewById(R.id.dureeTotale);
+        TextView txtDistance = findViewById(R.id.distanceTotale);
+        TextView txtDistanceMax = findViewById(R.id.plusLongueActivite);
+        TextView txtVitesseMoyenne = findViewById(R.id.vitesseMoyenne);
+        TextView txtDenivele = findViewById(R.id.denivelePositifTotal);
+
+
+        NumberFormat formatterDistance = new DecimalFormat("#0.00");
+        NumberFormat formatterHauteur = new DecimalFormat("#0");
+
+        txtNbr.setText(nb + "activités");
+        txtDuree.setText(DateTimeFormatter.ofPattern("HH'h'mm'min'").withZone(ZoneId.of("UTC")).format(Duration.ofSeconds(duree).addTo(Instant.ofEpochSecond(0))));
+
+        //Affiche la distance selon les préférences
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour distance", false))
+        {
+            txtDistance.setText(formatterDistance.format(distance * METRE_MILES) + "mi");
+            txtDistanceMax.setText(formatterDistance.format(distanceMax * METRE_MILES) + "mi");
+        } else
+        {
+            txtDistance.setText(formatterDistance.format(distance / 1000) + "km");
+            txtDistanceMax.setText(formatterDistance.format(distanceMax / 1000) + "km");
+        }
+
+        //Affiche les vitesse selon les préférences
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour vitesse", false))
+        {
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(vitesseMoy * METRE_MILES * 3600) + "mi/h");
+        } else
+        {
+            txtVitesseMoyenne.setText("moy : " + formatterDistance.format(vitesseMoy * 3.6) + "km/h");
+        }
+
+        //Affiche les dénivelé selon les préférences
+        if (this.getSharedPreferences("Preferences", Context.MODE_PRIVATE).getBoolean("impérial pour denivele", false))
+        {
+            txtDenivele.setText(formatterHauteur.format(denivelePositif * METRE_PIED) + "'");
+
+        } else
+        {
+            txtDenivele.setText(formatterHauteur.format(denivelePositif) + "m");
+        }
     }
 
     public void ouvrirAccueil(View view)

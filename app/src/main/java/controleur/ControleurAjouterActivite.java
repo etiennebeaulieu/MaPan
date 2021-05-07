@@ -17,7 +17,10 @@ import com.example.mapan.R;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Locale;
 
 import modele.Activite;
 import modele.ActiviteAdapter;
@@ -43,6 +46,8 @@ public class ControleurAjouterActivite extends AppCompatActivity
     private Activite activiteAjoutee;
     //adapteur pour l'activité
     private ActiviteAdapter adapter;
+    //nom de chaque sport
+    private String[] sports = {"Course à pied", "Randonnée pédestre", "Vélo", "Raquette", "Ski de randonnée", "Ski alpin", "Patin à glace", "Ski de fond"};
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -54,7 +59,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
         editTextNom = findViewById(R.id.editTextNom);
         editTextDate = findViewById(R.id.editTextDate);
         spinnerSport = (Spinner) findViewById(R.id.spinnerSport);
-        ArrayAdapter aa1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, Sport.values());
+        ArrayAdapter aa1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, sports);
         aa1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSport.setAdapter(aa1);
         editTextDuree = findViewById(R.id.editTextDuree);
@@ -80,7 +85,21 @@ public class ControleurAjouterActivite extends AppCompatActivity
         int selectedDayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
         //On définit le format de date pour le TextView et on fait (mois + 1) puisque le premier mois du calendrier est 0 par défaut.
-        DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> editTextDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+        DatePickerDialog.OnDateSetListener dateSetListener = (view1, year, month, dayOfMonth) -> {
+            if(month < 10 || dayOfMonth < 10)
+            {
+                if(month < 10 && dayOfMonth < 10)
+                    editTextDate.setText(year + "-" + 0 + (month + 1) + "-" + 0 + dayOfMonth);
+                else if(dayOfMonth < 10)
+                    editTextDate.setText(year + "-" + (month + 1) + "-" + 0 + dayOfMonth);
+                else if(month < 10)
+                    editTextDate.setText(year + "-" + 0 + (month + 1) + "-" + dayOfMonth);
+            }
+            else if(month > 10 && dayOfMonth > 10)
+            {
+                editTextDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+            }
+        };
 
         //Créer le DatePickerDialog et ajouter une date minimale et maximale. Puis, on affiche le DatePickerDialog
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, dateSetListener, selectedYear, selectedMonth, selectedDayOfMonth);

@@ -70,7 +70,7 @@
                 android:backgroundTint="#00FFFFFF"
                 android:onClick="ouvrirHistorique"
                 android:scaleType="fitCenter"
-                app:srcCompat="@android:drawable/ic_menu_revert" />
+                app:srcCompat="@drawable/ic_back" />
 
         </LinearLayout>
 

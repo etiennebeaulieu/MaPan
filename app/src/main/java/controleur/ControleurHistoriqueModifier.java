@@ -148,36 +148,32 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
-    public void importerGPX(View view)
-    {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-        {
-
-            Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            loadIntent.setType("application/*");
-            startActivityForResult(loadIntent, CHOISIR_GPX);
-        } else
-        {
+    public void importerGPX(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            importer();
+        } else {
             demanderPermissionStockage();
         }
     }
 
+    private void importer() {
+        Intent loadIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        loadIntent.setType("application/*");
+        startActivityForResult(loadIntent, CHOISIR_GPX);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Context context = this.getApplicationContext();
-        if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK)
-        {
+        if (requestCode == CHOISIR_GPX && resultCode == Activity.RESULT_OK) {
             Uri uri = null;
-            if (data != null)
-            {
+            if (data != null) {
                 uri = data.getData();
                 pickiT.getPath(uri, Build.VERSION.SDK_INT);
             }
         }
-        if (requestCode == PARTAGER_GPX)
-        {
+        if (requestCode == PARTAGER_GPX) {
             new File(this.getFilesDir(), activiteSelect.getNom() + ".gpx").delete();
         }
     }
@@ -202,6 +198,7 @@ public class ControleurHistoriqueModifier extends AppCompatActivity implements P
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+                importer();
             } else
             {
                 Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();

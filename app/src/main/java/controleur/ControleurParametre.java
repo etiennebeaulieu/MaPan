@@ -133,7 +133,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
 
     public void ouvrirCredit(View view)
     {
-        Dialog dialog = new Dialog(this);
+        Dialog dialog = new Dialog(this, R.style.DialogTransparent);
         dialog.setContentView(R.layout.credit);
         dialog.show();
     }

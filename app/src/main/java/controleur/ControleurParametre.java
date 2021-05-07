@@ -130,7 +130,7 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
         startActivity(new Intent(ControleurParametre.this,ControleurStatsGlobale.class));
     }
 
-    public void ouvrirCredit()
+    public void ouvrirCredit(View view)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

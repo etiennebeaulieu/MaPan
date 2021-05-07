@@ -1,5 +1,6 @@
 package controleur;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -125,4 +126,18 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
     {
         startActivity(new Intent(ControleurParametre.this, ControleurHistorique.class));
     }
+
+    public void ouvrirStatsGlobale(View view)
+    {
+        startActivity(new Intent(ControleurParametre.this,ControleurStatsGlobale.class));
+    }
+
+    public void ouvrirCredit()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("À propos").setMessage("Application conçue par: \nÉtienne Beaulieu\nXavier Dussault\nYanni Chamberland Oliva\nZacharie Forest").
+                setNeutralButton("Ok", ((dialog, which) -> dialog.dismiss())).show();
+    }
 }
+

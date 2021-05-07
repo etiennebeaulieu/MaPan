@@ -225,7 +225,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/historique_editButton"
+                android:id="@+id/parametre_historique"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -236,7 +236,7 @@
                 app:srcCompat="@drawable/book" />
 
             <ImageButton
-                android:id="@+id/historique_homeButton"
+                android:id="@+id/parametre_accueil"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

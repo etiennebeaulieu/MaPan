@@ -72,20 +72,10 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
-        //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (Build.VERSION.SDK_INT > 28) {
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 mapView.getMapAsync(this);
-            else
-                demanderPermissionLocation29();
-
-        }else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mapView.getMapAsync(this);
-            else
+        else
                 demanderPermissionLocation();
-
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Intent intent = new Intent();
@@ -111,17 +101,6 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
-    private void demanderPermissionLocation29(){
-        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
-                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurAccueil.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2))
-                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -129,13 +108,7 @@ public class ControleurAccueil extends AppCompatActivity implements OnMapReadyCa
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-            }
-        }
-        if (requestCode == 2) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+                mapView.getMapAsync(this);
             } else {
                 Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
             }

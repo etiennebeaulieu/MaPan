@@ -1,10 +1,14 @@
 package controleur;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.TypedValue;
@@ -13,8 +17,12 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.mapan.R;
 
@@ -215,6 +223,84 @@ public class ControleurNouvelleActivite extends AppCompatActivity
         }
         activiteEnCours = new Activite(nom, sp);
 
+        //Vérifie si l'application a accès à la localisation ou doit la demander
+        if (Build.VERSION.SDK_INT > 28)
+        {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                commencerActivite();
+            else demanderPermissionLocation29();
+
+        } else
+        {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                commencerActivite();
+            else demanderPermissionLocation();
+
+        }
+
+
+    }
+    //Pop-up pour demander la permission d'utiliser la localisation de l'appareil
+    private void demanderPermissionLocation()
+    {
+        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
+        {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application")
+                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurNouvelleActivite.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1))
+                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
+        } else
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+
+    //Pop-up alternatif pour demander la permission d'utiliser la localisation de l'appareil
+    private void demanderPermissionLocation29()
+    {
+        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+        {
+            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation en arrière plan est nécessaire pour enregistrer une activité")
+                    .setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurNouvelleActivite.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2))
+                    .setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss())
+                    .create().show();
+        } else
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
+        }
+    }
+
+    //Gère la réponse à la permissions de localisation
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+                commencerActivite();
+            } else
+            {
+                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == 2)
+        {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
+                commencerActivite();
+            } else
+            {
+                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void commencerActivite(){
         Intent intent = new Intent(ControleurNouvelleActivite.this, ControleurEnCours.class);
         intent.setAction("COMMENCER_ACTIVITE");
         startActivity(intent);

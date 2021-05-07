@@ -1,16 +1,13 @@
 package controleur;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,8 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.mapan.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -161,27 +156,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-
-        //Vérifie si l'application a accès à la localisation ou doit la demander
-        if (Build.VERSION.SDK_INT > 28)
-        {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mapView.getMapAsync(this);
-            else demanderPermissionLocation29();
-
-        } else
-        {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                mapView.getMapAsync(this);
-            else demanderPermissionLocation();
-
-        }
+        mapView.getMapAsync(this);
 
 
         lancerServiceLocation("ACTION_COMMENCER_SERVICE");
 
-        if (!(this.getIntent().getAction().equals(Intent.ACTION_MAIN)))
-        {
+        if (!(this.getIntent().getAction().equals(Intent.ACTION_MAIN))) {
             //Créer le graphique et instancier tout ce qui doit être instancier
             chart = findViewById(R.id.chart);
             data = new LineData();
@@ -215,59 +195,6 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
     }
 
-    //Pop-up pour demander la permission d'utiliser la localisation de l'appareil
-    private void demanderPermissionLocation()
-    {
-        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION))
-        {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application").setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1)).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
-        } else
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-    }
-
-    //Pop-up alternatif pour demander la permission d'utiliser la localisation de l'appareil
-    private void demanderPermissionLocation29()
-    {
-        //Si la localisation a déjà été refusé, un dialogue expliquant pourquoi elle est nécessaire apparait
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION))
-        {
-            new AlertDialog.Builder(this).setTitle("Permission demandée").setMessage("La localisation est nécessaire pour le bon fonctionnement de l'application").setPositiveButton("Ok", (dialog, which) -> ActivityCompat.requestPermissions(ControleurEnCours.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2)).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).create().show();
-        } else
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
-        }
-    }
-
-    //Gère la réponse à la permissions de localisation
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1)
-        {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else
-            {
-                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if (requestCode == 2)
-        {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(this, "Permission autorisée", Toast.LENGTH_SHORT).show();
-            } else
-            {
-                Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     @SuppressLint("MissingPermission")
     @Override

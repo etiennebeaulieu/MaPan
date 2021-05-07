@@ -116,13 +116,19 @@ public class ControleurAjouterActivite extends AppCompatActivity
     //Par contre, si une ou plusieurs des composantes ne sont pas conformes, elle affiche un message d'erreur à l'utilisateur afin qu'il corrige le problème.
     public void confirmer(View view)
     {
+        Sport sp = Sport.RANDONNEE;
+        for(Sport sport : Sport.values())
+        {
+            if(spinnerSport.getSelectedItem().toString().equals(sport.getNom())) sp = sport;
+        }
+
         //Vérifier si tout est conforme avant de créer l'activité à ajouter.
         if (adapter.getContext().getSharedPreferences("Preferences", MODE_PRIVATE).getBoolean("impérial pour distance", false))
         {
             if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null))) && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null))) && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0"))) && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals("."))))
             {
                 double distance = Double.valueOf(editTextDistance.getText().toString()) / 0.621371;
-                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()), distance);
+                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), sp, Integer.valueOf(editTextDuree.getText().toString()), distance);
 
                 //On enregistre l'activité
                 Fichier.enregistrer(ControleurAjouterActivite.this, activiteAjoutee);
@@ -177,7 +183,7 @@ public class ControleurAjouterActivite extends AppCompatActivity
         {
             if (((!editTextNom.getText().toString().isEmpty()) && (!editTextNom.getText().toString().equals(null))) && ((!editTextDate.getText().toString().isEmpty()) && (!editTextDate.getText().toString().equals(null))) && ((!editTextDuree.getText().toString().isEmpty()) && (!editTextDuree.getText().toString().equals(null)) && (!editTextDuree.getText().toString().contains(":")) && (!editTextDuree.getText().toString().equals("0"))) && ((!editTextDistance.getText().toString().isEmpty()) && (!editTextDistance.getText().toString().equals(null)) && (!editTextDistance.getText().toString().equals("."))))
             {
-                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), Sport.valueOf(spinnerSport.getSelectedItem().toString()), Integer.valueOf(editTextDuree.getText().toString()), Double.valueOf(editTextDistance.getText().toString()));
+                activiteAjoutee = new Activite(editTextNom.getText().toString().trim(), Date.valueOf(editTextDate.getText().toString()).toInstant().plusSeconds(43200), sp, Integer.valueOf(editTextDuree.getText().toString()), Double.valueOf(editTextDistance.getText().toString()));
 
 
                 //On enregistre l'activité

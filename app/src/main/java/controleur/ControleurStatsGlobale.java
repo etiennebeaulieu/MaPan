@@ -58,8 +58,7 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
     {
-        int indice = spin_type.getSelectedItemPosition();
-        String s = type[indice];
+        String s = type[position];
         Fichier.loadActivites(this);
 
 
@@ -95,6 +94,7 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
             }
             vitesseMoy = (int) (distance / duree);
         }
+        afficher();
     }
 
     @Override

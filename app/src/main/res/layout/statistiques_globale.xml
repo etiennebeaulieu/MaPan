@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <View
-        android:id="@+id/view2"
+        android:id="@+id/view3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#316c19"
@@ -32,21 +31,22 @@
 
             <TextView
                 android:id="@+id/textView2"
+                tools:fontFamily="sans-serif-black"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:backgroundTint="#00FFFFFF"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
-                android:text="PARAMÈTRES"
+                android:text="STATISTIQUES GLOBALES"
                 android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                tools:fontFamily="sans-serif-black" />
+                android:textSize="30sp" />
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,24 +63,12 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/nomDefaut"
-                        android:layout_width="235dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:maxWidth="240dp"
-                        android:text="Nom par défaut:"
-                        android:textColor="#FFFFFF"
-                        android:textSize="19sp" />
-
                     <Spinner
-                        android:id="@+id/choix_nom_defaut"
-                        android:layout_width="250dp"
+                        android:id="@+id/choix_sport"
+                        android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginBottom="15dp"
-                        android:layout_weight="1"
-                        android:background="#FFFFFF" />
+                        android:layout_weight="1" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -93,23 +81,19 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="235dp"
+                        android:id="@+id/textView26"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="sans-serif-black"
-                        android:maxWidth="240dp"
-                        android:text="Type par défaut:"
-                        android:textColor="#FFFFFF"
-                        android:textSize="19sp" />
+                        android:text="Nombre d'activités" />
 
-                    <Spinner
-                        android:id="@+id/choix_type_defaut"
-                        android:layout_width="250dp"
-                        android:layout_height="40dp"
-                        android:layout_marginBottom="15dp"
+                    <TextView
+                        android:id="@+id/nombreActivite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#FFFFFF" />
+                        android:text="activités"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -121,15 +105,20 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/imperial_pour_tout"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Utiliser impérial pour tout"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20dp"
-                        android:theme="@style/Theme.MyTheme" />
+                        android:text="Durée totale" />
+
+                    <TextView
+                        android:id="@+id/dureeTotale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="h"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -141,16 +130,20 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/imperial_pour_distance"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Utiliser impérial pour la distance"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20dp"
-                        android:theme="@style/Theme.MyTheme"/>
+                        android:text="Distance totale" />
 
+                    <TextView
+                        android:id="@+id/distanceTotale"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="km"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -162,16 +155,20 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/imperial_pour_vitesse"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Utiliser impérial pour la vitesse"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20dp"
-                        android:theme="@style/Theme.MyTheme"/>
+                        android:text="Plus longue activité" />
 
+                    <TextView
+                        android:id="@+id/plusLongueActivite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="km"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -183,16 +180,20 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/imperial_pour_altitude"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Utiliser impérial pour l'altitude"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20dp"
-                        android:theme="@style/Theme.MyTheme" />
+                        android:text="Dénivelé positif total" />
 
+                    <TextView
+                        android:id="@+id/denivelePositifTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="m"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,28 +205,33 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/imperial_pour_denivele"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/vitMoyenneLabel"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Utiliser impérial pour le dénivelé"
-                        android:textColor="#FFFFFF"
-                        android:textSize="20dp"
-                        android:theme="@style/Theme.MyTheme"/>
+                        android:text="Vitesse moyenne" />
 
+                    <TextView
+                        android:id="@+id/vitesseMoyenne"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="km/h"
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
+
             </LinearLayout>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:backgroundTint="#00FFFFFF"
+            android:background="#316c19"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/historique_editButton"
+                android:id="@+id/statistiques_historique"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -236,7 +242,7 @@
                 app:srcCompat="@drawable/book" />
 
             <ImageButton
-                android:id="@+id/historique_homeButton"
+                android:id="@+id/statistiques_accueil"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -246,7 +252,16 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/maison" />
 
+            <ImageButton
+                android:id="@+id/statistiques_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#00FFFFFF"
+                android:onClick="ouvrirParametre"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/setting" />
+
         </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

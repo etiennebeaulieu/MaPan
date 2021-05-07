@@ -1,6 +1,7 @@
 package controleur;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -132,10 +133,9 @@ public class ControleurParametre extends AppCompatActivity implements AdapterVie
 
     public void ouvrirCredit(View view)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle("À propos").setMessage("Application conçue par: \nÉtienne Beaulieu\nXavier Dussault\nYanni Chamberland Oliva\nZacharie Forest").
-                setNeutralButton("Ok", ((dialog, which) -> dialog.dismiss())).show();
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.credit);
+        dialog.show();
     }
 }
 

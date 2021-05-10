@@ -53,6 +53,7 @@ import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -62,6 +63,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import modele.Activite;
 import modele.Fichier;
 import modele.Graphique;
 import service.ServiceLocation;
@@ -370,7 +372,12 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
 
             ControleurNouvelleActivite.activiteEnCours.setDuree(Duration.between(ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(0), ControleurNouvelleActivite.activiteEnCours.getTabTemps().get(ControleurNouvelleActivite.activiteEnCours.getTabTemps().size() - 1)));
 
-            Fichier.enregistrer(this, ControleurNouvelleActivite.activiteEnCours);
+
+            File fichier = Fichier.partager(this.getApplicationContext(), ControleurNouvelleActivite.activiteEnCours);
+            Activite activite = new Activite(ControleurNouvelleActivite.activiteEnCours.getNom(), ControleurNouvelleActivite.activiteEnCours.getSport(), fichier);
+            Fichier.enregistrer(this, activite);
+
+
             startActivity(new Intent(ControleurEnCours.this, ControleurHistorique.class));
         }).setNegativeButton("Annuler", (dialog, which) -> dialog.dismiss()).show();
     }

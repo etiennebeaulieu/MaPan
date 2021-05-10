@@ -93,8 +93,7 @@ public class ControleurPostActivite extends AppCompatActivity implements OnMapRe
         activite = (Activite) this.getIntent().getSerializableExtra("activité");
 
         //Crée un liste de coordonnée à partir des tableaux latitude et longitude
-        for (int i = 0; i < activite.tabTemps.size(); i++)
-        {
+        for (int i = 0; i < activite.tabTemps.size(); i++) {
             activite.listeCoordonnee.add(Point.fromLngLat(activite.tabLongitude.get(i), activite.tabLatitude.get(i)));
         }
 

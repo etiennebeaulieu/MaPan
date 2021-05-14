@@ -169,6 +169,6 @@ public class ControleurStatsGlobale extends AppCompatActivity implements Adapter
 
     public void ouvrirParametre(View view)
     {
-        startActivity(new Intent(ControleurStatsGlobale.this, ControleurAccueil.class));
+        startActivity(new Intent(ControleurStatsGlobale.this, ControleurParametre.class));
     }
 }

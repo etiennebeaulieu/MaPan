@@ -300,48 +300,54 @@
                 android:id="@+id/postChoixAxeX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"
                 android:text="Distance"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
-                android:theme="@style/Theme.CheckBox"
-                android:translationX="10dp"
-                android:translationY="255dp" />
+                android:theme="@style/Theme.CheckBox" />
 
             <TextView
                 android:id="@+id/TextViewX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="10dp"
                 android:text="Temps"
-                android:textColor="#FFFFFF"
-                android:translationX="184dp"
-                android:translationY="260dp" />
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="120dp"
                 android:rotation="-90"
                 android:text="Altitude"
-                android:textColor="#FFFFFF"
-                android:translationX="-13dp"
-                android:translationY="120dp" />
+                android:textColor="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="120dp"
+                android:layout_marginRight="-5dp"
                 android:rotation="90"
                 android:text="Vitesse"
-                android:textColor="#FFFFFF"
-                android:translationX="355dp"
-                android:translationY="120dp" />
+                android:textColor="#FFFFFF" />
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/postChart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="25dp"
-                android:translationY="-10dp">
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="35dp">
 
             </com.github.mikephil.charting.charts.LineChart>
 
@@ -349,19 +355,21 @@
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="160dp"
                 android:text="■"
-                android:textColor="#33b5e5"
-                android:translationX="5dp"
-                android:translationY="160dp" />
+                android:textColor="#33b5e5" />
 
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="160dp"
+                android:layout_marginRight="15dp"
                 android:text="■"
-                android:textColor="#FF5722"
-                android:translationX="370dp"
-                android:translationY="160dp" />
+                android:textColor="#FF5722" />
 
         </FrameLayout>
     </LinearLayout>

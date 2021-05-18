@@ -452,8 +452,8 @@ public class ControleurEnCours extends AppCompatActivity implements OnMapReadyCa
                     Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * METRE_MILES * 3600, chart, "setVitesseDistance");
                 } else
                 {
-                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3600, chart, "setVitesseTemps");
-                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3600, chart, "setVitesseDistance");
+                    Graphique.ajouterDonnee(temps, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3.6, chart, "setVitesseTemps");
+                    Graphique.ajouterDonnee(distance, ControleurNouvelleActivite.activiteEnCours.tabVitesse.get(nbrPoint) * 3.6, chart, "setVitesseDistance");
                 }
 
                 //
